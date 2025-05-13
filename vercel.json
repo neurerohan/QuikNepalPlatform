@@ -22,14 +22,16 @@
         "Pragma": "no-cache",
         "Expires": "0"
       },
-      "dest": "dist/index.js"
+      "dest": "dist/index.js",
+      "continue": false
     },
     {
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "/^((?!api|assets|_next|favicon.ico).)*$/",
+      "dest": "/index.html",
+      "status": 200
     }
   ]
 } 
