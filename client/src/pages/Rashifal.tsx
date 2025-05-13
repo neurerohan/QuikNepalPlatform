@@ -59,6 +59,35 @@ const meditationTips: Record<ElementType, string> = {
   'Water': "Flow with emotions today. Visualize water washing away any negative feelings as you breathe deeply."
 };
 
+// Nepali astrology specifics - add right after the elementDetails declaration
+const nepaliAstrologyDetails = {
+  elements: [
+    { name: 'अग्नि (Agni)', description: 'Represents fire energy, transformation, and spiritual power', signs: ['Mesh', 'Singha', 'Dhanu'] },
+    { name: 'पृथ्वी (Prithvi)', description: 'Represents earth energy, stability, and material wealth', signs: ['Brish', 'Kanya', 'Makar'] },
+    { name: 'वायु (Vayu)', description: 'Represents air energy, intellect, and communication', signs: ['Mithun', 'Tula', 'Kumbha'] },
+    { name: 'जल (Jal)', description: 'Represents water energy, emotions, and intuition', signs: ['Karkat', 'Brischick', 'Meen'] }
+  ],
+  nature: [
+    { name: 'सात्त्विक (Satvik)', description: 'Pure, harmonious, balanced nature', signs: ['Mithun', 'Kanya', 'Tula', 'Kumbha'] },
+    { name: 'राजसिक (Rajasik)', description: 'Active, passionate, ambitious nature', signs: ['Mesh', 'Singha', 'Makar', 'Dhanu'] },
+    { name: 'तामसिक (Tamasik)', description: 'Deep, intense, mysterious nature', signs: ['Brish', 'Karkat', 'Brischick', 'Meen'] }
+  ],
+  planetary_rulers: {
+    'Mesh': { name: 'मंगल (Mangal)', english: 'Mars' },
+    'Brish': { name: 'शुक्र (Shukra)', english: 'Venus' },
+    'Mithun': { name: 'बुध (Budha)', english: 'Mercury' },
+    'Karkat': { name: 'चन्द्र (Chandra)', english: 'Moon' },
+    'Singha': { name: 'सूर्य (Surya)', english: 'Sun' },
+    'Kanya': { name: 'बुध (Budha)', english: 'Mercury' },
+    'Tula': { name: 'शुक्र (Shukra)', english: 'Venus' },
+    'Brischick': { name: 'मंगल (Mangal)', english: 'Mars' },
+    'Dhanu': { name: 'बृहस्पति (Brihaspati)', english: 'Jupiter' },
+    'Makar': { name: 'शनि (Shani)', english: 'Saturn' },
+    'Kumbha': { name: 'शनि (Shani)', english: 'Saturn' },
+    'Meen': { name: 'बृहस्पति (Brihaspati)', english: 'Jupiter' }
+  }
+};
+
 // Particles animation component
 const BackgroundParticles = () => {
   return (
@@ -169,10 +198,78 @@ const Rashifal = () => {
     .map(name => mergedZodiacData.find(sign => sign.englishName === name))
     .filter((sign): sign is ZodiacSign => sign !== undefined);
 
+  // Function to get Nepali weekday name
+  const weekdayNepali = () => {
+    const weekdays = ['आइतबार', 'सोमबार', 'मंगलबार', 'बुधबार', 'बिहिबार', 'शुक्रबार', 'शनिबार'];
+    const today = new Date();
+    return weekdays[today.getDay()];
+  };
+
   // Function to generate dynamic tithi and nakshatra data
   const generateDynamicTithi = () => {
     // Lunar phases
-    // ... existing code ...
+    const lunarPhases = [
+      { name: "शुक्लपक्ष प्रतिपदा", english: "Shukla Paksha Pratipada" },
+      { name: "शुक्लपक्ष द्वितीया", english: "Shukla Paksha Dwitiya" },
+      { name: "शुक्लपक्ष तृतीया", english: "Shukla Paksha Tritiya" },
+      { name: "शुक्लपक्ष चतुर्थी", english: "Shukla Paksha Chaturthi" },
+      { name: "शुक्लपक्ष पञ्चमी", english: "Shukla Paksha Panchami" },
+      { name: "शुक्लपक्ष षष्ठी", english: "Shukla Paksha Shashthi" },
+      { name: "शुक्लपक्ष सप्तमी", english: "Shukla Paksha Saptami" },
+      { name: "शुक्लपक्ष अष्टमी", english: "Shukla Paksha Ashtami" },
+      { name: "शुक्लपक्ष नवमी", english: "Shukla Paksha Navami" },
+      { name: "शुक्लपक्ष दशमी", english: "Shukla Paksha Dashami" },
+      { name: "शुक्लपक्ष एकादशी", english: "Shukla Paksha Ekadashi" },
+      { name: "शुक्लपक्ष द्वादशी", english: "Shukla Paksha Dwadashi" },
+      { name: "शुक्लपक्ष त्रयोदशी", english: "Shukla Paksha Trayodashi" },
+      { name: "शुक्लपक्ष चतुर्दशी", english: "Shukla Paksha Chaturdashi" },
+      { name: "पूर्णिमा", english: "Purnima" },
+      { name: "कृष्णपक्ष प्रतिपदा", english: "Krishna Paksha Pratipada" },
+      { name: "कृष्णपक्ष द्वितीया", english: "Krishna Paksha Dwitiya" },
+      { name: "कृष्णपक्ष तृतीया", english: "Krishna Paksha Tritiya" },
+      { name: "कृष्णपक्ष चतुर्थी", english: "Krishna Paksha Chaturthi" },
+      { name: "कृष्णपक्ष पञ्चमी", english: "Krishna Paksha Panchami" },
+      { name: "कृष्णपक्ष षष्ठी", english: "Krishna Paksha Shashthi" },
+      { name: "कृष्णपक्ष सप्तमी", english: "Krishna Paksha Saptami" },
+      { name: "कृष्णपक्ष अष्टमी", english: "Krishna Paksha Ashtami" },
+      { name: "कृष्णपक्ष नवमी", english: "Krishna Paksha Navami" },
+      { name: "कृष्णपक्ष दशमी", english: "Krishna Paksha Dashami" },
+      { name: "कृष्णपक्ष एकादशी", english: "Krishna Paksha Ekadashi" },
+      { name: "कृष्णपक्ष द्वादशी", english: "Krishna Paksha Dwadashi" },
+      { name: "कृष्णपक्ष त्रयोदशी", english: "Krishna Paksha Trayodashi" },
+      { name: "कृष्णपक्ष चतुर्दशी", english: "Krishna Paksha Chaturdashi" },
+      { name: "अमावस्या", english: "Amavasya" }
+    ];
+
+    const nakshatras = [
+      { name: "अश्विनी", english: "Ashwini" },
+      { name: "भरणी", english: "Bharani" },
+      { name: "कृत्तिका", english: "Krittika" },
+      { name: "रोहिणी", english: "Rohini" },
+      { name: "मृगशीर्ष", english: "Mrigashirsha" },
+      { name: "आर्द्रा", english: "Ardra" },
+      { name: "पुनर्वसु", english: "Punarvasu" },
+      { name: "पुष्य", english: "Pushya" },
+      { name: "आश्लेषा", english: "Ashlesha" },
+      { name: "मघा", english: "Magha" },
+      { name: "पूर्वफाल्गुनी", english: "Purva Phalguni" },
+      { name: "उत्तरफाल्गुनी", english: "Uttara Phalguni" },
+      { name: "हस्त", english: "Hasta" },
+      { name: "चित्रा", english: "Chitra" },
+      { name: "स्वाति", english: "Swati" },
+      { name: "विशाखा", english: "Vishakha" },
+      { name: "अनुराधा", english: "Anuradha" },
+      { name: "ज्येष्ठा", english: "Jyeshtha" },
+      { name: "मूल", english: "Mula" },
+      { name: "पूर्वाषाढ़ा", english: "Purva Ashadha" },
+      { name: "उत्तराषाढ़ा", english: "Uttara Ashadha" },
+      { name: "श्रवण", english: "Shravana" },
+      { name: "धनिष्ठा", english: "Dhanishtha" },
+      { name: "शतभिषा", english: "Shatabhisha" },
+      { name: "पूर्वभाद्रपद", english: "Purva Bhadrapada" },
+      { name: "उत्तरभाद्रपद", english: "Uttara Bhadrapada" },
+      { name: "रेवती", english: "Revati" }
+    ];
 
     // Generate a consistent tithi and nakshatra based on the current date
     const today = new Date();
@@ -180,8 +277,28 @@ const Rashifal = () => {
     const diff = Number(today) - Number(startOfYear);
     const dayOfYear = Math.floor(diff / 86400000);
     
-    // ... rest of the function
+    const tithiIndex = (dayOfYear % 30);
+    const nakshatra1Index = (dayOfYear % 27);
+    const nakshatra2Index = ((dayOfYear + 1) % 27);
+    
+    // Random time for nakshatra change (between 6:00 and 10:00)
+    const hour = 6 + Math.floor((dayOfYear % 5));
+    const minute = (dayOfYear * 7) % 60;
+    
+    // Generate moonSign (raashi)
+    const moonSignIndex = ((dayOfYear + 3) % 12);
+    const moonSign = zodiacSigns[moonSignIndex].name;
+    
+    return {
+      tithi: lunarPhases[tithiIndex].name,
+      nakshatra1: nakshatras[nakshatra1Index].name,
+      nakshatra2: nakshatras[nakshatra2Index].name,
+      time: `${hour}:${minute.toString().padStart(2, '0')}`,
+      moonSign: moonSign
+    };
   };
+
+  const dynamicAstrologyData = generateDynamicTithi();
 
   return (
     <MainLayout
@@ -218,12 +335,11 @@ const Rashifal = () => {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <p className="font-medium text-lg">
-                    {formattedNepaliDate}, {new Date().toLocaleDateString('en-US', { weekday: 'long' })}
+                    {formattedNepaliDate}, {weekdayNepali()}
                   </p>
                   <p className="text-sm mt-2 text-gray-600">
-                    ज्येष्ठ कृष्णपक्ष प्रतिपदा तिथि। विशाखा नक्षत्र, ८ः३६ बजे उप्रान्त अनुराधा। चन्द्रराशि वृश्चिक।
+                    {dynamicAstrologyData.tithi} तिथि। {dynamicAstrologyData.nakshatra1} नक्षत्र, {dynamicAstrologyData.time} बजे उप्रान्त {dynamicAstrologyData.nakshatra2}। चन्द्रराशि {dynamicAstrologyData.moonSign}।
                   </p>
-                  <p className="text-sm mt-2 italic">उपप्रा. लक्ष्मीप्रसाद बराल (फलितज्योतिषाचार्य)</p>
                 </motion.div>
                 
                 {/* Daily Meditation Tip */}
@@ -349,7 +465,7 @@ const Rashifal = () => {
                             <div className="bg-indigo-50 rounded-lg p-3 text-center">
                               <div className="text-sm font-medium text-gray-700">ग्रह (Planet)</div>
                               <div className="text-xl font-semibold text-indigo-700">
-                                {selectedSignData && nepaliAstrologyDetails.planetary_rulers[selectedSignData.name]?.name}
+                                {selectedSignData && nepaliAstrologyDetails.planetary_rulers[selectedSignData.name as keyof typeof nepaliAstrologyDetails.planetary_rulers]?.name}
                               </div>
                             </div>
                           </motion.div>
@@ -410,59 +526,70 @@ const Rashifal = () => {
                   </div>
                 </div>
                 
-                {/* Zodiac Elements Section */}
+                {/* Vedic Astrology Elements Section */}
                 <motion.div 
                   className="mt-8 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <h3 className="text-xl font-semibold text-primary mb-4">The Four Elements in Astrology</h3>
+                  <h3 className="text-xl font-semibold text-primary mb-4">वैदिक ज्योतिषका तत्वहरू (Elements in Vedic Astrology)</h3>
                   <div className="grid md:grid-cols-4 gap-4">
-                    {Object.entries(elementDetails).map(([element, details], i) => (
+                    {nepaliAstrologyDetails.elements.map((element, i) => (
                       <motion.div 
-                        key={element} 
-                        className={`rounded-xl p-4 shadow bg-gradient-to-b ${details.color} text-white`}
-                        whileHover={{ y: -5, boxShadow: "0 12px 20px -5px rgba(0, 0, 0, 0.2)" }}
+                        key={element.name} 
+                        className="rounded-xl p-5 shadow bg-gradient-to-b from-indigo-50 to-blue-50 border border-blue-100"
+                        whileHover={{ y: -5, boxShadow: "0 12px 20px -5px rgba(0, 0, 0, 0.1)" }}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.4 + (i * 0.1) }}
                       >
-                        <div className="text-3xl mb-2 text-center">{details.emoji}</div>
-                        <h4 className="text-xl font-bold text-center mb-2">{element}</h4>
-                        <p className="text-sm text-white/90">
-                          {element === 'Fire' && "Passionate, dynamic, temperamental. Fire signs are enthusiastic and sometimes larger than life."}
-                          {element === 'Earth' && "Practical, loyal, stable. Earth signs are grounded and the ones that bring us down to earth."}
-                          {element === 'Air' && "Intellectual, communicative, social. Air signs are rational, social, and love communication."}
-                          {element === 'Water' && "Intuitive, emotional, sensitive. Water signs are in touch with emotions and deeply perceptive."}
-                        </p>
-                        <div className="mt-2 text-sm font-medium">
-                          Signs: {mergedZodiacData.filter(s => s.element === element).map(s => s.englishName).join(', ')}
+                        <h4 className="text-xl font-bold text-center mb-3 text-indigo-700">{element.name}</h4>
+                        <p className="text-sm text-gray-700 mb-3">{element.description}</p>
+                        <div className="mt-2 text-sm font-medium text-primary">
+                          राशिहरू (Signs): {element.signs.join(', ')}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold text-primary mb-4 mt-8">त्रिगुण: राशिको प्रकृति (Three Gunas in Astrology)</h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {nepaliAstrologyDetails.nature.map((nature, i) => (
+                      <motion.div 
+                        key={nature.name} 
+                        className="rounded-xl p-5 shadow bg-gradient-to-b from-purple-50 to-pink-50 border border-purple-100"
+                        whileHover={{ y: -5, boxShadow: "0 12px 20px -5px rgba(0, 0, 0, 0.1)" }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.6 + (i * 0.1) }}
+                      >
+                        <h4 className="text-xl font-bold text-center mb-3 text-purple-700">{nature.name}</h4>
+                        <p className="text-sm text-gray-700 mb-3">{nature.description}</p>
+                        <div className="mt-2 text-sm font-medium text-primary">
+                          राशिहरू (Signs): {nature.signs.join(', ')}
                         </div>
                       </motion.div>
                     ))}
                   </div>
                 </motion.div>
 
+                {/* About Vedic Rashifal */}
                 <motion.div 
                   className="max-w-4xl mx-auto mt-8 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.6 }}
                 >
-                  <h3 className="text-xl font-semibold text-primary mb-4">About Nepali Rashifal</h3>
+                  <h3 className="text-xl font-semibold text-primary mb-4">वैदिक राशिफल बारे (About Vedic Rashifal)</h3>
                   <p className="mb-4">
-                    Rashifal is the Nepali term for horoscope predictions. These daily forecasts are based on the movement 
-                    of celestial bodies and their effects on different zodiac signs according to Hindu astrology.
+                    राशिफल वैदिक ज्योतिष अनुसार भविष्यवाणी हो। यो खगोलीय पिंडहरूको गतिविधि र विभिन्न ग्रह नक्षत्रहरूको राशिचक्रमा रहेका स्थितिको आधारमा तयार पारिन्छ।
                   </p>
                   <p className="mb-4">
-                    In Nepali culture, many people consult their daily rashifal to get insights about their day and 
-                    make important decisions accordingly. Each sign is associated with specific characteristics and is 
-                    influenced differently by planetary movements.
+                    नेपाली संस्कृतिमा, धेरै मानिसहरू आफ्नो दिनको बारेमा जान्न र महत्वपूर्ण निर्णयहरू लिन दैनिक राशिफल हेर्ने गर्छन्। प्रत्येक राशिको आफ्नै विशेषताहरू छन् र ग्रहीय चालहरूबाट फरक तरिकाले प्रभावित हुन्छन्।
                   </p>
                   <p>
-                    The predictions cover various aspects of life including career, relationships, health, and general wellbeing. 
-                    While some take these predictions seriously, others view them as guidance or entertainment.
+                    राशिफलमा जीवनका विभिन्न पक्षहरू जस्तै करियर, सम्बन्ध, स्वास्थ्य, र सामान्य कल्याणको बारेमा भविष्यवाणीहरू समावेश हुन्छन्। केहीले यी भविष्यवाणीहरूलाई गम्भीरतापूर्वक लिए पनि, अरूले यसलाई मार्गदर्शन वा मनोरञ्जनको रूपमा हेर्छन्।
                   </p>
                 </motion.div>
               </div>
