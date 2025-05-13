@@ -175,9 +175,9 @@ const Forex = () => {
       <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
         <BackgroundParticles />
         
-      <FadeIn>
+        <FadeIn>
           <section className="py-12 relative z-10">
-          <div className="container mx-auto px-4">
+            <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <motion.h1 
                   className="text-4xl md:text-5xl font-bold text-primary mb-3"
@@ -216,7 +216,7 @@ const Forex = () => {
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   <h3 className="text-xl md:text-2xl font-semibold text-primary mb-2 text-center md:text-left">
-                     विनिमय दरहरू {ratesDate ? `(As of ${formattedApiRatesDate})` : '(Latest Available)'}
+                    विनिमय दरहरू {ratesDate ? `(As of ${formattedApiRatesDate})` : '(Latest Available)'}
                   </h3>
                   <p className="text-sm text-gray-500 mb-6 text-center md:text-left">
                     {forexData?.totalRates ? `Displaying ${forexData.rates?.length || 0} of ${forexData.totalRates} exchange rates.` : isLoadingNepaliDate || isLoadingForex ? 'Fetching data...' : 'No rates data available.'}
@@ -240,7 +240,7 @@ const Forex = () => {
                         columns={forexColumns}
                         data={forexData.rates}
                         isLoading={isLoadingForex} // For internal DataTable shimmer perhaps
-                        />
+                      />
                       
                       {forexData.totalPages > 1 && (
                         <div className="mt-6 flex justify-center">
@@ -357,11 +357,12 @@ const Forex = () => {
                   </div>
                 </motion.div>
               </div>
-            </section>
-          </FadeIn>
-        </div>
-      </MainLayout>
-    );
+            </div>
+          </section>
+        </FadeIn>
+      </div>
+    </MainLayout>
+  );
 };
 
 export default Forex;
