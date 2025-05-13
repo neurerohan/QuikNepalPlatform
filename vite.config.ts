@@ -25,7 +25,13 @@ export default defineConfig({
   },
   root: path.resolve(import.meta.dirname, "client"),
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    outDir: process.env.VERCEL 
+      ? path.resolve(import.meta.dirname, "dist")
+      : path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    assetsDir: "assets",
+    rollupOptions: {
+      input: path.resolve(import.meta.dirname, "client", "index.html"),
+    }
   },
 });

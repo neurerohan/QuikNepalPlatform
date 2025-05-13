@@ -1,5 +1,13 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index" }
+  "version": 2,
+  "builds": [
+    { "src": "package.json", "use": "@vercel/static-build" },
+    { "src": "api/index.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index" },
+    { "src": "^/assets/(.*)", "dest": "/assets/$1" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 } 
