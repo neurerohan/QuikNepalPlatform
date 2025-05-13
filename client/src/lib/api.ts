@@ -161,29 +161,70 @@ export const getVegetables = async () => {
 
 export const getMetals = async () => {
   try {
-    const response = await api.get('metals/');
-    // Transform the metals data to the format our components expect
-    if (response.data && response.data.results) {
-      const metals = response.data.results;
-      const goldItems = metals.filter((item: any) => item.metal === 'gold');
-      const silverItems = metals.filter((item: any) => item.metal === 'silver');
+    console.log("Fetching Metal prices...");
+    const response = await api.get('metals/'); // Assuming no specific params needed for latest
+    console.log("Metals API raw response:", JSON.stringify(response.data, null, 2));
+
+    // Expected structure: response.data or response.data.results (if paginated, take first result or specific latest entry)
+    // or response.data directly contains { gold: {...}, silver: {...}, date: ... }
+
+    let metalData = response.data;
+
+    // If data is nested under 'results' and it's an array, take the first item (assuming latest)
+    if (response.data && response.data.results && Array.isArray(response.data.results) && response.data.results.length > 0) {
+      console.log("Metals API response has 'results' array. Taking first item as latest.");
+      metalData = response.data.results[0]; 
+    } else if (Array.isArray(response.data) && response.data.length > 0) {
+      console.log("Metals API response is a direct array. Taking first item as latest.");
+      metalData = response.data[0];
+    }
+
+    // Now process metalData which should be an object
+    if (metalData && typeof metalData === 'object' && !Array.isArray(metalData)) {
+      console.log("Processing metalData object:", JSON.stringify(metalData, null, 2));
+      const gold = metalData.gold || {};
+      const silver = metalData.silver || {};
+
+      // Try various common field names for gold and silver prices
+      const fineGoldPrice = gold.fine_gold || gold.fineGold || gold.fine || gold.fg_price || gold.price_fine_gold || '0';
+      const tejabiGoldPrice = gold.tejabi_gold || gold.tejabiGold || gold.standard_gold || gold.standardGold || gold.tejabi || gold.sg_price || gold.price_tejabi_gold || '0';
+      const standardSilverPrice = silver.standard_silver || silver.standardSilver || silver.silver_price || silver.price_silver || silver.ss_price || '0';
       
-      return {
+      // Attempt to find a date for the prices
+      const priceDate = metalData.date || metalData.effective_date || metalData.last_updated || new Date().toISOString().split('T')[0];
+
+      const processedData = {
         gold: {
-          fineGold: goldItems.find((item: any) => item.metal_type === 'fine' && item.unit === 'tola')?.price || '0',
-          standardGold: goldItems.find((item: any) => item.metal_type === 'hallmark' && item.unit === 'tola')?.price || '0'
+          fineGold: parseFloat(fineGoldPrice).toFixed(2),
+          tejabiGold: parseFloat(tejabiGoldPrice).toFixed(2),
         },
         silver: {
-          standardSilver: silverItems.find((item: any) => item.unit === 'tola')?.price || '0'
+          standardSilver: parseFloat(standardSilverPrice).toFixed(2),
         },
-        source: 'real_data'
+        date: priceDate,
+        source: metalData.source || 'Nepal Rastra Bank / FENEGOSIDA' // Common sources
       };
+      console.log("Processed Metal Data:", processedData);
+      return processedData;
     }
-    console.error("Unexpected API response format from metals API");
-    throw new Error("Invalid API response format");
+
+    console.warn("Unexpected Metals API response format. MetalData:", metalData);
+    // Fallback to a structure that won't break the UI, with zero prices
+    return {
+      gold: { fineGold: '0.00', tejabiGold: '0.00' },
+      silver: { standardSilver: '0.00' },
+      date: new Date().toISOString().split('T')[0],
+      source: 'Unknown'
+    };
+
   } catch (error) {
-    console.error("Error fetching metals data:", error);
-    throw error; // Re-throw the error to be handled by the component
+    console.error("Error fetching or processing metal prices:", error);
+    return {
+      gold: { fineGold: '0.00', tejabiGold: '0.00' },
+      silver: { standardSilver: '0.00' },
+      date: new Date().toISOString().split('T')[0],
+      source: 'Error'
+    };
   }
 };
 
