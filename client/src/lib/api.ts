@@ -313,11 +313,80 @@ export const getTodayNepaliDate = async () => {
 
 export const getForex = async (params: { from?: string; to?: string; page?: number; per_page?: number }) => {
   try {
+    console.log("Fetching Forex data with params:", params);
     const response = await api.get('forex', { params });
-    return response.data;
+    console.log("Forex API raw response:", response.data);
+
+    // Ideal structure: { rates: [], currentPage: 1, totalPages: 5, totalRates: 50 }
+    // Check for common structures and adapt
+    if (response.data && response.data.rates && Array.isArray(response.data.rates)) {
+      // Structure is already { rates: [...], ... }
+      console.log("Forex API response matches expected structure.");
+      return {
+        rates: response.data.rates.map((rate: any) => ({ // Ensure rates are mapped to expected DataTable structure
+          date: rate.date || new Date().toISOString().split('T')[0],
+          currency: rate.currency_code || rate.currency || rate.code, // Common variations for currency code
+          unit: rate.unit || 1,
+          buyingRate: parseFloat(rate.buy_rate || rate.buying_rate || rate.buyingRate || 0).toFixed(2),
+          sellingRate: parseFloat(rate.sell_rate || rate.selling_rate || rate.sellingRate || 0).toFixed(2),
+          middleRate: parseFloat(rate.middle_rate || rate.middleRate || 0).toFixed(2),
+        })),
+        currentPage: response.data.currentPage || response.data.page || params.page || 1,
+        totalPages: response.data.totalPages || response.data.total_pages || 1, 
+        totalRates: response.data.totalRates || response.data.total_items || response.data.rates.length
+      };
+    } else if (response.data && Array.isArray(response.data)) {
+      // Structure is directly an array of rates: [ {rate1}, {rate2} ]
+      console.log("Forex API response is a direct array of rates. Adapting...");
+      const perPage = params.per_page || 10;
+      const page = params.page || 1;
+      const totalRates = response.data.length;
+      const totalPages = Math.ceil(totalRates / perPage);
+      const paginatedRates = response.data.slice((page - 1) * perPage, page * perPage);
+
+      return {
+        rates: paginatedRates.map((rate: any) => ({
+          date: rate.date || new Date().toISOString().split('T')[0],
+          currency: rate.currency_code || rate.currency || rate.code,
+          unit: rate.unit || 1,
+          buyingRate: parseFloat(rate.buy_rate || rate.buying_rate || rate.buyingRate || 0).toFixed(2),
+          sellingRate: parseFloat(rate.sell_rate || rate.selling_rate || rate.sellingRate || 0).toFixed(2),
+          middleRate: parseFloat(rate.middle_rate || rate.middleRate || 0).toFixed(2),
+        })),
+        currentPage: page,
+        totalPages: totalPages,
+        totalRates: totalRates
+      };
+    } else if (response.data && response.data.results && Array.isArray(response.data.results)){
+      // Structure is { results: [...], count: N, next: ..., previous: ...}
+      console.log("Forex API response has 'results' array. Adapting...");
+      const perPage = params.per_page || 10;
+      const totalRates = response.data.count || response.data.results.length;
+      const totalPages = response.data.num_pages || Math.ceil(totalRates / perPage);
+      const currentPage = params.page || 1; // API might not provide current page in this structure
+      
+      return {
+        rates: response.data.results.map((rate: any) => ({
+          date: rate.date || new Date().toISOString().split('T')[0],
+          currency: rate.currency_code || rate.currency || rate.code,
+          unit: rate.unit || 1,
+          buyingRate: parseFloat(rate.buy_rate || rate.buying_rate || rate.buyingRate || 0).toFixed(2),
+          sellingRate: parseFloat(rate.sell_rate || rate.selling_rate || rate.sellingRate || 0).toFixed(2),
+          middleRate: parseFloat(rate.middle_rate || rate.middleRate || 0).toFixed(2),
+        })),
+        currentPage: currentPage,
+        totalPages: totalPages,
+        totalRates: totalRates
+      };
+    }
+
+    console.warn("Unexpected Forex API response format. Returning empty rates.", response.data);
+    return { rates: [], currentPage: 1, totalPages: 1, totalRates: 0 }; // Fallback
+
   } catch (error) {
-    console.error("Error fetching forex data:", error);
-    throw error;
+    console.error("Error fetching or processing forex data:", error);
+    // Return an empty state that matches the expected structure to prevent component errors
+    return { rates: [], currentPage: 1, totalPages: 1, totalRates: 0 }; 
   }
 };
 
