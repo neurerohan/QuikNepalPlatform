@@ -315,77 +315,76 @@ export const getForex = async (params: { from?: string; to?: string; page?: numb
   try {
     console.log("Fetching Forex data with params:", params);
     const response = await api.get('forex', { params });
-    console.log("Forex API raw response:", response.data);
+    console.log("Forex API raw response:", JSON.stringify(response.data, null, 2)); // Prettify JSON output
 
-    // Ideal structure: { rates: [], currentPage: 1, totalPages: 5, totalRates: 50 }
-    // Check for common structures and adapt
+    let ratesToProcess = [];
+    let sourceCurrentPage = params.page || 1;
+    let sourceTotalPages = 1;
+    let sourceTotalRates = 0;
+
+    // Scenario 1: Data is in response.data.rates (and has pagination info)
     if (response.data && response.data.rates && Array.isArray(response.data.rates)) {
-      // Structure is already { rates: [...], ... }
-      console.log("Forex API response matches expected structure.");
-      return {
-        rates: response.data.rates.map((rate: any) => ({ // Ensure rates are mapped to expected DataTable structure
-          date: rate.date || new Date().toISOString().split('T')[0],
-          currency: rate.currency_code || rate.currency || rate.code, // Common variations for currency code
-          unit: rate.unit || 1,
-          buyingRate: parseFloat(rate.buy_rate || rate.buying_rate || rate.buyingRate || 0).toFixed(2),
-          sellingRate: parseFloat(rate.sell_rate || rate.selling_rate || rate.sellingRate || 0).toFixed(2),
-          middleRate: parseFloat(rate.middle_rate || rate.middleRate || 0).toFixed(2),
-        })),
-        currentPage: response.data.currentPage || response.data.page || params.page || 1,
-        totalPages: response.data.totalPages || response.data.total_pages || 1, 
-        totalRates: response.data.totalRates || response.data.total_items || response.data.rates.length
-      };
-    } else if (response.data && Array.isArray(response.data)) {
-      // Structure is directly an array of rates: [ {rate1}, {rate2} ]
-      console.log("Forex API response is a direct array of rates. Adapting...");
+      console.log("Forex API response has 'rates' array.");
+      ratesToProcess = response.data.rates;
+      sourceCurrentPage = response.data.currentPage || response.data.page || sourceCurrentPage;
+      sourceTotalPages = response.data.totalPages || response.data.total_pages || sourceTotalPages;
+      sourceTotalRates = response.data.totalRates || response.data.total_items || ratesToProcess.length;
+    }
+    // Scenario 2: Data is in response.data.results (common for DRF-style paginated APIs)
+    else if (response.data && response.data.results && Array.isArray(response.data.results)) {
+      console.log("Forex API response has 'results' array.");
+      ratesToProcess = response.data.results;
+      sourceTotalRates = response.data.count || ratesToProcess.length;
       const perPage = params.per_page || 10;
-      const page = params.page || 1;
-      const totalRates = response.data.length;
-      const totalPages = Math.ceil(totalRates / perPage);
-      const paginatedRates = response.data.slice((page - 1) * perPage, page * perPage);
+      sourceTotalPages = response.data.num_pages || Math.ceil(sourceTotalRates / perPage);
+      // Try to get current page from API if available, e.g. if API uses 'page' query param for request and echoes it
+      // or if it provides it in the response under a different key
+      sourceCurrentPage = response.data.current_page || response.data.page || sourceCurrentPage;
+    }
+    // Scenario 3: Data is a direct array in response.data
+    else if (response.data && Array.isArray(response.data)) {
+      console.log("Forex API response is a direct array of rates.");
+      ratesToProcess = response.data;
+      sourceTotalRates = ratesToProcess.length;
+      const perPage = params.per_page || 10;
+      sourceTotalPages = Math.ceil(sourceTotalRates / perPage);
+      // For a direct array, current page is what was requested
+      sourceCurrentPage = params.page || 1;
+      // If paginating a direct array, we might need to slice it, but many APIs that return a direct array for latest rates don't paginate them.
+      // For now, assume if it's a direct array, it's all the rates for the "latest" call for the current page query.
+      // If the API is supposed to paginate this array itself based on {page, per_page} params, this is fine.
+    }
 
-      return {
-        rates: paginatedRates.map((rate: any) => ({
-          date: rate.date || new Date().toISOString().split('T')[0],
-          currency: rate.currency_code || rate.currency || rate.code,
+    if (ratesToProcess.length > 0) {
+      const mappedRates = ratesToProcess.map((rate: any) => {
+        // Log each individual rate object to see its structure
+        console.log("Processing rate object:", JSON.stringify(rate, null, 2)); 
+
+        return {
+          date: rate.date || rate.last_updated_date || new Date().toISOString().split('T')[0],
+          currency: rate.currency_code || rate.currency || rate.code || rate.iso3 || 'N/A',
           unit: rate.unit || 1,
-          buyingRate: parseFloat(rate.buy_rate || rate.buying_rate || rate.buyingRate || 0).toFixed(2),
-          sellingRate: parseFloat(rate.sell_rate || rate.selling_rate || rate.sellingRate || 0).toFixed(2),
-          middleRate: parseFloat(rate.middle_rate || rate.middleRate || 0).toFixed(2),
-        })),
-        currentPage: page,
-        totalPages: totalPages,
-        totalRates: totalRates
-      };
-    } else if (response.data && response.data.results && Array.isArray(response.data.results)){
-      // Structure is { results: [...], count: N, next: ..., previous: ...}
-      console.log("Forex API response has 'results' array. Adapting...");
-      const perPage = params.per_page || 10;
-      const totalRates = response.data.count || response.data.results.length;
-      const totalPages = response.data.num_pages || Math.ceil(totalRates / perPage);
-      const currentPage = params.page || 1; // API might not provide current page in this structure
-      
+          // Try more direct field names and ensure robust parsing
+          buyingRate: parseFloat(rate.buy || rate.buy_rate || rate.buying_rate || rate.buyingRate || rate.bid || 0).toFixed(2),
+          sellingRate: parseFloat(rate.sell || rate.sell_rate || rate.selling_rate || rate.sellingRate || rate.ask || 0).toFixed(2),
+          middleRate: parseFloat(rate.mid_rate || rate.middle_rate || rate.middleRate || rate.mid || 0).toFixed(2),
+        };
+      });
+
+      console.log("Mapped rates:", mappedRates.slice(0,2)); // Log first few mapped rates
       return {
-        rates: response.data.results.map((rate: any) => ({
-          date: rate.date || new Date().toISOString().split('T')[0],
-          currency: rate.currency_code || rate.currency || rate.code,
-          unit: rate.unit || 1,
-          buyingRate: parseFloat(rate.buy_rate || rate.buying_rate || rate.buyingRate || 0).toFixed(2),
-          sellingRate: parseFloat(rate.sell_rate || rate.selling_rate || rate.sellingRate || 0).toFixed(2),
-          middleRate: parseFloat(rate.middle_rate || rate.middleRate || 0).toFixed(2),
-        })),
-        currentPage: currentPage,
-        totalPages: totalPages,
-        totalRates: totalRates
+        rates: mappedRates,
+        currentPage: sourceCurrentPage,
+        totalPages: sourceTotalPages,
+        totalRates: sourceTotalRates
       };
     }
 
-    console.warn("Unexpected Forex API response format. Returning empty rates.", response.data);
+    console.warn("No processable rates found in Forex API response. Response data:", response.data);
     return { rates: [], currentPage: 1, totalPages: 1, totalRates: 0 }; // Fallback
 
   } catch (error) {
     console.error("Error fetching or processing forex data:", error);
-    // Return an empty state that matches the expected structure to prevent component errors
     return { rates: [], currentPage: 1, totalPages: 1, totalRates: 0 }; 
   }
 };
