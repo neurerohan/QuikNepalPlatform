@@ -12,8 +12,8 @@ mkdir -p dist/api
 # Transpile API TypeScript files to JavaScript
 npx tsc api/index.ts --outDir dist/api --esModuleInterop --skipLibCheck
 
-# Create runtime config file 
-echo 'export const config = { runtime: "nodejs18.x" };' > dist/api/_runtime.js
+# Create API config file (without runtime specification)
+echo 'export const config = { api: { bodyParser: false } };' > dist/api/_config.js
 
 # Copy public directory contents correctly
 if [ ! -d "dist/public" ]; then

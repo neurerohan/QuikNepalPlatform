@@ -12,6 +12,5 @@ export default function handler(req: IncomingMessage, res: ServerResponse) {
 export const config = {
   api: {
     bodyParser: false, // Let Express handle body parsing
-  },
-  runtime: 'nodejs18.x',
+  }
 }; 

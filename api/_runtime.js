@@ -1,3 +1,6 @@
+// Vercel API configuration
 export const config = {
-  runtime: "nodejs18.x",
+  api: {
+    bodyParser: false
+  }
 }; 
