@@ -355,7 +355,6 @@ const Forex = () => {
                       </p>
                     </div>
                   </div>
-                </div>
                 </motion.div>
               </div>
             </div> 
