@@ -1,16 +1,8 @@
 #!/bin/bash
 
-# Run the Vite build to generate static assets
+# Simply build the frontend with Vite
 npm run vercel-build
-
-# Ensure the build outputs go where Vercel expects them
-mkdir -p .vercel/output/static
-cp -r dist/public/* .vercel/output/static/
-
-# Make sure the API function is built properly
-mkdir -p .vercel/output/functions/api
-npx esbuild api/index.ts --bundle --platform=node --format=esm --outfile=.vercel/output/functions/api/index.js
 
 # Log the output structure for debugging
 echo "Build output structure:"
-find .vercel/output -type f | sort 
+find dist -type f | sort 

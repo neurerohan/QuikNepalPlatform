@@ -10,7 +10,7 @@ const Vegetables = () => {
   const [searchTerm, setSearchTerm] = useState('');
   
   const { data, isLoading, error } = useQuery({
-    queryKey: ['/api/vegetables'],
+    queryKey: ['vegetables'],
     queryFn: getVegetables,
     staleTime: 3600000 // 1 hour
   });

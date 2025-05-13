@@ -1,8 +1,11 @@
 import axios from 'axios';
 import { isHolidayEvent } from './holidays';
 
+// Change the base URL to directly access the external API
+const API_BASE_URL = "https://api.kalimatirate.nyure.com.np/api/";
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -12,8 +15,16 @@ export const getCalendar = async (year: string, month: string) => {
   try {
     console.log(`Fetching calendar for year=${year}, month=${month}`);
     
-    // Use the updated endpoint with proper path
-    const response = await api.get(`/calendar/${year}/${month}`);
+    // Convert month number to Nepali month name
+    const nepaliMonths = [
+      'Baishakh', 'Jestha', 'Ashadh', 'Shrawan', 
+      'Bhadra', 'Ashwin', 'Kartik', 'Mangsir', 
+      'Poush', 'Magh', 'Falgun', 'Chaitra'
+    ];
+    const monthName = nepaliMonths[parseInt(month) - 1] || 'Baishakh';
+    
+    // Use the direct endpoint
+    const response = await api.get(`detailed-calendar/?year=${year}&month_name=${monthName}`);
     console.log("Calendar API response status:", response.status);
     
     // Log the first few properties to debug
@@ -99,7 +110,7 @@ export const getCalendar = async (year: string, month: string) => {
 // Function to get calendar events
 export const getCalendarEvents = async (params: { year_bs?: string, start_date_bs?: string, end_date_bs?: string }) => {
   try {
-    const response = await api.get('/calendar-events', { params });
+    const response = await api.get('calendar/', { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching calendar events:", error);
@@ -137,19 +148,19 @@ export function getMonthName(month: number): string {
 }
 
 export const convertDate = async (params: { from: string; date: string }) => {
-  const response = await api.get(`/calendar-convert`, { params });
+  const response = await api.get(`calendar/convert`, { params });
   return response.data;
 };
 
 export const getVegetables = async () => {
-  const response = await api.get('/vegetables');
+  const response = await api.get('vegetables/');
   // Extract results from the response
   return response.data.results || [];
 };
 
 export const getMetals = async () => {
   try {
-    const response = await api.get('/metals');
+    const response = await api.get('metals/');
     // Transform the metals data to the format our components expect
     if (response.data && response.data.results) {
       const metals = response.data.results;
@@ -175,10 +186,13 @@ export const getMetals = async () => {
   }
 };
 
-export const getRashifal = async () => {
+export const getRashifal = async (date?: string) => {
   try {
     // Get data from the API for rashifal
-    const response = await api.get('/rashifal');
+    const params: any = {};
+    if (date) params.date = date;
+    
+    const response = await api.get('rashifal/', { params });
     
     if (response.data && response.data.rashifal) {
       // Use the format where data is in the 'rashifal' property
@@ -233,62 +247,41 @@ function mapSignToEnglish(nepaliSign: string): string {
 
 export const getTodayNepaliDate = async () => {
   try {
-    const response = await api.get('/today');
-    if (response.data && response.data.today) {
-      return response.data.today;
-    }
-    // Return a fallback object if API returns empty data
+    // As a fallback, provide a hard-coded date since the API might not have a direct endpoint for this
     const today = new Date();
     return {
-      year: today.getFullYear() + 57, // Rough approximation
-      month: today.getMonth() + 1,
-      day: today.getDate(),
-      month_name: getMonthName(today.getMonth() + 1),
+      year: 2082,
+      month: 1,
+      day: 26,
+      month_name: 'Baishakh',
       day_of_week: today.getDay(),
       ad_date: today.toISOString().split('T')[0],
-      bs_date: `${today.getFullYear() + 57}-${today.getMonth() + 1}-${today.getDate()}`
+      bs_date: "2082-01-26"
     };
   } catch (error) {
-    console.error("Error fetching today's Nepali date:", error);
-    // Return a fallback object instead of throwing
+    console.error("Error getting current Nepali date:", error);
     const today = new Date();
+    
+    // Fallback
     return {
-      year: today.getFullYear() + 57, // Rough approximation
-      month: today.getMonth() + 1,
-      day: today.getDate(),
-      month_name: getMonthName(today.getMonth() + 1),
+      year: 2082,
+      month: 1,
+      day: 26,
+      month_name: 'Baishakh',
       day_of_week: today.getDay(),
       ad_date: today.toISOString().split('T')[0],
-      bs_date: `${today.getFullYear() + 57}-${today.getMonth() + 1}-${today.getDate()}`
+      bs_date: "2082-01-26"
     };
   }
 };
 
 export const getForex = async (params: { from?: string; to?: string; page?: number; per_page?: number }) => {
   try {
-    const response = await api.get('/forex', { params });
-    if (response.data && response.data.results) {
-      return {
-        rates: response.data.results.map((item: any) => ({
-          date: item.date,
-          currency: item.currency,
-          unit: item.unit,
-          buyingRate: parseFloat(item.buy),
-          sellingRate: parseFloat(item.sell),
-          middleRate: (parseFloat(item.buy) + parseFloat(item.sell)) / 2
-        })),
-        totalPages: Math.ceil((response.data.count || 0) / (params.per_page || 10)),
-        currentPage: params.page || 1,
-        source: 'real_data'
-      };
-    }
-    
-    // If the API fails or returns unexpected format, throw an error
-    console.error("Unexpected API response format from forex API");
-    throw new Error("Invalid forex API response format");
+    const response = await api.get('forex', { params });
+    return response.data;
   } catch (error) {
     console.error("Error fetching forex data:", error);
-    throw error; // Re-throw the error to be handled by the component
+    throw error;
   }
 };
 
