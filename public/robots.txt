@@ -9,7 +9,7 @@ Disallow: /login
 Disallow: /api/
 
 # Crawl delay to prevent overloading server
-Crawl-delay: 10
+Crawl-delay: 00
 
 # Sitemap location
 Sitemap: https://quiknepal.com/sitemap.xml 
