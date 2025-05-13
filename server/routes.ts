@@ -3,11 +3,11 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import axios, { AxiosError } from "axios";
 
-// Base URL for the external API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.kalimatirate.nyure.com.np/api/";
+// Use API_BASE_URL from Vercel environment variables, then NEXT_PUBLIC_API_BASE_URL, then fallback
+var API_BASE_URL = process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.kalimatirate.nyure.com.np/api/";
 
 // Date conversion utilities for Nepali calendar
-const getCurrentNepaliDate = async () => {
+var getCurrentNepaliDate = async () => {
   try {
     // Today is May 9, 2025
     // For the real API, we would use this:
