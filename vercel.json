@@ -10,28 +10,21 @@
       }
     },
     {
-      "src": "dist/index.js",
+      "src": "api/**/*.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "headers": {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0"
-      },
-      "dest": "dist/index.js",
-      "continue": false
+      "dest": "/api"
     },
     {
       "handle": "filesystem"
     },
     {
-      "src": "/^((?!api|assets|_next|favicon.ico).)*$/",
-      "dest": "/index.html",
-      "status": 200
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 } 
