@@ -182,49 +182,69 @@ export const getMetals = async () => {
     // Now process metalData which should be an object
     if (metalData && typeof metalData === 'object' && !Array.isArray(metalData)) {
       console.log("Processing metalData object:", JSON.stringify(metalData, null, 2));
+      
+      // Try to extract gold and silver data with flexible property names
       const gold = metalData.gold || {};
       const silver = metalData.silver || {};
 
-      // Try various common field names for gold and silver prices
-      const fineGoldPrice = gold.fine_gold || gold.fineGold || gold.fine || gold.fg_price || gold.price_fine_gold || '0';
-      const tejabiGoldPrice = gold.tejabi_gold || gold.tejabiGold || gold.standard_gold || gold.standardGold || gold.tejabi || gold.sg_price || gold.price_tejabi_gold || '0';
-      const standardSilverPrice = silver.standard_silver || silver.standardSilver || silver.silver_price || silver.price_silver || silver.ss_price || '0';
+      // If gold and silver are not directly available as objects, try to extract from the root object
+      // This handles response formats like { fine_gold: "123", tejabi_gold: "120", silver_price: "150" }
+      const extractedGold = {
+        fine_gold: gold.fine_gold || gold.fineGold || gold.fine || gold.fg_price || gold.price_fine_gold || 
+                   metalData.fine_gold || metalData.fineGold || metalData.fine || metalData.fg_price || metalData.price_fine_gold || '0',
+        tejabi_gold: gold.tejabi_gold || gold.tejabiGold || gold.standard_gold || gold.standardGold || gold.tejabi || gold.sg_price || gold.price_tejabi_gold || 
+                     metalData.tejabi_gold || metalData.tejabiGold || metalData.standard_gold || metalData.standardGold || metalData.tejabi || metalData.sg_price || metalData.price_tejabi_gold || '0'
+      };
       
-      // Attempt to find a date for the prices
+      const extractedSilver = {
+        standard_silver: silver.standard_silver || silver.standardSilver || silver.silver_price || silver.price_silver || silver.ss_price || 
+                          metalData.standard_silver || metalData.standardSilver || metalData.silver_price || metalData.price_silver || metalData.ss_price || '0'
+      };
+      
+      console.log("Extracted gold data:", extractedGold);
+      console.log("Extracted silver data:", extractedSilver);
+      
+      // Try to find dates
       const priceDate = metalData.date || metalData.effective_date || metalData.last_updated || new Date().toISOString().split('T')[0];
-
+      
+      // Ensure prices are numbers and properly formatted
       const processedData = {
         gold: {
-          fineGold: parseFloat(fineGoldPrice).toFixed(2),
-          tejabiGold: parseFloat(tejabiGoldPrice).toFixed(2),
+          fineGold: parseFloat(extractedGold.fine_gold).toFixed(2),
+          tejabiGold: parseFloat(extractedGold.tejabi_gold).toFixed(2),
         },
         silver: {
-          standardSilver: parseFloat(standardSilverPrice).toFixed(2),
+          standardSilver: parseFloat(extractedSilver.standard_silver).toFixed(2),
         },
         date: priceDate,
         source: metalData.source || 'Nepal Rastra Bank / FENEGOSIDA' // Common sources
       };
-      console.log("Processed Metal Data:", processedData);
+      
+      console.log("Final processed Metal Data:", processedData);
       return processedData;
     }
 
     console.warn("Unexpected Metals API response format. MetalData:", metalData);
     // Fallback to a structure that won't break the UI, with zero prices
-    return {
+    const fallbackData = {
       gold: { fineGold: '0.00', tejabiGold: '0.00' },
       silver: { standardSilver: '0.00' },
       date: new Date().toISOString().split('T')[0],
-      source: 'Unknown'
+      source: 'Data Unavailable'
     };
+    console.log("Using fallback data:", fallbackData);
+    return fallbackData;
 
   } catch (error) {
     console.error("Error fetching or processing metal prices:", error);
-    return {
+    const errorFallbackData = {
       gold: { fineGold: '0.00', tejabiGold: '0.00' },
       silver: { standardSilver: '0.00' },
       date: new Date().toISOString().split('T')[0],
-      source: 'Error'
+      source: 'Error Loading Data'
     };
+    console.log("Using error fallback data:", errorFallbackData);
+    return errorFallbackData;
   }
 };
 

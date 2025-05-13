@@ -5,6 +5,7 @@ import FadeIn from '@/components/ui/FadeIn';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { FaInfoCircle, FaCoins } from 'react-icons/fa'; // Using FaCoins for gold/silver, FaInfoCircle from fa
+import { useEffect } from 'react';
 
 // Background particles (similar to other pages)
 const BackgroundParticles = () => {
@@ -50,6 +51,21 @@ interface MetalDisplayCardProps {
 const MetalDisplayCard: React.FC<MetalDisplayCardProps> = ({ 
   metalName, icon, prices, bgColorClass, borderColorClass, textColorClass, animationDelay = 0 
 }) => {
+  // Format price to ensure it displays properly
+  const formatPrice = (value: string | number): string => {
+    // If value is "0" or "0.00" or 0, return "N/A"
+    if (value === '0' || value === '0.00' || value === 0 || value === 0.00) {
+      return 'N/A';
+    }
+    // If value is already a string that's not a number, return it directly
+    if (typeof value === 'string' && isNaN(Number(value))) {
+      return value;
+    }
+    // Otherwise format the number
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    return numValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   return (
     <motion.div 
       className={`rounded-xl shadow-lg overflow-hidden border ${borderColorClass} ${bgColorClass}`}
@@ -67,8 +83,10 @@ const MetalDisplayCard: React.FC<MetalDisplayCardProps> = ({
           <div key={index} className="flex justify-between items-baseline">
             <span className="text-md text-gray-700 font-medium">{price.label}:</span>
             <span className={`text-lg md:text-xl font-semibold ${textColorClass}`}>
-              Rs. {price.value} 
-              <span className="text-xs text-gray-500 ml-1">{price.unit || '/ Tola'}</span>
+              {formatPrice(price.value) === 'N/A' 
+                ? <span className="text-gray-500">N/A</span>
+                : <>Rs. {formatPrice(price.value)}<span className="text-xs text-gray-500 ml-1">{price.unit || '/ Tola'}</span></>
+              }
             </span>
           </div>
         ))}
@@ -83,7 +101,34 @@ const Metals = () => {
     queryFn: getMetals,
     staleTime: 1800000, // 30 minutes
     refetchOnWindowFocus: true,
+    retry: 2, // Try up to 2 additional times if the request fails
   });
+
+  // Debug logging to see what data we're getting
+  useEffect(() => {
+    console.log('Metals data:', data);
+    console.log('Loading state:', isLoading);
+    console.log('Error state:', error);
+    
+    if (data) {
+      console.log('Gold data:', data.gold);
+      console.log('Silver data:', data.silver);
+      console.log('Date:', data.date);
+      console.log('Source:', data.source);
+    }
+  }, [data, isLoading, error]);
+
+  // Helper function to check if we have real data (non-zero values)
+  const hasRealData = () => {
+    if (!data) return false;
+    
+    const goldFine = parseFloat(data.gold?.fineGold || '0');
+    const goldTejabi = parseFloat(data.gold?.tejabiGold || '0');
+    const silver = parseFloat(data.silver?.standardSilver || '0');
+    
+    // Return true if at least one price is not zero
+    return goldFine > 0 || goldTejabi > 0 || silver > 0;
+  };
 
   const pricesDate = data?.date ? format(parseISO(data.date), 'MMMM dd, yyyy') : "Today";
   const pageTitle = `सुन चाँदीको मूल्य (${pricesDate}) - Gold/Silver Prices Nepal`;
@@ -137,7 +182,7 @@ const Metals = () => {
                   <p className="font-bold text-xl">मूल्यहरू लोड गर्न असमर्थ।</p>
                   <p>Could not load metal prices. Please try again later.</p>
                 </div>
-              ) : data ? (
+              ) : data && hasRealData() ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto mb-12 md:mb-16">
                   <MetalDisplayCard 
                     metalName="सुन (Gold)"
@@ -168,6 +213,7 @@ const Metals = () => {
                   <FaInfoCircle className="text-3xl mx-auto mb-3" />
                   <p className="font-bold text-xl">आजको लागि कुनै धातु मूल्य उपलब्ध छैन।</p>
                   <p>No metal prices available for today. Please check back later.</p>
+                  <p className="text-sm mt-2 text-blue-600">API response received, but no valid price data was found.</p>
                 </div>
               )}
 
