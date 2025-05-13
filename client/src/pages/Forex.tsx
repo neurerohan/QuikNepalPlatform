@@ -13,52 +13,34 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from '@/components/ui/pagination';
+import { format, parseISO } from 'date-fns'; // For formatting dates
 
-// Popular currency information
-const currencyInfo = [
-  { 
-    code: 'USD', 
-    name: 'US Dollar',
-    flag: '🇺🇸',
-    about: 'The US Dollar is the official currency of the United States and several other countries. It is the world\'s primary reserve currency.',
-    color: 'from-green-500 to-emerald-400'
-  },
-  { 
-    code: 'EUR', 
-    name: 'Euro',
-    flag: '🇪🇺',
-    about: 'The Euro is the official currency of 19 of the 27 member states of the European Union.',
-    color: 'from-blue-500 to-indigo-400'
-  },
-  { 
-    code: 'GBP', 
-    name: 'British Pound',
-    flag: '🇬🇧',
-    about: 'The British Pound is the official currency of the United Kingdom and is the oldest currency still in use.',
-    color: 'from-purple-500 to-pink-400'
-  },
-  { 
-    code: 'JPY', 
-    name: 'Japanese Yen',
-    flag: '🇯🇵',
-    about: 'The Japanese Yen is the official currency of Japan and is the third most traded currency in the foreign exchange market.',
-    color: 'from-red-500 to-rose-400'
-  },
-  { 
-    code: 'AUD', 
-    name: 'Australian Dollar',
-    flag: '🇦🇺',
-    about: 'The Australian Dollar is the currency of the Commonwealth of Australia and its territories.',
-    color: 'from-yellow-500 to-amber-400'
-  },
-  { 
-    code: 'INR', 
-    name: 'Indian Rupee',
-    flag: '🇮🇳',
-    about: 'The Indian Rupee is the official currency of India and is the currency most used by Nepalis for trade and travel.',
-    color: 'from-orange-500 to-amber-400'
-  }
-];
+// Popular currency information - adding more for flag mapping if needed
+const currencyDetails: {[key: string]: { name: string; flag: string; color?: string; about?: string }} = {
+  USD: { name: 'US Dollar', flag: '🇺🇸', color: 'from-green-500 to-emerald-400', about: 'The US Dollar is the official currency of the United States and several other countries. It is the world\'s primary reserve currency.'},
+  EUR: { name: 'Euro', flag: '🇪🇺', color: 'from-blue-500 to-indigo-400', about: 'The Euro is the official currency of 19 of the 27 member states of the European Union.'},
+  GBP: { name: 'British Pound', flag: '🇬🇧', color: 'from-purple-500 to-pink-400', about: 'The British Pound is the official currency of the United Kingdom and is the oldest currency still in use.'},
+  JPY: { name: 'Japanese Yen', flag: '🇯🇵', color: 'from-red-500 to-rose-400', about: 'The Japanese Yen is the official currency of Japan and is the third most traded currency in the foreign exchange market.'},
+  AUD: { name: 'Australian Dollar', flag: '🇦🇺', color: 'from-yellow-500 to-amber-400', about: 'The Australian Dollar is the currency of the Commonwealth of Australia and its territories.'},
+  INR: { name: 'Indian Rupee', flag: '🇮🇳', color: 'from-orange-500 to-amber-400', about: 'The Indian Rupee is the official currency of India and is the currency most used by Nepalis for trade and travel.'},
+  AED: { name: 'UAE Dirham', flag: '🇦🇪' },
+  BHD: { name: 'Bahraini Dinar', flag: '🇧🇭' },
+  CAD: { name: 'Canadian Dollar', flag: '🇨🇦' },
+  CHF: { name: 'Swiss Franc', flag: '🇨🇭' },
+  CNY: { name: 'Chinese Yuan Renminbi', flag: '🇨🇳' },
+  DKK: { name: 'Danish Krone', flag: '🇩🇰' },
+  HKD: { name: 'Hong Kong Dollar', flag: '🇭🇰' },
+  KRW: { name: 'South Korean Won', flag: '🇰🇷' },
+  KWD: { name: 'Kuwaiti Dinar', flag: '🇰🇼' },
+  MYR: { name: 'Malaysian Ringgit', flag: '🇲🇾' },
+  OMR: { name: 'Omani Rial', flag: '🇴🇲' },
+  QAR: { name: 'Qatari Riyal', flag: '🇶🇦' },
+  SAR: { name: 'Saudi Riyal', flag: '🇸🇦' },
+  SEK: { name: 'Swedish Krona', flag: '🇸🇪' },
+  SGD: { name: 'Singapore Dollar', flag: '🇸🇬' },
+  THB: { name: 'Thai Baht', flag: '🇹🇭' },
+  // Add more as needed from API response
+};
 
 // Background particles animation component 
 const BackgroundParticles = () => {
@@ -90,8 +72,11 @@ const BackgroundParticles = () => {
   );
 };
 
-// Currency Card component
-const CurrencyCard = ({ currency }: { currency: typeof currencyInfo[0] }) => {
+// Currency Card component for the "Major Currencies" section
+const CurrencyInfoCard = ({ currencyCode }: { currencyCode: string }) => {
+  const detail = currencyDetails[currencyCode];
+  if (!detail || !detail.about) return null; // Only render for currencies with full details for this section
+
   return (
     <motion.div
       className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100"
@@ -100,16 +85,16 @@ const CurrencyCard = ({ currency }: { currency: typeof currencyInfo[0] }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className={`h-2 bg-gradient-to-r ${currency.color}`} />
+      <div className={`h-2 bg-gradient-to-r ${detail.color || 'from-gray-400 to-gray-500'}`} />
       <div className="p-5">
         <div className="flex items-center mb-3">
-          <span className="text-2xl mr-3">{currency.flag}</span>
+          <span className="text-2xl mr-3">{detail.flag}</span>
           <div>
-            <h3 className="font-semibold">{currency.code}</h3>
-            <p className="text-sm text-gray-600">{currency.name}</p>
+            <h3 className="font-semibold">{currencyCode}</h3>
+            <p className="text-sm text-gray-600">{detail.name}</p>
           </div>
         </div>
-        <p className="text-sm text-gray-700">{currency.about}</p>
+        <p className="text-sm text-gray-700">{detail.about}</p>
       </div>
     </motion.div>
   );
@@ -117,14 +102,14 @@ const CurrencyCard = ({ currency }: { currency: typeof currencyInfo[0] }) => {
 
 const Forex = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(15); // Show more items per page
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['/api/forex', { page: currentPage, per_page: perPage }],
     queryFn: () => getForex({ page: currentPage, per_page: perPage }),
     enabled: true,
-    staleTime: 3600000,
-    refetchOnWindowFocus: false,
+    staleTime: 1800000, // 30 minutes for potentially faster updates
+    refetchOnWindowFocus: true, // Refetch when window gains focus
   });
 
   const handlePageChange = (page: number) => {
@@ -132,28 +117,53 @@ const Forex = () => {
   };
 
   const forexColumns = [
-    { header: 'Date', accessor: 'date' },
-    { header: 'Currency', accessor: 'currency' },
-    { header: 'Unit', accessor: 'unit' },
-    { header: 'Buying Rate', accessor: 'buyingRate', cell: (value: string | number) => `Rs. ${value}` },
-    { header: 'Selling Rate', accessor: 'sellingRate', cell: (value: string | number) => `Rs. ${value}` },
-    { header: 'Middle Rate', accessor: 'middleRate', cell: (value: string | number) => `Rs. ${value}` },
+    { 
+      header: 'Date', 
+      accessor: 'date', 
+      cell: (value: string) => {
+        try {
+          return format(parseISO(value), 'MMM dd, yyyy');
+        } catch {
+          return value; // Fallback if date is not ISO
+        }
+      }
+    },
+    {
+      header: 'Currency',
+      accessor: 'currency',
+      cell: (value: string) => {
+        const detail = currencyDetails[value.toUpperCase()];
+        return (
+          <div className="flex items-center">
+            {detail?.flag && <span className="mr-2 text-lg">{detail.flag}</span>}
+            <span>{value.toUpperCase()}</span>
+          </div>
+        );
+      },
+    },
+    { header: 'Unit', accessor: 'unit', cell: (value: number) => <div className="text-right pr-2">{value}</div> },
+    { header: 'Buying Rate', accessor: 'buyingRate', cell: (value: string | number) => <div className="text-right font-medium text-green-600">{`Rs. ${value}`}</div> },
+    { header: 'Selling Rate', accessor: 'sellingRate', cell: (value: string | number) => <div className="text-right font-medium text-red-600">{`Rs. ${value}`}</div> },
+    { header: 'Middle Rate', accessor: 'middleRate', cell: (value: string | number) => <div className="text-right text-gray-700">{`Rs. ${value}`}</div> },
   ];
+
+  const ratesDate = data?.rates && data.rates.length > 0 ? data.rates[0].date : null;
+  const formattedRatesDate = ratesDate ? format(parseISO(ratesDate), 'MMMM dd, yyyy') : "Today";
 
   return (
     <MainLayout
-      title="आजको विदेशी मुद्रा विनिमय दर - Today's Forex Rates in Nepal"
-      description="Check today's latest foreign exchange rates for Nepali Rupee (NPR) against major world currencies. Daily updated rates from Nepal Rastra Bank."
+      title={`आजको विदेशी मुद्रा विनिमय दर (${formattedRatesDate}) - Forex Rates Nepal`}
+      description={`Check ${formattedRatesDate}'s latest foreign exchange rates for Nepali Rupee (NPR) from Nepal Rastra Bank.`}
     >
       <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
         <BackgroundParticles />
         
-        <FadeIn>
+      <FadeIn>
           <section className="py-12 relative z-10">
-            <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <motion.h1 
-                  className="text-4xl font-bold text-primary mb-2"
+                  className="text-4xl md:text-5xl font-bold text-primary mb-3"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
@@ -161,50 +171,59 @@ const Forex = () => {
                   आजको विदेशी मुद्रा विनिमय दर
                 </motion.h1>
                 <motion.h2 
-                  className="text-2xl font-semibold text-gray-700 mb-2"
+                  className="text-2xl md:text-3xl font-semibold text-gray-700 mb-3"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Today's Foreign Exchange Rates
+                  Foreign Exchange Rates for {formattedRatesDate}
                 </motion.h2>
                 <motion.div
-                  className="text-neutral-600 mt-4 max-w-2xl mx-auto"
+                  className="text-neutral-600 mt-2 max-w-2xl mx-auto"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <p className="text-lg">
-                    Latest exchange rates for Nepali Rupee (NPR) from Nepal Rastra Bank.
+                  <p className="text-md">
+                    नेपाल राष्ट्र बैंकद्वारा प्रकाशित नेपाली रुपैयाँ (NPR) को नवीनतम विनिमय दरहरू।
+                    {data?.totalRates && ` ${data.totalRates} मुद्राहरू सूचीबद्ध छन्।`}
                   </p>
                 </motion.div>
               </div>
-
-              <div className="max-w-6xl mx-auto">
+              
+              <div className="max-w-7xl mx-auto">
                 <motion.div 
-                  className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-blue-100 mb-8 p-6"
+                  className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-blue-100 mb-10 p-4 md:p-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <h2 className="text-xl font-semibold text-primary mb-4">Today's Exchange Rates</h2>
-                  {isLoading ? (
-                    <div className="flex items-center justify-center h-64">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                      <p className="ml-4 text-gray-600">Loading latest rates...</p>
+                  <h3 className="text-xl md:text-2xl font-semibold text-primary mb-2 text-center md:text-left">
+                     विनिमय दरहरू {ratesDate ? `(${formattedRatesDate})` : '(Latest)'}
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-6 text-center md:text-left">
+                    {data?.totalRates ? `Displaying ${data.rates?.length || 0} of ${data.totalRates} exchange rates.` : 'Fetching latest rates...'}
+                  </p>
+                  {isLoading && !data ? (
+                    <div className="flex flex-col items-center justify-center h-80 bg-slate-50 rounded-lg">
+                      <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mb-4"></div>
+                      <p className="text-lg text-gray-600">पछिल्लो दरहरू लोड हुँदैछ...</p>
+                      <p className="text-sm text-gray-500">Loading latest rates...</p>
                     </div>
                   ) : error ? (
-                    <div className="bg-red-50 p-6 rounded-lg text-red-700 text-center">
-                      <p className="font-semibold">Failed to load Forex data.</p>
-                      <p className="text-sm">Please try again later or check your internet connection.</p>
+                    <div className="bg-red-50 p-6 rounded-lg text-red-700 text-center h-80 flex flex-col justify-center items-center">
+                      <span className="text-4xl mb-3">⚠️</span>
+                      <p className="font-semibold text-xl">Forex डाटा लोड गर्न असमर्थ।</p>
+                      <p className="text-md">Failed to load Forex data.</p>
+                      <p className="text-sm mt-2">कृपया पछि प्रयास गर्नुहोस् वा आफ्नो इन्टरनेट जडान जाँच गर्नुहोस्।</p>
                     </div>
                   ) : data && data.rates && data.rates.length > 0 ? (
-                    <div className="bg-blue-50/50 p-4 rounded-xl">
+                    <div className="overflow-x-auto bg-blue-50/30 p-2 sm:p-4 rounded-xl">
                       <DataTable
                         columns={forexColumns}
                         data={data.rates}
-                        isLoading={isLoading}
-                      />
+                        isLoading={isLoading} // For internal DataTable shimmer perhaps
+                        />
                       
                       {data.totalPages > 1 && (
                         <div className="mt-6 flex justify-center">
@@ -213,27 +232,27 @@ const Forex = () => {
                               <PaginationItem>
                                 <PaginationPrevious 
                                   onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                                  className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10'}
+                                  className={`${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10 hover:text-primary'} transition-colors`}
                                 />
                               </PaginationItem>
                               
                               {Array.from({ length: Math.min(data.totalPages, 5) }, (_, i) => {
                                 let pageNum = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
-                                if (data.totalPages - currentPage < 2 && currentPage > 3) {
+                                if (data.totalPages - currentPage < 2 && currentPage > 3 && data.totalPages > 5) {
                                    pageNum = data.totalPages - 4 + i;
                                 }
                                 if (pageNum > 0 && pageNum <= data.totalPages) {
-                                  return (
+                                return (
                                     <PaginationItem key={pageNum}>
                                       <PaginationLink 
                                         onClick={() => handlePageChange(pageNum)}
                                         isActive={currentPage === pageNum}
-                                        className={currentPage === pageNum ? 'bg-primary text-white' : 'hover:bg-primary/10'}
+                                        className={`${currentPage === pageNum ? 'bg-primary text-white hover:bg-primary/90' : 'hover:bg-primary/10 hover:text-primary'} transition-colors px-3 py-1.5 rounded-md`}
                                       >
                                         {pageNum}
                                       </PaginationLink>
                                     </PaginationItem>
-                                  );
+                                );
                                 }
                                 return null;
                               })}
@@ -241,7 +260,7 @@ const Forex = () => {
                               <PaginationItem>
                                 <PaginationNext 
                                   onClick={() => handlePageChange(Math.min(currentPage + 1, data.totalPages))}
-                                  className={currentPage === data.totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10'}
+                                  className={`${currentPage === data.totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10 hover:text-primary'} transition-colors`}
                                 />
                               </PaginationItem>
                             </PaginationContent>
@@ -250,15 +269,16 @@ const Forex = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="bg-yellow-50 p-6 rounded-lg text-yellow-700 text-center">
-                       <div className="text-5xl mb-4">⚠️</div>
-                      <p className="font-semibold">No Forex Data Available</p>
-                      <p className="text-sm">Today's foreign exchange rates are not available at the moment. Please check back later.</p>
+                    <div className="bg-yellow-50 p-6 rounded-lg text-yellow-700 text-center h-80 flex flex-col justify-center items-center">
+                       <span className="text-4xl mb-3">ℹ️</span>
+                      <p className="font-semibold text-xl">आजको लागि कुनै Forex डाटा उपलब्ध छैन।</p>
+                      <p className="text-md">No Forex Data Available for Today.</p>
+                      <p className="text-sm mt-2">नेपाल राष्ट्र बैंकले आजको दरहरू प्रकाशित नगरेको हुन सक्छ। कृपया पछि फेरि जाँच गर्नुहोस्।</p>
                     </div>
                   )}
                 </motion.div>
 
-                {/* Popular currencies section */}
+                {/* Popular currencies section - now uses CurrencyInfoCard */}
                 <motion.div 
                   className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md mb-8"
                   initial={{ opacity: 0, y: 20 }}
@@ -266,17 +286,17 @@ const Forex = () => {
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
                   <h3 className="text-xl font-semibold text-primary mb-4">प्रमुख विदेशी मुद्राहरू (Major Currencies)</h3>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    {currencyInfo.map((currency) => (
-                      <CurrencyCard 
-                        key={currency.code} 
-                        currency={currency} 
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'INR'].map((code) => (
+                      <CurrencyInfoCard 
+                        key={code} 
+                        currencyCode={code} 
                       />
                     ))}
                   </div>
                 </motion.div>
 
-                {/* About Forex section */}
+                {/* About Forex section (remains the same) */}
                 <motion.div 
                   className="max-w-4xl mx-auto mt-8 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md mb-8"
                   initial={{ opacity: 0, y: 20 }}
