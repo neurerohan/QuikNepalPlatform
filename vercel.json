@@ -6,11 +6,18 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist/public"
       }
+    },
+    {
+      "src": "dist/index.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/index.js" }
+    {
+      "src": "/(.*)",
+      "dest": "dist/index.js"
+    }
   ]
 } 
