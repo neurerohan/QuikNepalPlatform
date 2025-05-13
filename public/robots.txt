@@ -1,0 +1,15 @@
+# QuikNepal Platform Robots.txt
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /wp-admin/
+Disallow: /login
+Disallow: /api/
+
+# Crawl delay to prevent overloading server
+Crawl-delay: 10
+
+# Sitemap location
+Sitemap: https://quiknepal.com/sitemap.xml 
