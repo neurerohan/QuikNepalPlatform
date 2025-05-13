@@ -215,9 +215,14 @@ const Forex = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <h3 className="text-xl md:text-2xl font-semibold text-primary mb-2 text-center md:text-left">
-                    विनिमय दरहरू {ratesDate ? `(As of ${formattedApiRatesDate})` : '(Latest Available)'}
+                  <h3 className="text-xl md:text-2xl font-semibold text-primary mb-1 text-center md:text-left">
+                    विनिमय दरहरू ({currentFormattedNepaliDate})
                   </h3>
+                  {ratesDate && formattedApiRatesDate !== currentFormattedNepaliDate && (
+                    <p className="text-xs text-gray-500 mb-4 text-center md:text-left">
+                      (Exchange rates effective as of: {formattedApiRatesDate})
+                    </p>
+                  )}
                   <p className="text-sm text-gray-500 mb-6 text-center md:text-left">
                     {forexData?.totalRates ? `Displaying ${forexData.rates?.length || 0} of ${forexData.totalRates} exchange rates.` : isLoadingNepaliDate || isLoadingForex ? 'Fetching data...' : 'No rates data available.'}
                   </p>
