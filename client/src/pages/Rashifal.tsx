@@ -169,6 +169,20 @@ const Rashifal = () => {
     .map(name => mergedZodiacData.find(sign => sign.englishName === name))
     .filter((sign): sign is ZodiacSign => sign !== undefined);
 
+  // Function to generate dynamic tithi and nakshatra data
+  const generateDynamicTithi = () => {
+    // Lunar phases
+    // ... existing code ...
+
+    // Generate a consistent tithi and nakshatra based on the current date
+    const today = new Date();
+    const startOfYear = new Date(today.getFullYear(), 0, 0);
+    const diff = Number(today) - Number(startOfYear);
+    const dayOfYear = Math.floor(diff / 86400000);
+    
+    // ... rest of the function
+  };
+
   return (
     <MainLayout
       title="आजको राशिफल - Today's Horoscope"
@@ -321,20 +335,22 @@ const Rashifal = () => {
                             transition={{ duration: 0.4, delay: 0.2 }}
                           >
                             <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">Lucky Day</div>
+                              <div className="text-sm font-medium text-gray-700">शुभ दिन (Lucky Day)</div>
                               <div className="text-xl font-semibold text-indigo-700">{selectedSignData?.lucky_day}</div>
                             </div>
                             <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">Lucky Number</div>
+                              <div className="text-sm font-medium text-gray-700">शुभ अंक (Lucky Number)</div>
                               <div className="text-xl font-semibold text-indigo-700">{selectedSignData?.lucky_number}</div>
                             </div>
                             <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">Lucky Color</div>
+                              <div className="text-sm font-medium text-gray-700">शुभ रंग (Lucky Color)</div>
                               <div className="text-xl font-semibold text-indigo-700">{selectedSignData?.lucky_color}</div>
                             </div>
                             <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">Ruling Planet</div>
-                              <div className="text-xl font-semibold text-indigo-700">{selectedSignData?.ruling_planet}</div>
+                              <div className="text-sm font-medium text-gray-700">ग्रह (Planet)</div>
+                              <div className="text-xl font-semibold text-indigo-700">
+                                {selectedSignData && nepaliAstrologyDetails.planetary_rulers[selectedSignData.name]?.name}
+                              </div>
                             </div>
                           </motion.div>
                           
