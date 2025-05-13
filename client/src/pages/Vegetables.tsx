@@ -148,8 +148,19 @@ const Vegetables = () => {
     return matchesSearch && trend === filterByTrend;
   }) || [];
 
+  // Remove duplicates by creating a map with unique keys based on name
+  const uniqueVegetablesMap = new Map();
+  filteredData.forEach((item: VegetableData) => {
+    if (!uniqueVegetablesMap.has(item.name.toLowerCase())) {
+      uniqueVegetablesMap.set(item.name.toLowerCase(), item);
+    }
+  });
+
+  // Get the unique vegetables array back from the map
+  const uniqueVegetables = Array.from(uniqueVegetablesMap.values());
+
   // Sort the filtered data
-  const sortedData = [...filteredData].sort((a: VegetableData, b: VegetableData) => {
+  const sortedData = [...uniqueVegetables].sort((a: VegetableData, b: VegetableData) => {
     let valA, valB;
     
     if (sortBy === 'name') {
@@ -463,71 +474,354 @@ const Vegetables = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
-                <h3 className="text-2xl font-bold text-green-700 mb-6 text-center">तरकारीको पोषक महत्व</h3>
-                <h4 className="text-xl text-gray-800 mb-4 text-center">Nutritional Benefits of Vegetables</h4>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                  <div className="space-y-4">
-                    <div className="border-l-4 border-green-500 pl-4">
-                      <h5 className="font-bold text-green-800">हरियो पत्तेदार तरकारीहरू</h5>
-                      <h6 className="text-gray-700 italic mb-1">Leafy Greens</h6>
-                      <p className="text-gray-600 text-sm">
-                        पालुङ्गो, रायो, मेथी, र धनियाँ जस्ता हरियो पत्तेदार तरकारीहरूमा भिटामिन K, A, C, फोलेट, आइरन, क्याल्सियम र फाइबर प्रचुर मात्रामा पाइन्छन्। यी तरकारीहरू रगत बनाउन, हड्डी मजबुत बनाउन, र प्रतिरक्षा प्रणाली बलियो बनाउन सहायक हुन्छन्।
-                      </p>
-                      <p className="text-gray-600 text-sm">
-                        Spinach, mustard greens, fenugreek leaves, and coriander are rich in vitamins K, A, C, folate, iron, calcium, and fiber. These vegetables help in blood formation, bone strengthening, and boosting the immune system.
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-orange-500 pl-4">
-                      <h5 className="font-bold text-orange-700">जरे तरकारीहरू</h5>
-                      <h6 className="text-gray-700 italic mb-1">Root Vegetables</h6>
-                      <p className="text-gray-600 text-sm">
-                        गाजर, मूला, शकरखण्ड, र सुठुनीमा एन्टिअक्सिडेन्ट्स, भिटामिन A, C, पोटासियम, र फाइबर पाइन्छन्। यी तरकारीहरू आँखाको स्वास्थ्यका लागि फाइदाजनक हुन्छन्, पाचन प्रणालीलाई सहयोग गर्छन्, र रक्तचापलाई नियन्त्रित गर्न मद्दत गर्छन्।
-                      </p>
-                      <p className="text-gray-600 text-sm">
-                        Carrots, radishes, sweet potatoes, and beetroot contain antioxidants, vitamins A, C, potassium, and fiber. These vegetables are beneficial for eye health, support the digestive system, and help control blood pressure.
-                      </p>
-                    </div>
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl md:text-3xl font-bold text-green-700 mb-3">तरकारीको पोषक महत्व</h3>
+                  <h4 className="text-xl text-gray-800">Nutritional Benefits of Vegetables</h4>
+                  <div className="mt-3 flex justify-center space-x-2">
+                    <span className="inline-block h-1 w-10 rounded bg-green-500"></span>
+                    <span className="inline-block h-1 w-16 rounded bg-green-400"></span>
+                    <span className="inline-block h-1 w-10 rounded bg-green-500"></span>
                   </div>
+                </div>
+                
+                {/* Feature Cards - Vegetable Categories */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                  {/* Leafy Greens Card */}
+                  <motion.div 
+                    className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl shadow-md overflow-hidden border border-green-200"
+                    whileHover={{ y: -5, boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)" }}
+                  >
+                    <div className="p-4 border-b border-green-200 flex justify-between items-center">
+                      <div>
+                        <h5 className="text-xl font-bold text-green-800">हरियो पत्तेदार तरकारीहरू</h5>
+                        <h6 className="text-gray-700 italic">Leafy Greens</h6>
+                      </div>
+                      <svg className="w-14 h-14 text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="currentColor" fillOpacity="0.2"/>
+                        <path d="M7 8.5C7 8.5 9.5 7 12 9.5C14.5 12 13.5 15.5 13.5 15.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M16 15C16 15 14 13.5 12 15.5C10 17.5 9 17.5 9 17.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M12 22V19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M4.5 14C4.5 14 6.5 15.5 9 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex mb-3">
+                        <div className="py-1 px-2 bg-green-200 text-green-800 rounded text-xs mr-2">पालुङ्गो</div>
+                        <div className="py-1 px-2 bg-green-200 text-green-800 rounded text-xs mr-2">रायो</div>
+                        <div className="py-1 px-2 bg-green-200 text-green-800 rounded text-xs mr-2">मेथी</div>
+                        <div className="py-1 px-2 bg-green-200 text-green-800 rounded text-xs">धनियाँ</div>
+                      </div>
+                      <p className="text-gray-700 text-sm">
+                        पालुङ्गो, रायो, मेथी, र धनियाँ जस्ता हरियो पत्तेदार तरकारीहरूमा भिटामिन K, A, C, फोलेट, आइरन, क्याल्सियम र फाइबर प्रचुर मात्रामा पाइन्छन्।
+                      </p>
+                      <p className="text-gray-700 text-sm mt-2">
+                        Spinach, mustard greens, fenugreek leaves, and coriander are rich in vitamins K, A, C, folate, iron, calcium, and fiber.
+                      </p>
+                      
+                      <div className="mt-4 border-t border-green-200 pt-3">
+                        <h6 className="font-medium text-green-800 mb-2">Key Benefits:</h6>
+                        <ul className="space-y-1">
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Blood formation and improved circulation
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Strong bone development
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Enhanced immune system
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </motion.div>
                   
-                  <div className="space-y-4">
-                    <div className="border-l-4 border-purple-500 pl-4">
-                      <h5 className="font-bold text-purple-800">क्रूसिफेरस तरकारीहरू</h5>
-                      <h6 className="text-gray-700 italic mb-1">Cruciferous Vegetables</h6>
-                      <p className="text-gray-600 text-sm">
-                        काउली, बन्दा, ब्रोकोली, र गाँठकोबीमा भिटामिन C, K, फोलेट, र फाइटोन्युट्रिएन्ट्स प्रचुर मात्रामा पाइन्छन्। यी तरकारीहरूले क्यान्सरको जोखिम कम गर्न, सूजन कम गर्न, र हृदय स्वास्थ्यमा सुधार गर्न मद्दत गर्छन्।
+                  {/* Root Vegetables Card */}
+                  <motion.div 
+                    className="bg-gradient-to-br from-orange-50 to-amber-100 rounded-xl shadow-md overflow-hidden border border-orange-200"
+                    whileHover={{ y: -5, boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)" }}
+                  >
+                    <div className="p-4 border-b border-orange-200 flex justify-between items-center">
+                      <div>
+                        <h5 className="text-xl font-bold text-orange-800">जरे तरकारीहरू</h5>
+                        <h6 className="text-gray-700 italic">Root Vegetables</h6>
+                      </div>
+                      <svg className="w-14 h-14 text-orange-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="currentColor" fillOpacity="0.2"/>
+                        <path d="M12 7V2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M12 7C9 7 7 9 7 12C7 15 9 17 12 17C15 17 17 15 17 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M12 17V22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex mb-3">
+                        <div className="py-1 px-2 bg-orange-200 text-orange-800 rounded text-xs mr-2">गाजर</div>
+                        <div className="py-1 px-2 bg-orange-200 text-orange-800 rounded text-xs mr-2">मूला</div>
+                        <div className="py-1 px-2 bg-orange-200 text-orange-800 rounded text-xs mr-2">शकरखण्ड</div>
+                        <div className="py-1 px-2 bg-orange-200 text-orange-800 rounded text-xs">सुठुनी</div>
+                      </div>
+                      <p className="text-gray-700 text-sm">
+                        गाजर, मूला, शकरखण्ड, र सुठुनीमा एन्टिअक्सिडेन्ट्स, भिटामिन A, C, पोटासियम, र फाइबर पाइन्छन्।
                       </p>
-                      <p className="text-gray-600 text-sm">
-                        Cauliflower, cabbage, broccoli, and Brussels sprouts are rich in vitamins C, K, folate, and phytonutrients. These vegetables help reduce cancer risk, decrease inflammation, and improve heart health.
+                      <p className="text-gray-700 text-sm mt-2">
+                        Carrots, radishes, sweet potatoes, and beetroot contain antioxidants, vitamins A, C, potassium, and fiber.
                       </p>
+                      
+                      <div className="mt-4 border-t border-orange-200 pt-3">
+                        <h6 className="font-medium text-orange-800 mb-2">Key Benefits:</h6>
+                        <ul className="space-y-1">
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Improved eye health and vision
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Digestive system support
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Blood pressure regulation
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </motion.div>
+                
+                  {/* Cruciferous Vegetables Card */}
+                  <motion.div 
+                    className="bg-gradient-to-br from-purple-50 to-indigo-100 rounded-xl shadow-md overflow-hidden border border-purple-200"
+                    whileHover={{ y: -5, boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)" }}
+                  >
+                    <div className="p-4 border-b border-purple-200 flex justify-between items-center">
+                      <div>
+                        <h5 className="text-xl font-bold text-purple-800">क्रूसिफेरस तरकारीहरू</h5>
+                        <h6 className="text-gray-700 italic">Cruciferous Vegetables</h6>
+                      </div>
+                      <svg className="w-14 h-14 text-purple-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="currentColor" fillOpacity="0.2"/>
+                        <path d="M12 6C8 6 7 9 7 12C7 15 9 18 12 18C15 18 17 15 17 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M12 6V2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M7 12H4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex mb-3">
+                        <div className="py-1 px-2 bg-purple-200 text-purple-800 rounded text-xs mr-2">काउली</div>
+                        <div className="py-1 px-2 bg-purple-200 text-purple-800 rounded text-xs mr-2">बन्दा</div>
+                        <div className="py-1 px-2 bg-purple-200 text-purple-800 rounded text-xs mr-2">ब्रोकोली</div>
+                        <div className="py-1 px-2 bg-purple-200 text-purple-800 rounded text-xs">गाँठकोभी</div>
+                      </div>
+                      <p className="text-gray-700 text-sm">
+                        काउली, बन्दा, ब्रोकोली, र गाँठकोबीमा भिटामिन C, K, फोलेट, र फाइटोन्युट्रिएन्ट्स प्रचुर मात्रामा पाइन्छन्।
+                      </p>
+                      <p className="text-gray-700 text-sm mt-2">
+                        Cauliflower, cabbage, broccoli, and Brussels sprouts are rich in vitamins C, K, folate, and phytonutrients.
+                      </p>
+                      
+                      <div className="mt-4 border-t border-purple-200 pt-3">
+                        <h6 className="font-medium text-purple-800 mb-2">Key Benefits:</h6>
+                        <ul className="space-y-1">
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Reduced cancer risk
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Decreased inflammation
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Improved heart health
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </motion.div>
+                
+                  {/* Nightshade Vegetables Card */}
+                  <motion.div 
+                    className="bg-gradient-to-br from-red-50 to-rose-100 rounded-xl shadow-md overflow-hidden border border-red-200"
+                    whileHover={{ y: -5, boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)" }}
+                  >
+                    <div className="p-4 border-b border-red-200 flex justify-between items-center">
+                      <div>
+                        <h5 className="text-xl font-bold text-red-800">नाइट्रेटसेड तरकारीहरू</h5>
+                        <h6 className="text-gray-700 italic">Nightshade Vegetables</h6>
+                      </div>
+                      <svg className="w-14 h-14 text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="currentColor" fillOpacity="0.2"/>
+                        <path d="M12 2C14.6522 2 17.1957 3.05357 19.0711 4.92893C20.9464 6.8043 22 9.34784 22 12C22 14.6522 20.9464 17.1957 19.0711 19.0711C17.1957 20.9464 14.6522 22 12 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M7.5 4C8.5 7 10 8.5 13 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M11 13C12.5 15 15 16.5 18 17.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex mb-3">
+                        <div className="py-1 px-2 bg-red-200 text-red-800 rounded text-xs mr-2">गोलभेंडा</div>
+                        <div className="py-1 px-2 bg-red-200 text-red-800 rounded text-xs mr-2">भण्टा</div>
+                        <div className="py-1 px-2 bg-red-200 text-red-800 rounded text-xs mr-2">खुर्सानी</div>
+                        <div className="py-1 px-2 bg-red-200 text-red-800 rounded text-xs">आलु</div>
+                      </div>
+                      <p className="text-gray-700 text-sm">
+                        गोलभेंडा, भण्टा, र खुर्सानीमा लाइकोपिन, एन्थोसायनिन, र विभिन्न एन्टिअक्सिडेन्ट्स पाइन्छन्।
+                      </p>
+                      <p className="text-gray-700 text-sm mt-2">
+                        Tomatoes, eggplants, and peppers contain lycopene, anthocyanins, and various antioxidants.
+                      </p>
+                      
+                      <div className="mt-4 border-t border-red-200 pt-3">
+                        <h6 className="font-medium text-red-800 mb-2">Key Benefits:</h6>
+                        <ul className="space-y-1">
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Heart health support
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Reduced cancer risk
+                          </li>
+                          <li className="flex items-center text-sm text-gray-700">
+                            <svg className="w-4 h-4 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Strengthened immune system
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+                
+                {/* Nutritional Overview Section */}
+                <div className="bg-gradient-to-r from-green-100 to-emerald-50 rounded-xl p-6 shadow-md mb-8">
+                  <h4 className="text-xl font-bold text-green-800 mb-4 flex items-center">
+                    <svg className="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    तरकारीहरूमा पाइने मुख्य पोषक तत्वहरू
+                  </h4>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white rounded-lg p-3 shadow-sm flex flex-col items-center">
+                      <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-2">
+                        <span className="text-lg font-bold text-red-600">A</span>
+                      </div>
+                      <h6 className="font-medium">भिटामिन A</h6>
+                      <p className="text-xs text-gray-600 text-center mt-1">आँखा र छालाको स्वास्थ्यका लागि</p>
                     </div>
                     
-                    <div className="border-l-4 border-red-500 pl-4">
-                      <h5 className="font-bold text-red-800">नाइट्रेटसेड तरकारीहरू</h5>
-                      <h6 className="text-gray-700 italic mb-1">Nightshade Vegetables</h6>
-                      <p className="text-gray-600 text-sm">
-                        गोलभेंडा, भण्टा, र खुर्सानीमा लाइकोपिन, एन्थोसायनिन, र विभिन्न एन्टिअक्सिडेन्ट्स पाइन्छन्। यी तरकारीहरूले हृदय स्वास्थ्यलाई समर्थन गर्छन्, क्यान्सरको जोखिम कम गर्छन्, र प्रतिरक्षा प्रणालीलाई बलियो बनाउँछन्।
-                      </p>
-                      <p className="text-gray-600 text-sm">
-                        Tomatoes, eggplants, and peppers contain lycopene, anthocyanins, and various antioxidants. These vegetables support heart health, reduce cancer risk, and strengthen the immune system.
-                      </p>
+                    <div className="bg-white rounded-lg p-3 shadow-sm flex flex-col items-center">
+                      <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mb-2">
+                        <span className="text-lg font-bold text-orange-600">C</span>
+                      </div>
+                      <h6 className="font-medium">भिटामिन C</h6>
+                      <p className="text-xs text-gray-600 text-center mt-1">प्रतिरक्षा प्रणालीका लागि</p>
+                    </div>
+                    
+                    <div className="bg-white rounded-lg p-3 shadow-sm flex flex-col items-center">
+                      <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                        <span className="text-lg font-bold text-green-600">K</span>
+                      </div>
+                      <h6 className="font-medium">भिटामिन K</h6>
+                      <p className="text-xs text-gray-600 text-center mt-1">रगत जम्ने प्रक्रियाका लागि</p>
+                    </div>
+                    
+                    <div className="bg-white rounded-lg p-3 shadow-sm flex flex-col items-center">
+                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                        <span className="text-lg font-bold text-blue-600">Fe</span>
+                      </div>
+                      <h6 className="font-medium">आइरन</h6>
+                      <p className="text-xs text-gray-600 text-center mt-1">रगत निर्माणका लागि</p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="mt-8 bg-green-50 p-4 rounded-lg">
-                  <h5 className="font-bold text-green-800 mb-2 text-center">स्वस्थ भोजनको लागि सुझावहरू</h5>
-                  <h6 className="text-gray-700 italic mb-2 text-center">Tips for Healthy Eating</h6>
-                  <ul className="list-disc pl-6 space-y-1 text-gray-600">
-                    <li>दैनिक कम्तिमा पाँच प्रकारका फरक रंगका तरकारीहरू समावेश गर्नुहोस्।</li>
-                    <li>तरकारीहरूलाई धेरै नपकाउनुहोस् जसले पोषक तत्वहरू नष्ट गर्दछ।</li>
-                    <li>ताजा, मौसमी, र स्थानीय तरकारीहरू छनोट गर्नुहोस्।</li>
-                    <li>विविध प्रकारका तरकारीहरू प्रयोग गर्नुहोस् - हरियो पत्तेदार, जरे, फलदार, र क्रूसिफेरस।</li>
-                  </ul>
-                  <p className="mt-3 text-gray-600 text-sm text-center">
-                    Include at least five different colored vegetables daily. Avoid overcooking vegetables which destroys nutrients. Choose fresh, seasonal, and local produce. Use a variety of vegetables - leafy greens, root vegetables, fruiting vegetables, and cruciferous vegetables.
-                  </p>
+                {/* Healthy Eating Tips Section */}
+                <div className="bg-white rounded-xl p-6 shadow-md border border-green-100">
+                  <h4 className="text-xl font-bold text-green-800 mb-4 text-center">स्वस्थ भोजनको लागि सुझावहरू</h4>
+                  <h5 className="text-md text-gray-700 italic mb-4 text-center">Tips for Healthy Eating</h5>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-green-50 rounded-lg p-4 flex">
+                      <div className="mr-3 flex-shrink-0">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">दैनिक कम्तिमा पाँच प्रकारका फरक रंगका तरकारीहरू समावेश गर्नुहोस्।</p>
+                        <p className="text-xs text-gray-600 mt-1">Include at least five different colored vegetables daily.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-green-50 rounded-lg p-4 flex">
+                      <div className="mr-3 flex-shrink-0">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">तरकारीहरूलाई धेरै नपकाउनुहोस् जसले पोषक तत्वहरू नष्ट गर्दछ।</p>
+                        <p className="text-xs text-gray-600 mt-1">Avoid overcooking vegetables which destroys nutrients.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-green-50 rounded-lg p-4 flex">
+                      <div className="mr-3 flex-shrink-0">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">ताजा, मौसमी, र स्थानीय तरकारीहरू छनोट गर्नुहोस्।</p>
+                        <p className="text-xs text-gray-600 mt-1">Choose fresh, seasonal, and local produce.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-green-50 rounded-lg p-4 flex">
+                      <div className="mr-3 flex-shrink-0">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">विविध प्रकारका तरकारीहरू प्रयोग गर्नुहोस्।</p>
+                        <p className="text-xs text-gray-600 mt-1">Use a variety of vegetables - leafy greens, root vegetables, fruiting vegetables, and cruciferous vegetables.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </div>
