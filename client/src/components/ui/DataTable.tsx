@@ -1,9 +1,11 @@
 import { ReactNode } from 'react';
+import { FaSortUp, FaSortDown, FaSort } from 'react-icons/fa';
 
 interface Column {
   header: string;
   accessor: string;
   cell?: (value: any, row: any) => ReactNode;
+  onClick?: () => void;
 }
 
 interface DataTableProps {
@@ -12,9 +14,31 @@ interface DataTableProps {
   isLoading?: boolean;
   title?: string;
   subtitle?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
-const DataTable = ({ columns, data, isLoading = false, title, subtitle }: DataTableProps) => {
+const DataTable = ({ 
+  columns, 
+  data, 
+  isLoading = false, 
+  title, 
+  subtitle,
+  sortBy,
+  sortDirection
+}: DataTableProps) => {
+  
+  // Function to render sort indicators
+  const renderSortIndicator = (columnAccessor: string) => {
+    if (!sortBy || columnAccessor !== sortBy) {
+      return <FaSort className="ml-1 text-gray-400 inline" />;
+    }
+    
+    return sortDirection === 'asc' 
+      ? <FaSortUp className="ml-1 text-primary inline" />
+      : <FaSortDown className="ml-1 text-primary inline" />;
+  };
+  
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
       {(title || subtitle) && (
@@ -29,8 +53,15 @@ const DataTable = ({ columns, data, isLoading = false, title, subtitle }: DataTa
           <thead className="bg-gray-50">
             <tr>
               {columns.map((column, index) => (
-                <th key={index} className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {column.header}
+                <th 
+                  key={index} 
+                  className={`py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${column.onClick ? 'cursor-pointer hover:bg-gray-100' : ''}`}
+                  onClick={column.onClick}
+                >
+                  <div className="flex items-center">
+                    {column.header}
+                    {column.onClick && renderSortIndicator(column.accessor)}
+                  </div>
                 </th>
               ))}
             </tr>
