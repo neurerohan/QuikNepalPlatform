@@ -4,7 +4,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import FadeIn from '@/components/ui/FadeIn';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
-import { FaGold, FaSilver, FaInfoCircle } from 'react-icons/fa'; // Using react-icons for better icons
+import { FaInfoCircle, FaCoins } from 'react-icons/fa'; // Using FaCoins for gold/silver, FaInfoCircle from fa
 
 // Background particles (similar to other pages)
 const BackgroundParticles = () => {
@@ -141,7 +141,7 @@ const Metals = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto mb-12 md:mb-16">
                   <MetalDisplayCard 
                     metalName="सुन (Gold)"
-                    icon={<FaGold />}
+                    icon={<FaCoins />}
                     prices= {[
                       { label: 'फाइन गोल्ड (Fine Gold)', value: data.gold.fineGold || 'N/A' },
                       { label: 'तेजाबी गोल्ड (Tejabi Gold)', value: data.gold.tejabiGold || 'N/A' },
@@ -153,7 +153,7 @@ const Metals = () => {
                   />
                   <MetalDisplayCard 
                     metalName="चाँदी (Silver)"
-                    icon={<FaSilver />}
+                    icon={<FaCoins />}
                     prices={[
                       { label: 'स्ट्यान्डर्ड चाँदी (Standard Silver)', value: data.silver.standardSilver || 'N/A' }
                     ]}
