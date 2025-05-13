@@ -357,7 +357,7 @@ const Forex = () => {
                   </div>
                 </motion.div>
               </div>
-            </div> </div>
+            </div> 
           </section>
         </FadeIn>
       </div>
