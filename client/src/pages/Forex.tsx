@@ -1,12 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getForex } from '@/lib/api';
 import MainLayout from '@/components/layout/MainLayout';
 import DataTable from '@/components/ui/DataTable';
 import FadeIn from '@/components/ui/FadeIn';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
 import { 
   Pagination, 
@@ -119,51 +116,34 @@ const CurrencyCard = ({ currency }: { currency: typeof currencyInfo[0] }) => {
 };
 
 const Forex = () => {
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['/api/forex', { from: fromDate, to: toDate, page: currentPage, per_page: perPage }],
-    queryFn: () => getForex({ from: fromDate, to: toDate, page: currentPage, per_page: perPage }),
-    enabled: false, // Don't fetch on component mount
-    staleTime: 3600000 // 1 hour
+    queryKey: ['/api/forex', { page: currentPage, per_page: perPage }],
+    queryFn: () => getForex({ page: currentPage, per_page: perPage }),
+    enabled: true,
+    staleTime: 3600000,
+    refetchOnWindowFocus: false,
   });
-
-  const handleSearch = () => {
-    setCurrentPage(1);
-    refetch();
-  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    refetch();
-  };
-
-  // Auto-generate today and a week ago dates for user convenience
-  const setDefaultDates = () => {
-    const today = new Date();
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(today.getDate() - 7);
-    
-    setToDate(today.toISOString().split('T')[0]);
-    setFromDate(oneWeekAgo.toISOString().split('T')[0]);
   };
 
   const forexColumns = [
     { header: 'Date', accessor: 'date' },
     { header: 'Currency', accessor: 'currency' },
     { header: 'Unit', accessor: 'unit' },
-    { header: 'Buying Rate', accessor: 'buyingRate', cell: (value: number) => `Rs. ${value}` },
-    { header: 'Selling Rate', accessor: 'sellingRate', cell: (value: number) => `Rs. ${value}` },
-    { header: 'Middle Rate', accessor: 'middleRate', cell: (value: number) => `Rs. ${value}` },
+    { header: 'Buying Rate', accessor: 'buyingRate', cell: (value: string | number) => `Rs. ${value}` },
+    { header: 'Selling Rate', accessor: 'sellingRate', cell: (value: string | number) => `Rs. ${value}` },
+    { header: 'Middle Rate', accessor: 'middleRate', cell: (value: string | number) => `Rs. ${value}` },
   ];
 
   return (
     <MainLayout
-      title="Forex Rates - Foreign Exchange Rates in Nepal"
-      description="Track current and historical foreign exchange rates for Nepali Rupee (NPR) against major world currencies. Daily updated rates from Nepal Rastra Bank."
+      title="आजको विदेशी मुद्रा विनिमय दर - Today's Forex Rates in Nepal"
+      description="Check today's latest foreign exchange rates for Nepali Rupee (NPR) against major world currencies. Daily updated rates from Nepal Rastra Bank."
     >
       <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
         <BackgroundParticles />
@@ -171,14 +151,14 @@ const Forex = () => {
         <FadeIn>
           <section className="py-12 relative z-10">
             <div className="container mx-auto px-4">
-              <div className="text-center mb-8">
+              <div className="text-center mb-12">
                 <motion.h1 
                   className="text-4xl font-bold text-primary mb-2"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  विदेशी मुद्रा विनिमय दर
+                  आजको विदेशी मुद्रा विनिमय दर
                 </motion.h1>
                 <motion.h2 
                   className="text-2xl font-semibold text-gray-700 mb-2"
@@ -186,7 +166,7 @@ const Forex = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Foreign Exchange Rates
+                  Today's Foreign Exchange Rates
                 </motion.h2>
                 <motion.div
                   className="text-neutral-600 mt-4 max-w-2xl mx-auto"
@@ -195,128 +175,87 @@ const Forex = () => {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <p className="text-lg">
-                    Current and historical exchange rates for Nepali Rupee (NPR)
-                  </p>
-                  <p className="text-sm mt-2 text-gray-600">
-                    Data source: Nepal Rastra Bank
+                    Latest exchange rates for Nepali Rupee (NPR) from Nepal Rastra Bank.
                   </p>
                 </motion.div>
               </div>
 
               <div className="max-w-6xl mx-auto">
                 <motion.div 
-                  className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-blue-100 mb-8"
+                  className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-blue-100 mb-8 p-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white">
-                    <h2 className="text-xl font-semibold">Search Foreign Exchange Rates</h2>
-                    <p className="text-white/80 text-sm">Filter by date range to find historical rates</p>
-                  </div>
-                  
-                  <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                      <div>
-                        <Label htmlFor="from-date" className="mb-1 block">From Date</Label>
-                        <Input 
-                          id="from-date" 
-                          type="date" 
-                          value={fromDate} 
-                          onChange={(e) => setFromDate(e.target.value)}
-                          className="border-blue-200 focus:border-primary"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="to-date" className="mb-1 block">To Date</Label>
-                        <Input 
-                          id="to-date" 
-                          type="date" 
-                          value={toDate} 
-                          onChange={(e) => setToDate(e.target.value)}
-                          className="border-blue-200 focus:border-primary"
-                        />
-                      </div>
-                      <div className="flex items-end gap-2">
-                        <Button 
-                          onClick={handleSearch} 
-                          className="bg-primary hover:bg-primary-dark"
-                          disabled={isLoading}
-                        >
-                          {isLoading ? 'Searching...' : 'Search'}
-                        </Button>
-                        <Button
-                          onClick={setDefaultDates}
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/5"
-                        >
-                          Last 7 Days
-                        </Button>
-                      </div>
+                  <h2 className="text-xl font-semibold text-primary mb-4">Today's Exchange Rates</h2>
+                  {isLoading ? (
+                    <div className="flex items-center justify-center h-64">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                      <p className="ml-4 text-gray-600">Loading latest rates...</p>
                     </div>
-
-                    {data ? (
-                      <div className="bg-blue-50/50 p-4 rounded-xl">
-                        <DataTable
-                          columns={forexColumns}
-                          data={data.rates || []}
-                          isLoading={isLoading}
-                        />
-                        
-                        {data.totalPages > 1 && (
-                          <div className="mt-4 flex justify-center">
-                            <Pagination>
-                              <PaginationContent>
-                                <PaginationItem>
-                                  <PaginationPrevious 
-                                    onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                                    className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                                  />
-                                </PaginationItem>
-                                
-                                {Array.from({ length: Math.min(data.totalPages, 5) }, (_, i) => {
-                                  // Show pages around current page
-                                  let pageNum = currentPage - 2 + i;
-                                  if (pageNum < 1) pageNum += 5;
-                                  if (pageNum > data.totalPages) pageNum -= 5;
-                                  
+                  ) : error ? (
+                    <div className="bg-red-50 p-6 rounded-lg text-red-700 text-center">
+                      <p className="font-semibold">Failed to load Forex data.</p>
+                      <p className="text-sm">Please try again later or check your internet connection.</p>
+                    </div>
+                  ) : data && data.rates && data.rates.length > 0 ? (
+                    <div className="bg-blue-50/50 p-4 rounded-xl">
+                      <DataTable
+                        columns={forexColumns}
+                        data={data.rates}
+                        isLoading={isLoading}
+                      />
+                      
+                      {data.totalPages > 1 && (
+                        <div className="mt-6 flex justify-center">
+                          <Pagination>
+                            <PaginationContent>
+                              <PaginationItem>
+                                <PaginationPrevious 
+                                  onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                                  className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10'}
+                                />
+                              </PaginationItem>
+                              
+                              {Array.from({ length: Math.min(data.totalPages, 5) }, (_, i) => {
+                                let pageNum = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                                if (data.totalPages - currentPage < 2 && currentPage > 3) {
+                                   pageNum = data.totalPages - 4 + i;
+                                }
+                                if (pageNum > 0 && pageNum <= data.totalPages) {
                                   return (
-                                    <PaginationItem key={i}>
+                                    <PaginationItem key={pageNum}>
                                       <PaginationLink 
                                         onClick={() => handlePageChange(pageNum)}
                                         isActive={currentPage === pageNum}
+                                        className={currentPage === pageNum ? 'bg-primary text-white' : 'hover:bg-primary/10'}
                                       >
                                         {pageNum}
                                       </PaginationLink>
                                     </PaginationItem>
                                   );
-                                })}
-                                
-                                <PaginationItem>
-                                  <PaginationNext 
-                                    onClick={() => handlePageChange(Math.min(currentPage + 1, data.totalPages))}
-                                    className={currentPage === data.totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                                  />
-                                </PaginationItem>
-                              </PaginationContent>
-                            </Pagination>
-                          </div>
-                        )}
-                      </div>
-                    ) : error ? (
-                      <div className="bg-red-50 p-4 rounded-lg text-red-800">
-                        Failed to load forex data. Please try again later.
-                      </div>
-                    ) : (
-                      <div className="bg-blue-50 p-6 rounded-lg text-center">
-                        <div className="text-5xl mb-4">💱</div>
-                        <h3 className="text-xl font-semibold text-primary mb-2">Foreign Exchange Rates</h3>
-                        <p className="text-gray-600 mb-4">
-                          Set a date range and click Search to view current and historical forex rates for Nepali Rupee (NPR)
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                                }
+                                return null;
+                              })}
+                              
+                              <PaginationItem>
+                                <PaginationNext 
+                                  onClick={() => handlePageChange(Math.min(currentPage + 1, data.totalPages))}
+                                  className={currentPage === data.totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10'}
+                                />
+                              </PaginationItem>
+                            </PaginationContent>
+                          </Pagination>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="bg-yellow-50 p-6 rounded-lg text-yellow-700 text-center">
+                       <div className="text-5xl mb-4">⚠️</div>
+                      <p className="font-semibold">No Forex Data Available</p>
+                      <p className="text-sm">Today's foreign exchange rates are not available at the moment. Please check back later.</p>
+                    </div>
+                  )}
                 </motion.div>
 
                 {/* Popular currencies section */}
@@ -328,7 +267,7 @@ const Forex = () => {
                 >
                   <h3 className="text-xl font-semibold text-primary mb-4">प्रमुख विदेशी मुद्राहरू (Major Currencies)</h3>
                   <div className="grid md:grid-cols-3 gap-4">
-                    {currencyInfo.map((currency, i) => (
+                    {currencyInfo.map((currency) => (
                       <CurrencyCard 
                         key={currency.code} 
                         currency={currency} 
