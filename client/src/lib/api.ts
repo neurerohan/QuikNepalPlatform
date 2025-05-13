@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { isHolidayEvent } from './holidays';
+import { getCurrentNepaliDate } from './nepaliDateConverter';
 
 // Change the base URL to directly access the external API
 const API_BASE_URL = "https://api.kalimatirate.nyure.com.np/api/";
@@ -247,22 +248,13 @@ function mapSignToEnglish(nepaliSign: string): string {
 
 export const getTodayNepaliDate = async () => {
   try {
-    // As a fallback, provide a hard-coded date since the API might not have a direct endpoint for this
-    const today = new Date();
-    return {
-      year: 2082,
-      month: 1,
-      day: 26,
-      month_name: 'Baishakh',
-      day_of_week: today.getDay(),
-      ad_date: today.toISOString().split('T')[0],
-      bs_date: "2082-01-26"
-    };
+    // Use our new date converter to get the current Nepali date
+    return getCurrentNepaliDate();
   } catch (error) {
     console.error("Error getting current Nepali date:", error);
-    const today = new Date();
     
-    // Fallback
+    // Fallback if something goes wrong
+    const today = new Date();
     return {
       year: 2082,
       month: 1,
