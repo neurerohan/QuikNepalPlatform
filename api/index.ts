@@ -1,9 +1,17 @@
 // This file serves as the entry point for Vercel serverless function
-import { Request, Response } from 'express';
+import { IncomingMessage, ServerResponse } from 'http';
 import app from '../server/index';
 
-// Export a function that processes all HTTP methods on all paths
-export default async function handler(req: Request, res: Response) {
-  // Let the Express app handle the request
+// Handler function that will be called by Vercel
+export default function handler(req: IncomingMessage, res: ServerResponse) {
+  // Pass the request to Express
   return app(req, res);
-} 
+}
+
+// Vercel serverless function configuration
+export const config = {
+  api: {
+    bodyParser: false, // Let Express handle body parsing
+  },
+  runtime: 'nodejs18.x',
+}; 

@@ -12,10 +12,12 @@ app.use((req, res, next) => {
   const path3 = req.path;
   let capturedJsonResponse: any = undefined;
   const originalResJson = res.json;
+  
   res.json = function(bodyJson: any, ...args: any[]) {
     capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+    return originalResJson.call(res, bodyJson);
   };
+  
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path3.startsWith("/api")) {
