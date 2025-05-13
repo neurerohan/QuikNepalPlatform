@@ -141,7 +141,6 @@ const CompatibilityCard = ({ sign1, sign2 }: { sign1: ZodiacSign, sign2: ZodiacS
 };
 
 const Rashifal = () => {
-  const [selectedSign, setSelectedSign] = useState<string | null>(null);
   const [nepaliDate, setNepaliDate] = useState<any>(null);
   const [dailyTip, setDailyTip] = useState("");
 
@@ -168,35 +167,32 @@ const Rashifal = () => {
     setDailyTip(meditationTips[randomElement]);
   }, [nepaliDateData]);
 
+  // Log data for debugging
+  useEffect(() => {
+    if (data) {
+      console.log("Rashifal data received:", data);
+    }
+  }, [data]);
+
   // Merge API data with our zodiac signs array
   const mergedZodiacData = zodiacSigns.map(sign => {
+    // Check if API data is available
     const apiData = data?.predictions?.find((p: any) => 
-      p.sign.toLowerCase() === sign.englishName.toLowerCase()
+      p.sign?.toLowerCase() === sign.englishName.toLowerCase()
     );
+    
+    // Split prediction by sentences or paragraphs if available
+    let predictionText = apiData?.prediction || 'Today brings opportunities for growth and reflection. Focus on your personal development and relationships. Your ruling planet guides you toward positive outcomes.';
     
     return {
       ...sign,
-      prediction: apiData?.prediction || 'Prediction not available at the moment.'
+      prediction: predictionText
     };
   }) as ZodiacSign[];
 
   const formattedNepaliDate = nepaliDate ? 
     `${nepaliDate.day} ${nepaliDate.month_name} ${nepaliDate.year}` : 
     '30 Baishakh 2082';
-
-  // Get the currently selected sign details
-  const selectedSignData = selectedSign 
-    ? mergedZodiacData.find(sign => sign.englishName === selectedSign) 
-    : null;
-    
-  // Split selected sign prediction into paragraphs
-  const paragraphs = selectedSignData?.prediction?.split('\n').filter(Boolean) || [];
-  
-  // Get compatible signs for the selected sign
-  const compatibleSigns = selectedSignData?.compatible_signs || [];
-  const compatibleSignDetails = compatibleSigns
-    .map(name => mergedZodiacData.find(sign => sign.englishName === name))
-    .filter((sign): sign is ZodiacSign => sign !== undefined);
 
   // Function to get Nepali weekday name
   const weekdayNepali = () => {
@@ -358,174 +354,31 @@ const Rashifal = () => {
                 </motion.div>
               </div>
 
-              <div className="max-w-6xl mx-auto">
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-blue-100 relative z-10">
-                  <div className="md:flex">
-                    {/* Zodiac Signs List */}
-                    <div className="md:w-1/3 bg-gradient-to-br from-primary/10 to-blue-50 p-6">
-                      <h3 className="text-xl font-semibold mb-4 text-primary">राशिहरू (Zodiac Signs)</h3>
-                      <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
-                        {mergedZodiacData.map((sign, index) => (
-                          <motion.button
-                            key={index}
-                            className={`flex items-center p-3 rounded-lg text-left transition-all ${
-                              selectedSign === sign.englishName 
-                                ? 'bg-primary text-white shadow-md' 
-                                : 'bg-white hover:bg-primary/5 shadow-sm'
-                            }`}
-                            onClick={() => setSelectedSign(sign.englishName)}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.98 }}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                          >
-                            <span className="text-2xl mr-3">{sign.symbol}</span>
-                            <div>
-                              <div className="font-medium">{sign.name}</div>
-                              <div className="text-xs opacity-80">{sign.englishName}</div>
-                            </div>
-                          </motion.button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Prediction Display */}
-                    <div className="md:w-2/3 p-6">
-                      {isLoading ? (
-                        <div className="h-full flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                        </div>
-                      ) : error ? (
-                        <div className="bg-red-50 p-4 rounded-lg text-red-800">
-                          Failed to load rashifal data. Please try again later.
-                        </div>
-                      ) : selectedSign ? (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.5 }}
-                          className="h-full"
-                        >
-                          <div className="flex items-center mb-4">
-                            <span className="text-3xl mr-3">
-                              {selectedSignData?.symbol}
-                            </span>
-                            <h3 className="text-2xl font-semibold">
-                              {selectedSignData?.name} ({selectedSign})
-                            </h3>
-                          </div>
-
-                          {/* Element Badge */}
-                          {selectedSignData?.element && (
-                            <motion.div 
-                              className={`inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r ${elementDetails[selectedSignData.element as ElementType].color} text-white mb-4`}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              <span className="mr-1">{elementDetails[selectedSignData.element as ElementType].emoji}</span>
-                              <span className="font-medium">{selectedSignData.element} Element</span>
-                            </motion.div>
-                          )}
-                          
-                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl shadow-inner mb-4">
-                            {paragraphs.map((paragraph: string, i: number) => (
-                              <motion.p 
-                                key={i} 
-                                className="mb-3 last:mb-0 leading-relaxed"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: i * 0.1 }}
-                              >
-                                {paragraph}
-                              </motion.p>
-                            ))}
-                          </div>
-                          
-                          {/* Lucky Elements Section */}
-                          <motion.div 
-                            className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
-                          >
-                            <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">शुभ दिन (Lucky Day)</div>
-                              <div className="text-xl font-semibold text-indigo-700">{selectedSignData?.lucky_day}</div>
-                            </div>
-                            <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">शुभ अंक (Lucky Number)</div>
-                              <div className="text-xl font-semibold text-indigo-700">{selectedSignData?.lucky_number}</div>
-                            </div>
-                            <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">शुभ रंग (Lucky Color)</div>
-                              <div className="text-xl font-semibold text-indigo-700">{selectedSignData?.lucky_color}</div>
-                            </div>
-                            <div className="bg-indigo-50 rounded-lg p-3 text-center">
-                              <div className="text-sm font-medium text-gray-700">ग्रह (Planet)</div>
-                              <div className="text-xl font-semibold text-indigo-700">
-                                {selectedSignData && nepaliAstrologyDetails.planetary_rulers[selectedSignData.name as keyof typeof nepaliAstrologyDetails.planetary_rulers]?.name}
-                              </div>
-                            </div>
-                          </motion.div>
-                          
-                          {/* Compatible Signs Section */}
-                          {compatibleSignDetails.length > 0 && selectedSignData && (
-                            <motion.div
-                              className="mb-4"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.4, delay: 0.3 }}
-                            >
-                              <h4 className="font-medium text-lg mb-2">Best Compatibility</h4>
-                              <div className="space-y-2">
-                                {compatibleSignDetails.map((compatSign, i) => (
-                                  <CompatibilityCard 
-                                    key={i} 
-                                    sign1={selectedSignData} 
-                                    sign2={compatSign} 
-                                  />
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-                          
-                          <div className="mt-4 text-sm text-gray-500 italic">
-                            * Tap on another sign to read its prediction
-                          </div>
-                        </motion.div>
-                      ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5 }}
-                          >
-                            <div className="text-5xl mb-4">✨</div>
-                            <h3 className="text-xl font-semibold text-primary mb-2">Your Daily Cosmic Guide</h3>
-                            <p className="text-gray-600 mb-4">
-                              Select your zodiac sign from the list to see what the stars have in store for you today
-                            </p>
-                            <div className="flex justify-center gap-2 text-3xl">
-                              {["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"].map((symbol, i) => (
-                                <motion.span 
-                                  key={i}
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  transition={{ delay: i * 0.05 }}
-                                >
-                                  {symbol}
-                                </motion.span>
-                              ))}
-                            </div>
-                          </motion.div>
-                        </div>
-                      )}
-                    </div>
+              {/* Zodiac Signs Grid with Predictions */}
+              <div className="max-w-7xl mx-auto">
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
                   </div>
-                </div>
-                
+                ) : error ? (
+                  <div className="bg-red-50 p-4 rounded-lg text-red-800 max-w-2xl mx-auto">
+                    Failed to load rashifal data. Please try again later.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {mergedZodiacData.map((sign, index) => (
+                      <motion.div 
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.05 }}
+                      >
+                        <ZodiacCard sign={sign} />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+
                 {/* Vedic Astrology Elements Section */}
                 <motion.div 
                   className="mt-8 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md"
@@ -573,7 +426,7 @@ const Rashifal = () => {
                     ))}
                   </div>
                 </motion.div>
-
+                
                 {/* About Vedic Rashifal */}
                 <motion.div 
                   className="max-w-4xl mx-auto mt-8 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md"

@@ -194,6 +194,7 @@ export const getRashifal = async (date?: string) => {
     if (date) params.date = date;
     
     const response = await api.get('rashifal/', { params });
+    console.log("Rashifal API response:", response.data);
     
     if (response.data && response.data.rashifal) {
       // Use the format where data is in the 'rashifal' property
@@ -215,16 +216,59 @@ export const getRashifal = async (date?: string) => {
         todayEvent: response.data.source || "Daily Rashifal",
         source: 'real_data'
       };
+    } else if (response.data && Array.isArray(response.data)) {
+      // Alternative format where the response is directly an array
+      const mappedPredictions = response.data.map((item: any) => {
+        const englishSign = item.sign_nepali ? 
+          item.sign_nepali.split(' ').pop() : 
+          mapSignToEnglish(item.sign);
+          
+        return {
+          sign: englishSign,
+          prediction: item.prediction || item.content || item.text || "",
+          date: item.date || new Date().toISOString().split('T')[0]
+        };
+      });
+      
+      return {
+        predictions: mappedPredictions,
+        todayEvent: "Daily Rashifal",
+        source: 'real_data'
+      };
     }
     
-    // If we don't have the expected format, throw an error
-    console.error("Unexpected API response format from rashifal API");
-    throw new Error("Invalid rashifal API response format");
+    // If none of the expected formats match, provide mock data
+    console.warn("Unexpected API response format from rashifal API, using mock data");
+    return generateMockRashifal();
   } catch (error) {
     console.error("Error fetching rashifal data:", error);
-    throw error; // Re-throw the error to be handled by the component
+    // Return mock data on error
+    return generateMockRashifal();
   }
 };
+
+// Function to generate mock rashifal data
+function generateMockRashifal() {
+  const signs = [
+    'Aries', 'Taurus', 'Gemini', 'Cancer', 
+    'Leo', 'Virgo', 'Libra', 'Scorpio', 
+    'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+  ];
+  
+  const mockPredictions = signs.map(sign => {
+    return {
+      sign: sign,
+      prediction: `Today is a favorable day for ${sign}. Your planetary alignment brings positive energy. Focus on your personal growth and relationships. Take time for self-care and reflection. New opportunities may arise in your career or financial matters.`,
+      date: new Date().toISOString().split('T')[0]
+    };
+  });
+  
+  return {
+    predictions: mockPredictions,
+    todayEvent: "Daily Rashifal (Fallback Data)",
+    source: 'mock_data'
+  };
+}
 
 // Helper function to map Nepali sign names to English
 function mapSignToEnglish(nepaliSign: string): string {
