@@ -271,7 +271,86 @@ const YearEvents = ({ year }: { year: string }) => {
   );
 };
 
+// Add getTraditionalFestivals function higher up in the file, before the Calendar component
+const getTraditionalFestivals = (month: number) => {
+  const festivals = [
+    // Baishakh (1)
+    ...(month === 1 ? [
+      { name: 'Nepali New Year', description: 'First day of Baishakh marks the Nepali New Year (Navavarsha)' },
+      { name: 'Bisket Jatra', description: 'Ancient festival celebrated in Bhaktapur with chariot processions' }
+    ] : []),
+    // Jestha (2)
+    ...(month === 2 ? [
+      { name: 'Buddha Jayanti', description: 'Celebrates the birth of Gautama Buddha, the founder of Buddhism' },
+      { name: 'Sithi Nakha', description: 'Newari festival marking the start of monsoon preparation' }
+    ] : []),
+    // Ashadh (3)
+    ...(month === 3 ? [
+      { name: 'Ropai Jatra', description: 'Rice planting festival celebrated during monsoon season' },
+      { name: 'Jagannath Rath Yatra', description: 'Chariot procession of Lord Jagannath, popular in certain regions' }
+    ] : []),
+    // Shrawan (4)
+    ...(month === 4 ? [
+      { name: 'Shrawan Sombar', description: 'Hindu fasting observed by women on Mondays for prosperity' },
+      { name: 'Nag Panchami', description: 'Worship of serpent deities for protection from snake bites' }
+    ] : []),
+    // Bhadra (5)
+    ...(month === 5 ? [
+      { name: 'Gai Jatra', description: 'Festival of cows that commemorates those who died in the past year' },
+      { name: 'Krishna Janmashtami', description: 'Celebrates the birth of Lord Krishna with fasting and festivities' },
+      { name: 'Teej', description: 'Major festival for women with fasting, singing and dancing' }
+    ] : []),
+    // Ashwin (6)
+    ...(month === 6 ? [
+      { name: 'Dashain', description: 'Nepal\'s biggest festival celebrating the victory of good over evil' },
+      { name: 'Fulpati', description: 'Sacred flowers and plants brought to Kathmandu for Dashain' }
+    ] : []),
+    // Kartik (7)
+    ...(month === 7 ? [
+      { name: 'Tihar', description: 'Festival of lights honoring Laxmi, crows, dogs, cows and brothers' },
+      { name: 'Nepal Sambat', description: 'Traditional Nepali New Year according to Nepal Era calendar' }
+    ] : []),
+    // Mangsir (8)
+    ...(month === 8 ? [
+      { name: 'Yomari Punhi', description: 'Newari festival featuring sweet bread delicacy called Yomari' },
+      { name: 'Bala Chaturdashi', description: 'Ceremony at Pashupatinath to honor the deceased with seeds and flowers' }
+    ] : []),
+    // Poush (9)
+    ...(month === 9 ? [
+      { name: 'Tamu Lhosar', description: 'New Year celebration of the Gurung community' },
+      { name: 'Udhauli', description: 'Kiranti festival celebrating the migration of birds to lower elevations' }
+    ] : []),
+    // Magh (10)
+    ...(month === 10 ? [
+      { name: 'Maghe Sankranti', description: 'Winter solstice festival with special foods and sacred bathing' },
+      { name: 'Sonam Lhosar', description: 'New Year celebration of the Tamang community' }
+    ] : []),
+    // Falgun (11)
+    ...(month === 11 ? [
+      { name: 'Holi', description: 'Festival of colors with water and powdered color throwing' },
+      { name: 'Gyalpo Lhosar', description: 'New Year celebration of the Sherpa community' }
+    ] : []),
+    // Chaitra (12)
+    ...(month === 12 ? [
+      { name: 'Chaite Dashain', description: 'Smaller version of Dashain festival' },
+      { name: 'Ghode Jatra', description: 'Horse racing festival in Kathmandu Valley' }
+    ] : [])
+  ];
+  
+  return festivals;
+};
 
+// Add new animations to the global styles
+const additionalStyles = `
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+`;
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -612,12 +691,17 @@ const Calendar = () => {
                 </div>
 
                 {/* Monthly Events Section - Enlarged */}
-                <div className="mt-6 bg-white rounded-xl shadow-sm p-6 md:p-7 border border-gray-100">
-                  <h4 className="text-xl font-semibold text-primary mb-5">Key Events in {getMonthName(parseInt(month))}</h4>
+                <div className="mt-6 bg-white rounded-xl shadow-lg p-6 md:p-7 border border-gray-100 overflow-hidden">
+                  <h4 className="text-xl font-semibold mb-5 bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-3 px-4 rounded-lg shadow-md transform -translate-x-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Key Events in {getMonthName(parseInt(month))}
+                  </h4>
                   
                   {/* Current month events from API data */}
                   {data && data.days && data.days.filter((day: any) => day.events && day.events.length > 0).length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {(() => {
                         // Safely extract all events with proper type handling
                         const allEvents: string[] = [];
@@ -639,18 +723,15 @@ const Calendar = () => {
                               Array.isArray(day.events) && 
                               day.events.includes(event)
                             )
-                            .map((day: any) => day.bs.nepaliDay)
-                            .join(', ');
+                            .map((day: any) => day.bs.nepaliDay);
                             
-                          // Determine if the event is a holiday - match the logic from day cells
+                          // Determine if the event is a holiday
                           const isEventHoliday = (() => {
-                              // Only mark true holidays as holidays, not every event with these common terms
                               const isPublicHoliday = 
                                 event.toLowerCase().includes('public holiday') || 
                                 event.toLowerCase().includes('federal holiday') ||
                                 event.toLowerCase().includes('national holiday');
                                 
-                              // Religious festivals that are holidays  
                               const isReligiousHoliday =
                                 event.toLowerCase().includes('dashain') ||
                                 event.toLowerCase().includes('tihar') ||
@@ -661,26 +742,91 @@ const Calendar = () => {
                               return isPublicHoliday || isReligiousHoliday;
                           })();
                           
+                          // Determine event type and icon
+                          const getEventTypeAndIcon = () => {
+                            const eventLower = event.toLowerCase();
+                            
+                            if (isEventHoliday) {
+                              return {
+                                type: 'Holiday',
+                                icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                </svg>,
+                                color: 'from-red-500 to-red-400 shadow-red-200/40'
+                              };
+                            }
+                            
+                            if (eventLower.includes('festival') || eventLower.includes('jatra')) {
+                              return {
+                                type: 'Festival',
+                                icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                                </svg>,
+                                color: 'from-amber-500 to-orange-400 shadow-orange-200/40'
+                              };
+                            }
+                            
+                            if (eventLower.includes('jayanti') || eventLower.includes('birthday')) {
+                              return {
+                                type: 'Jayanti',
+                                icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                                </svg>,
+                                color: 'from-blue-500 to-indigo-400 shadow-blue-200/40'
+                              };
+                            }
+                            
+                            if (eventLower.includes('diwas') || eventLower.includes('day') || eventLower.includes('दिवस')) {
+                              return {
+                                type: 'Day',
+                                icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>,
+                                color: 'from-teal-500 to-emerald-400 shadow-teal-200/40'
+                              };
+                            }
+                            
+                            if (eventLower.includes('puja') || eventLower.includes('vrat') || eventLower.includes('v्रत')) {
+                              return {
+                                type: 'Religious',
+                                icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                </svg>,
+                                color: 'from-purple-500 to-purple-400 shadow-purple-200/40'
+                              };
+                            }
+                            
+                            return {
+                              type: 'Event',
+                              icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>,
+                              color: 'from-[#57c84d] to-[#83d475] shadow-green-200/40'
+                            };
+                          };
+                          
+                          const eventInfo = getEventTypeAndIcon();
+                          const animationDelay = `${index * 0.1}s`;
+                          
                           return (
                             <div 
                               key={index} 
-                              className={`flex items-start p-3 rounded-lg border ${
-                                isEventHoliday 
-                                  ? 'bg-red-50/40 border-red-100' 
-                                  : 'bg-white border-gray-100'
-                              }`}
+                              className="bg-white rounded-xl border shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1 animate-fadeIn"
+                              style={{ animationDelay }}
                             >
-                              <div className={`text-lg mr-3 mt-0.5 ${
-                                isEventHoliday ? 'text-red-500' : 'text-primary'
-                              }`}>•</div>
-                              <div>
-                                <span className={`text-sm md:text-base font-medium ${
-                                  isEventHoliday ? 'text-red-700' : 'text-gray-700'
-                                }`}>
-                                  {event}
-                                </span>
-                                <div className="text-xs md:text-sm text-gray-500 mt-1">
-                                  {eventDays} {getMonthName(parseInt(month))}
+                              <div className={`flex items-center p-4 bg-gradient-to-r ${eventInfo.color} text-white`}>
+                                <div className="rounded-full bg-white/20 p-2 mr-3 flex-shrink-0">
+                                  {eventInfo.icon}
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-medium line-clamp-2">{event}</p>
+                                  <div className="text-xs text-white/80 mt-1 flex flex-wrap gap-1">
+                                    {eventDays.map((day: string | number, i: number) => (
+                                      <span key={i} className="bg-white/20 rounded-full px-2 py-0.5">
+                                        {day} {getMonthName(parseInt(month))}
+                                      </span>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -689,25 +835,33 @@ const Calendar = () => {
                       })()}
                     </div>
                   ) : (
-                    <p className="text-base text-gray-500 bg-gray-50 p-4 rounded-lg">No major events recorded for this month.</p>
-                  )}
-                  
-                  {/* Traditional festivals associated with this month */}
-                  {params.year && (
-                    <div className="mt-6">
-                      <h5 className="font-medium text-primary-dark mb-3">Traditional Festivals</h5>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {getMonthContent(parseInt(month), parseInt(params.year)).festivals.map((festival, index) => (
-                          <div key={index} className="bg-primary-light/5 p-3 rounded-lg border border-primary-light/20">
-                            <div className="font-medium text-primary-dark">{festival}</div>
-                            <div className="text-xs text-gray-500 mt-1">
-                              Traditional festival celebrated in {getMonthName(parseInt(month))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="text-center py-10 animate-fadeIn">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <p className="text-base text-gray-500">No major events recorded for this month.</p>
+                      <p className="text-sm text-gray-400 mt-2">Try selecting a different month to see events.</p>
                     </div>
                   )}
+                  
+                  {/* Traditional festivals section */}
+                  <div className="mt-8">
+                    <h5 className="text-lg font-semibold mb-4 text-[#57c84d] flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+                      </svg>
+                      Traditional Festivals
+                    </h5>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fadeIn">
+                      {getTraditionalFestivals(parseInt(month)).map((festival, index) => (
+                        <div key={index} className="bg-gradient-to-br from-purple-50 to-indigo-50 p-4 rounded-lg border border-purple-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                          <h6 className="font-medium text-purple-700">{festival.name}</h6>
+                          <p className="text-sm text-gray-600 mt-1">{festival.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 
                 {/* Month Summary - Using dynamic content */}

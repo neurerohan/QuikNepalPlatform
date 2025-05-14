@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { convertDate } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -44,28 +44,29 @@ const DateConverterForm = () => {
   // BS to AD conversion query
   const bsToAdQuery = useQuery({
     queryKey: ['/calendar/convert', { from: 'bs', date: `${bsYear}-${bsMonth}-${bsDay}` }],
-    enabled: bsToAdTrigger,
-    staleTime: Infinity,
-    onSuccess: () => {
-      setBsToAdTrigger(false);
-    },
-    onError: () => {
-      setBsToAdTrigger(false);
-    }
+    queryFn: () => convertDate({ from: 'bs', date: `${bsYear}-${bsMonth}-${bsDay}` }),
+    enabled: bsToAdTrigger
   });
 
   // AD to BS conversion query
   const adToBsQuery = useQuery({
     queryKey: ['/calendar/convert', { from: 'ad', date: `${adYear}-${adMonth}-${adDay}` }],
-    enabled: adToBsTrigger,
-    staleTime: Infinity,
-    onSuccess: () => {
-      setAdToBsTrigger(false);
-    },
-    onError: () => {
+    queryFn: () => convertDate({ from: 'ad', date: `${adYear}-${adMonth}-${adDay}` }),
+    enabled: adToBsTrigger
+  });
+
+  // Effects to reset triggers when query finishes
+  useEffect(() => {
+    if (bsToAdQuery.isSuccess || bsToAdQuery.isError) {
+      setBsToAdTrigger(false);
+    }
+  }, [bsToAdQuery.isSuccess, bsToAdQuery.isError]);
+
+  useEffect(() => {
+    if (adToBsQuery.isSuccess || adToBsQuery.isError) {
       setAdToBsTrigger(false);
     }
-  });
+  }, [adToBsQuery.isSuccess, adToBsQuery.isError]);
 
   const handleBsToAdConvert = () => {
     setBsToAdTrigger(true);
@@ -126,7 +127,7 @@ const DateConverterForm = () => {
           
           <Button 
             onClick={handleBsToAdConvert} 
-            className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
+            className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors"
             disabled={bsToAdQuery.isPending}
           >
             {bsToAdQuery.isPending ? 'Converting...' : 'Convert to AD'}
@@ -194,7 +195,7 @@ const DateConverterForm = () => {
           
           <Button 
             onClick={handleAdToBsConvert} 
-            className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
+            className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors"
             disabled={adToBsQuery.isPending}
           >
             {adToBsQuery.isPending ? 'Converting...' : 'Convert to BS'}
