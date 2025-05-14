@@ -8,6 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from '@/components/ui/separator';
 import { getMonthContent, getYearInfo } from '@/lib/calendar-content';
 import AnnualEvents from '@/components/ui/AnnualEvents';
+import SEO from '@/components/SEO';
+import { getKathmanduTime } from '@/lib/nepaliDateConverter';
+import { FaCalendarAlt, FaCalendarCheck, FaCalendarDay, FaCalendarWeek, FaInfoCircle } from 'react-icons/fa';
 
 // Helper function to convert Tithi names to Devanagari
 const convertTithiToNepali = (tithi: string): string => {
@@ -246,16 +249,47 @@ const YearEvents = ({ year }: { year: string }) => {
         <div>
           <h2 className="sr-only">Events for Year {year}</h2>
           {Object.keys(eventsByMonth).map((month) => (
-            <div key={month} className="mb-8">
-              <h3 className="text-lg font-semibold text-primary mb-4 border-b pb-2">{month}</h3>
-              <div className="space-y-4">
-                {eventsByMonth[month].map((event, index) => {
-                  const { type, color } = getEventTypeAndColor(event);
-                  const bsDate = event.date_bs || '';
-                  const adDate = event.date_ad || event.date || '';
-                  const tithi = event.tithi || getTithiForDate(bsDate);
-                  
-                  // Extract day number for display
+            <div key={month} className="mb-10">
+              <h2 className="text-2xl font-bold text-primary mb-6">About the Nepali Calendar (Hamro Patro)</h2>
+              <div className="prose prose-lg max-w-none text-gray-700">
+                <p className="mb-4">
+                  The <strong>Nepali Calendar</strong> (also known as <strong>Hamro Patro</strong> or <strong>Mero Patro</strong>) is the official calendar system of Nepal. Based on the Bikram Sambat (BS) system, it is approximately 56.7 years ahead of the Gregorian calendar. Our <strong>Nepal calendar</strong> provides accurate information about <strong>today's Nepali date</strong>, festivals, events, and tithi details.
+                </p>
+                <p className="mb-4">
+                  Whether you're looking for <strong>today's nepali date</strong>, checking upcoming festivals, or planning according to the <strong>nepali patro nepali</strong> calendar system, our comprehensive <strong>nepal patro</strong> has all the information you need. The <strong>date of nepal</strong> calendar follows a lunar cycle, making it different from the Gregorian calendar used internationally.
+                </p>
+                <div className="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500 mb-4">
+                  <h3 className="text-lg font-medium text-indigo-800 mb-2">Today's Nepali Date</h3>
+                  <p className="text-indigo-700">
+                    <FaCalendarDay className="inline-block mr-2" />
+                    <strong>{formattedTodayDate}</strong> according to the <strong>nepal calendar date today</strong>.
+                  </p>
+                </div>
+                <h3 className="text-lg font-semibold text-primary mb-4 border-b pb-2">{month}</h3>
+                <div className="space-y-4">
+                  {eventsByMonth[month].map((event, index) => {
+                    const { type, color } = getEventTypeAndColor(event);
+                    const bsDate = event.date_bs || '';
+                    const adDate = event.date_ad || event.date || '';
+                    const tithi = event.tithi || getTithiForDate(bsDate);
+                    
+                    // Extract day number for display
+                    let dayNumber = 'N/A';
+                    if (bsDate.includes('-')) {
+                      dayNumber = bsDate.split('-')[2];
+                    } else if (bsDate.includes('.')) {
+                      dayNumber = bsDate.split('.')[0];
+                    }
+                    
+                    return (
+                      <div 
+                        key={index} 
+                        className="border border-gray-100 rounded-lg p-4 bg-white hover:bg-gray-50 transition-colors shadow-sm"
+                      >
+                        <div className="flex items-start">
+                          <div className="bg-primary text-white rounded-md p-2 text-center min-w-[60px] mr-4">
+                            <div className="text-xs uppercase">{month}</div>
+                            <div className="text-2xl font-bold">{dayNumber}</div>
                   let dayNumber = 'N/A';
                   if (bsDate.includes('-')) {
                     dayNumber = bsDate.split('-')[2];
@@ -424,6 +458,10 @@ const Calendar = () => {
   // State to hold the selected day for detail view
   const [selectedDay, setSelectedDay] = useState<any>(null);
   
+  // Get current Kathmandu time for SEO modified date
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
+  
   // Get today's Nepali date from API
   const { data: nepaliToday, isLoading: loadingToday } = useQuery({
     queryKey: ['/api/today'],
@@ -515,11 +553,155 @@ const Calendar = () => {
     }
   };
   
+  // SEO keywords and metadata
+  const pageTitle = "Hamro Patro | Nepali Calendar | Today's Nepali Date | Nepal Calendar";
+  const pageDescription = "View the official Nepali calendar (Bikram Sambat) with holidays, events, and tithi information. Check today's nepali date, mero patro, nepali patro, and important festivals in Nepal calendar date today.";
+  const pageKeywords = "hamro patro, nepali calendar, today's nepali date, mero patro, nepal calendar date today, nepali calendar nepali calendar, date of nepal, nepal patro, nepali patro nepali";
+  
+  // Format today's date for display
+  const formattedTodayDate = todayNepaliDate ? 
+    `${todayNepaliDate.day} ${todayNepaliDate.month_name} ${todayNepaliDate.year}` : 
+    "Loading today's nepali date...";
+    
+  // Current year and month for schema markup
+  const currentYear = params.year || (todayNepaliDate ? todayNepaliDate.year.toString() : "");
+  const currentMonth = params.month || (todayNepaliDate ? todayNepaliDate.month_name : "");
+  
   return (
-    <MainLayout 
-      title={`Nepali Calendar ${params.year} - ${getMonthName(parseInt(month))}` }
-      description="View and navigate through Bikram Sambat (BS) calendar with corresponding Gregorian (AD) dates."
-    >
+    <>
+      <SEO 
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname="/nepalicalendar"
+        ogImage="https://quiknepal.com/og-images/nepali-calendar.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="Calendar"
+        hrefLangs={[
+          { lang: "en", url: "https://quiknepal.com/en/nepalicalendar" },
+          { lang: "ne", url: "https://quiknepal.com/ne/nepalicalendar" }
+        ]}
+      >
+        {/* Additional Schema Markup for Nepali Calendar */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Hamro Patro - Nepali Calendar",
+            "description": "View today's nepali date and browse the complete nepali calendar (mero patro). The official nepal calendar with dates, events, and festivals.",
+            "applicationCategory": "UtilityApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          })}
+        </script>
+        
+        {/* BreadcrumbList Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://quiknepal.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Nepali Calendar",
+                "item": "https://quiknepal.com/nepalicalendar"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": `${currentYear} ${currentMonth}`,
+                "item": `https://quiknepal.com/nepalicalendar/${currentYear}/${currentMonth.toLowerCase()}`
+              }
+            ]
+          })}
+        </script>
+        
+        {/* FAQ Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Hamro Patro or Nepali Calendar?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Hamro Patro (Nepal Patro) is the official calendar of Nepal based on the Bikram Sambat system. It shows today's nepali date and all important festivals, events, and tithis throughout the year."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I find today's Nepali date?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Today's nepali date is clearly displayed at the top of our nepali calendar. The current date is highlighted in the calendar view for easy reference."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between Hamro Patro and Mero Patro?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Both Hamro Patro and Mero Patro refer to the Nepali calendar. 'Hamro' means 'our' and 'Mero' means 'my' in Nepali. Both show the nepal calendar date today and other important information."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How accurate is this Nepali Calendar?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Our nepali calendar (nepali patro) is highly accurate, following the official Bikram Sambat calendar used in Nepal. It includes precise tithi calculations, accurate festival dates, and today's nepali date."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Event Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": "Nepali Calendar Events",
+            "description": "View all festivals and events in the Nepal calendar date today and throughout the year in our hamro patro.",
+            "startDate": `${currentYear}-01-01`,
+            "endDate": `${currentYear}-12-31`,
+            "location": {
+              "@type": "Place",
+              "name": "Nepal",
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "Nepal"
+              }
+            },
+            "organizer": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "url": "https://quiknepal.com"
+            }
+          })}
+        </script>
+      </SEO>
+      <MainLayout 
+        title={pageTitle}
+        description={pageDescription}
+      >
       <FadeIn>
         <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
@@ -1390,6 +1572,7 @@ const Calendar = () => {
         </div>
       </section>
     </MainLayout>
+    </>
   );
 };
 

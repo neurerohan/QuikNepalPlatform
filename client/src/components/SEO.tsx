@@ -126,7 +126,7 @@ const SEO = ({
           "name": "Nepal"
         }
       };
-    } else if (schemaType === "SoftwareApplication") {
+    } else if (schemaType === "WebApplication") {
       return {
         ...baseSchema,
         "applicationCategory": "UtilityApplication",
@@ -136,6 +136,15 @@ const SEO = ({
           "price": "0",
           "priceCurrency": "USD"
         }
+      };
+    } else if (schemaType === "Calendar") {
+      return {
+        ...baseSchema,
+        "@type": "Dataset",
+        "name": "Nepali Calendar (Hamro Patro)",
+        "description": "Complete Nepali calendar with today's nepali date, festivals, and events. The official nepal calendar date today with tithi and other important information.",
+        "keywords": ["hamro patro", "nepali calendar", "today's nepali date", "mero patro", "nepal calendar date today", "nepali patro nepali"],
+        "temporalCoverage": "2000/2100"
       };
     } else if (schemaType === "Tool") {
       return {
