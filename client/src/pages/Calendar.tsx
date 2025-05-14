@@ -68,10 +68,65 @@ const YearEvents = ({ year }: { year: string }) => {
   }
 
   if (!data || !data.calendar_events || data.calendar_events.length === 0) {
+    // Enhanced fallback content with custom events for better UX
     return (
-      <div className="p-8 text-center text-gray-500">
-        <p>No events found for this year</p>
-        <p className="text-sm mt-2">Try selecting a different year</p>
+      <div className="p-8">
+        <div className="bg-primary/5 rounded-lg p-6 border border-primary/20 mb-6">
+          <h3 className="text-lg font-medium text-primary mb-3 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5 mr-2">
+              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+              <path d="M12 8v4M12 16h.01" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            No API Events Available
+          </h3>
+          <p className="text-neutral mb-4">We couldn't find official event data for year {year} BS. While we work on updating our database, here are some important annual events you can expect:</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
+            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+              <div className="flex items-center mb-2">
+                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2">
+                  <span className="text-red-500 text-sm font-medium">1</span>
+                </div>
+                <h4 className="font-medium">Nepali New Year</h4>
+              </div>
+              <p className="text-sm text-gray-600">The first day of Baishakh marks the beginning of the Nepali New Year with celebrations across the country.</p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+              <div className="flex items-center mb-2">
+                <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center mr-2">
+                  <span className="text-amber-500 text-sm font-medium">2</span>
+                </div>
+                <h4 className="font-medium">Buddha Jayanti</h4>
+              </div>
+              <p className="text-sm text-gray-600">Full moon day of Baishakh celebrating the birth, enlightenment and death of Gautama Buddha.</p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+              <div className="flex items-center mb-2">
+                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-2">
+                  <span className="text-green-500 text-sm font-medium">6</span>
+                </div>
+                <h4 className="font-medium">Dashain Festival</h4>
+              </div>
+              <p className="text-sm text-gray-600">Nepal's most important 15-day festival taking place in Ashwin month, celebrating the victory of good over evil.</p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+              <div className="flex items-center mb-2">
+                <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-2">
+                  <span className="text-purple-500 text-sm font-medium">7</span>
+                </div>
+                <h4 className="font-medium">Tihar Festival</h4>
+              </div>
+              <p className="text-sm text-gray-600">Five-day festival of lights in Kartik month, honoring Goddess Laxmi, animals, and brotherly bonds.</p>
+            </div>
+          </div>
+          
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-500">Check the Annual Events section below for more comprehensive yearly events.</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -760,7 +815,7 @@ const Calendar = () => {
                               return {
                                 type: 'Festival',
                                 icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
                                 </svg>,
                                 color: 'from-amber-500 to-orange-400 shadow-orange-200/40'
                               };
@@ -864,83 +919,298 @@ const Calendar = () => {
                   </div>
                 </div>
                 
-                {/* Month Summary - Using dynamic content */}
+                {/* Month Summary - Enhanced with better design and more content */}
                 {params.year && (
-                  <div className="mt-6 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                    <h3 className="text-xl font-semibold text-primary mb-3">About {getMonthName(parseInt(month))} Month</h3>
-                    
-                    <div className="flex flex-col md:flex-row gap-6">
-                      <div className="md:w-3/4">
-                        {/* Dynamic content */}
-                        {(() => {
-                          const monthContent = getMonthContent(parseInt(month), parseInt(params.year));
-                          return (
-                            <>
-                              <p className="text-neutral mb-4">
-                                <span className="font-medium">{monthContent.name}</span> (Nepali: <span className="font-medium">{monthContent.nepaliName}</span>) is 
-                                the {parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month in the Nepali Bikram Sambat calendar. 
-                                This month typically falls during <span className="font-medium">{monthContent.gregorianMonths}</span> in the Gregorian calendar.
-                              </p>
-                              
-                              <p className="text-neutral mb-4">
-                                In {monthContent.name}, the average temperature in Nepal ranges from <span className="font-medium">{monthContent.temperature}</span>. 
-                                This month is particularly known for <span className="font-medium">{monthContent.highlights}</span>.
-                              </p>
-                              
-                              <p className="text-neutral mb-4">
-                                {monthContent.name} typically has <span className="font-medium">{monthContent.days} days</span> in most years of the Nepali calendar. 
-                                The agricultural activities during this month generally include <span className="font-medium">{monthContent.agriculture}</span>.
-                              </p>
-                              
-                              <div className="bg-primary-light/10 p-4 rounded-lg mb-4">
-                                <h4 className="font-medium text-primary mb-2">Seasonal Context</h4>
-                                <p className="text-sm text-neutral">
-                                  {monthContent.name} falls within {(() => {
-                                    if ([1, 2, 3].includes(parseInt(month))) return "spring season in Nepal";
-                                    if ([4, 5, 6, 7].includes(parseInt(month))) return "monsoon season in Nepal";
-                                    if ([8, 9].includes(parseInt(month))) return "autumn season in Nepal";
-                                    return "winter season in Nepal";
-                                  })()} with particular importance to the agricultural calendar and cultural traditions.
-                                  {parseInt(month) === 1 && " This is the beginning of the Nepali calendar year."}
-                                  {parseInt(month) === 6 && " This month hosts Dashain, Nepal's most significant festival."}
-                                  {parseInt(month) === 7 && " This month hosts Tihar, the festival of lights, second only to Dashain in importance."}
-                                </p>
-                              </div>
-                            </>
-                          )
-                        })()}
-                        
-                        {/* General information about Nepali calendar */}
-                        <p className="text-neutral">
-                          The Nepali calendar, officially known as Bikram Sambat (BS), is approximately 56.7 years ahead of the Gregorian calendar (AD) and is the official calendar of Nepal. It was introduced by King Bikramaditya and has been in use for over 2,000 years, making it one of the oldest continuously used calendars in the world.
-                        </p>
-                      </div>
+                  <div className="mt-6">
+                    <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100 relative overflow-hidden">
+                      {/* Decorative elements */}
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-x-20 -translate-y-20 z-0"></div>
+                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/5 rounded-full translate-x-8 translate-y-10 z-0"></div>
                       
-                      <div className="md:w-1/4">
-                        <div className="bg-gradient-to-r from-primary/80 to-primary p-4 rounded-lg text-white shadow-md">
-                          <h4 className="font-medium mb-3 text-white/90">Month Facts</h4>
-                          <ul className="space-y-3 text-sm">
-                            <li className="flex items-start">
-                              <span className="mr-2">•</span>
-                              <span>Position: {parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month</span>
-                            </li>
-                            <li className="flex items-start">
-                              <span className="mr-2">•</span>
-                              <span>Nepali Name: {getMonthContent(parseInt(month), parseInt(params.year)).nepaliName}</span>
-                            </li>
-                            <li className="flex items-start">
-                              <span className="mr-2">•</span>
-                              <span>Days: {getMonthContent(parseInt(month), parseInt(params.year)).days}</span>
-                            </li>
-                            <li className="flex items-start">
-                              <span className="mr-2">•</span>
-                              <span>Major Festivals: {getMonthContent(parseInt(month), parseInt(params.year)).festivals.length}</span>
-                            </li>
-                            <li className="flex items-start">
-                              <span className="mr-2">•</span>
-                              <span>Gregorian: {getMonthContent(parseInt(month), parseInt(params.year)).gregorianMonths}</span>
-                            </li>
-                          </ul>
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-semibold text-primary mb-5 flex items-center animate-fadeIn">
+                          <div className="bg-primary text-white rounded-lg px-3 py-1.5 mr-3">
+                            <span className="font-bold">{getMonthContent(parseInt(month), parseInt(params.year)).nepaliName}</span>
+                          </div>
+                          About {getMonthName(parseInt(month))} Month
+                        </h3>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                          <div className="lg:col-span-2 animate-fadeIn" style={{ animationDelay: '0.1s' }}>
+                            {/* Main content area - enhanced and sectioned */}
+                            {(() => {
+                              const monthContent = getMonthContent(parseInt(month), parseInt(params.year));
+                              return (
+                                <div className="space-y-6">
+                                  {/* Introduction section with better styling */}
+                                  <div className="bg-gradient-to-r from-primary/10 to-transparent p-5 rounded-lg border-l-4 border-primary">
+                                    <p className="text-neutral">
+                                      <span className="font-medium text-lg">{monthContent.name}</span> 
+                                      (Nepali: <span className="font-medium text-lg">{monthContent.nepaliName}</span>) is 
+                                      the {parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month in the Nepali Bikram Sambat calendar. 
+                                      This month typically falls during <span className="font-medium">{monthContent.gregorianMonths}</span> in the Gregorian calendar.
+                                    </p>
+                                  </div>
+                                  
+                                  {/* Climate and highlights section with icon */}
+                                  <div className="flex gap-5 items-start bg-white p-5 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                                    <div className="flex-shrink-0 bg-amber-100 text-amber-600 p-3 rounded-full animate-gentle-float">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <h4 className="text-lg font-medium text-gray-800 mb-2">Climate & Highlights</h4>
+                                      <p className="text-neutral mb-3">
+                                        In {monthContent.name}, the average temperature in Nepal ranges from <span className="font-medium">{monthContent.temperature}</span>.
+                                      </p>
+                                      <p className="text-neutral">
+                                        This month is particularly known for <span className="font-medium">{monthContent.highlights}</span>.
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Agricultural activities with icon */}
+                                  <div className="flex gap-5 items-start bg-white p-5 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                                    <div className="flex-shrink-0 bg-green-100 text-green-600 p-3 rounded-full animate-gentle-float">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <h4 className="text-lg font-medium text-gray-800 mb-2">Agricultural Activities</h4>
+                                      <p className="text-neutral mb-3">
+                                        {monthContent.name} typically has <span className="font-medium">{monthContent.days} days</span> in most years of the Nepali calendar.
+                                      </p>
+                                      <p className="text-neutral">
+                                        The agricultural activities during this month generally include <span className="font-medium">{monthContent.agriculture}</span>.
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Cultural significance section */}
+                                  <div className="bg-primary-light/10 p-5 rounded-lg relative">
+                                    <div className="absolute top-0 right-0 opacity-10">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                      </svg>
+                                    </div>
+                                    <div className="relative">
+                                      <h4 className="font-medium text-primary text-lg mb-3 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                        </svg>
+                                        Cultural Significance
+                                      </h4>
+                                      <p className="text-neutral mb-3 bg-white/60 p-3 rounded-lg shadow-sm">
+                                        {monthContent.name} falls within {(() => {
+                                          if ([1, 2, 3].includes(parseInt(month))) return "spring season in Nepal";
+                                          if ([4, 5, 6, 7].includes(parseInt(month))) return "monsoon season in Nepal";
+                                          if ([8, 9].includes(parseInt(month))) return "autumn season in Nepal";
+                                          return "winter season in Nepal";
+                                        })()} with particular importance to the agricultural calendar and cultural traditions.
+                                        {parseInt(month) === 1 && " This is the beginning of the Nepali calendar year, celebrated with festivities and social gatherings across the country."}
+                                        {parseInt(month) === 6 && " This month hosts Dashain, Nepal's most significant festival celebrated for 15 days with family reunions, feasting, and worship."}
+                                        {parseInt(month) === 7 && " This month hosts Tihar, the festival of lights, second only to Dashain in importance, with five days of celebrations honoring different deities and strengthening family bonds."}
+                                      </p>
+                                      
+                                      {/* Festival cards */}
+                                      {monthContent.festivals.length > 0 && (
+                                        <div>
+                                          <h5 className="font-medium text-primary mb-3 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                                            </svg>
+                                            Key Festivals in {monthContent.name}
+                                          </h5>
+                                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                            {monthContent.festivals.map((festival, index) => (
+                                              <div 
+                                                key={index} 
+                                                className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1 animate-fadeIn"
+                                                style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+                                              >
+                                                <div className="flex items-center mb-2">
+                                                  <div className="w-8 h-8 rounded-full bg-primary-light/30 flex items-center justify-center mr-2 text-primary">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                                    </svg>
+                                                  </div>
+                                                  <h6 className="font-medium text-primary-dark">{festival}</h6>
+                                                </div>
+                                                <div className="mt-2 bg-primary-light/10 text-xs text-gray-600 p-1.5 rounded">
+                                                  Celebrated in {monthContent.name} ({monthContent.nepaliName})
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Additional cultural information */}
+                                  <div className="p-5 bg-white rounded-lg shadow-sm border border-gray-100">
+                                    <h4 className="font-medium text-lg text-gray-800 mb-3">Nepali Calendar Context</h4>
+                                    <p className="text-neutral mb-3">
+                                      The Nepali calendar, officially known as Bikram Sambat (BS), is approximately 56.7 years ahead of the Gregorian calendar (AD) and is the official calendar of Nepal. It was introduced by King Bikramaditya and has been in use for over 2,000 years, making it one of the oldest continuously used calendars in the world.
+                                    </p>
+                                    
+                                    <div className="flex flex-col sm:flex-row gap-3 text-sm mt-4">
+                                      <div className="flex-1 bg-gray-50 p-3 rounded-lg">
+                                        <p className="text-gray-600">
+                                          <span className="font-medium block mb-1">Month Structure</span>
+                                          The Nepali calendar follows a lunar-solar system, with months having between 29 to 32 days, adjusting to keep in sync with lunar cycles.
+                                        </p>
+                                      </div>
+                                      <div className="flex-1 bg-gray-50 p-3 rounded-lg">
+                                        <p className="text-gray-600">
+                                          <span className="font-medium block mb-1">Tithis (Lunar Days)</span>
+                                          Each month consists of 30 tithis (lunar days) divided into two paksha (fortnights): Shukla (bright) and Krishna (dark).
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })()}
+                          </div>
+                          
+                          <div className="animate-fadeIn" style={{ animationDelay: '0.3s' }}>
+                            {/* Sidebar with enhanced design */}
+                            <div className="space-y-5">
+                              {/* Month facts card with enhanced styling */}
+                              <div className="bg-gradient-to-br from-primary to-primary-dark p-6 rounded-xl text-white shadow-lg animate-pulse-border border-2 border-primary">
+                                <div className="flex justify-between items-start mb-4">
+                                  <h4 className="font-semibold text-xl text-white">Month Facts</h4>
+                                  <div className="bg-white/20 rounded-full p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                  </div>
+                                </div>
+                                <ul className="space-y-4">
+                                  <li className="flex items-center">
+                                    <div className="bg-white/20 rounded-full p-1.5 mr-3">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <span className="text-white/70 text-sm block">Position</span>
+                                      <span className="font-medium">{parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month</span>
+                                    </div>
+                                  </li>
+                                  <li className="flex items-center">
+                                    <div className="bg-white/20 rounded-full p-1.5 mr-3">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <span className="text-white/70 text-sm block">Nepali Name</span>
+                                      <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).nepaliName}</span>
+                                    </div>
+                                  </li>
+                                  <li className="flex items-center">
+                                    <div className="bg-white/20 rounded-full p-1.5 mr-3">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <span className="text-white/70 text-sm block">Days</span>
+                                      <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).days}</span>
+                                    </div>
+                                  </li>
+                                  <li className="flex items-center">
+                                    <div className="bg-white/20 rounded-full p-1.5 mr-3">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <span className="text-white/70 text-sm block">Major Festivals</span>
+                                      <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).festivals.length}</span>
+                                    </div>
+                                  </li>
+                                  <li className="flex items-center">
+                                    <div className="bg-white/20 rounded-full p-1.5 mr-3">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <span className="text-white/70 text-sm block">Gregorian</span>
+                                      <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).gregorianMonths}</span>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              
+                              {/* Weather widget-style card */}
+                              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-100 animate-gentle-float">
+                                <h4 className="font-medium text-indigo-800 mb-4 flex items-center">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                  </svg>
+                                  Typical Weather
+                                </h4>
+                                <div className="flex items-center justify-between">
+                                  <div className="text-center">
+                                    <span className="block text-4xl font-bold text-indigo-600 mb-1 animate-shimmer">
+                                      {parseInt(month) <= 3 ? "🌤️" : 
+                                       parseInt(month) <= 7 ? "🌧️" : 
+                                       parseInt(month) <= 9 ? "⛅" : "❄️"}
+                                    </span>
+                                    <span className="text-sm text-gray-500 block animate-weather-slide">
+                                      {parseInt(month) <= 3 ? "Spring" : 
+                                       parseInt(month) <= 7 ? "Monsoon" : 
+                                       parseInt(month) <= 9 ? "Autumn" : "Winter"}
+                                    </span>
+                                  </div>
+                                  <div className="text-right">
+                                    <span className="text-lg font-medium text-indigo-800 block">
+                                      {getMonthContent(parseInt(month), parseInt(params.year)).temperature.split(' ')[0]}
+                                    </span>
+                                    <span className="text-sm text-gray-500">
+                                      Terai Region
+                                    </span>
+                                  </div>
+                                </div>
+                                
+                                <div className="mt-4 pt-4 border-t border-blue-100">
+                                  <p className="text-sm text-gray-600">
+                                    {parseInt(month) <= 3 ? "Warm days with clear skies. Excellent time for tourism and outdoor activities in Nepal." : 
+                                     parseInt(month) <= 7 ? "Humid with heavy rainfall. Rice planting season with lush green landscapes." : 
+                                     parseInt(month) <= 9 ? "Clear weather after monsoon. Festival season with moderate temperatures." : 
+                                     "Cool and dry with excellent mountain views. Winter crops flourish."}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              {/* Links to other months */}
+                              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                                <h4 className="font-medium text-gray-800 mb-3">Explore Other Months</h4>
+                                <div className="grid grid-cols-3 gap-2">
+                                  {Array.from({ length: 12 }, (_, i) => i + 1)
+                                    .filter(m => m !== parseInt(month)) // Exclude current month
+                                    .map(m => {
+                                      const monthName = getMonthName(m).toLowerCase();
+                                      return (
+                                        <a
+                                          href={`/nepalicalendar/${params.year}/${monthName}`}
+                                          key={m}
+                                          className="text-center py-2 px-1 text-sm bg-gray-50 hover:bg-primary-light/20 rounded transition-colors"
+                                        >
+                                          {getMonthName(m)}
+                                        </a>
+                                      );
+                                  })}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

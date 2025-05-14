@@ -49,6 +49,23 @@
     animation: fadeIn 0.5s ease-out forwards;
   }
   
+  /* New animations */
+  .animate-shimmer {
+    animation: shimmer 2.5s ease-in-out infinite;
+  }
+  
+  .animate-gentle-float {
+    animation: gentleFloat 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-border {
+    animation: pulseBorder 2s ease-in-out infinite;
+  }
+  
+  .animate-weather-slide {
+    animation: weatherSlide 0.7s ease-out forwards;
+  }
+  
   /* Custom ease curves */
   .ease-smooth-out {
     transition-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
@@ -111,6 +128,60 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* New animation keyframes */
+@keyframes shimmer {
+  0% {
+    box-shadow: 0 0 0 0 rgba(87, 200, 77, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(87, 200, 77, 0);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(87, 200, 77, 0);
+    transform: scale(1);
+  }
+}
+
+@keyframes gentleFloat {
+  0% {
+    transform: translateY(0);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+  }
+  50% {
+    transform: translateY(-5px);
+    filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.12));
+  }
+  100% {
+    transform: translateY(0);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+  }
+}
+
+@keyframes pulseBorder {
+  0% {
+    border-color: rgba(87, 200, 77, 0.5);
+  }
+  50% {
+    border-color: rgba(87, 200, 77, 1);
+  }
+  100% {
+    border-color: rgba(87, 200, 77, 0.5);
+  }
+}
+
+@keyframes weatherSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 :root {
