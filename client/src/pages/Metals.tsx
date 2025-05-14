@@ -169,7 +169,12 @@ const Metals = () => {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   नेपाल सुनचाँदी व्यवसायी महासंघ (FENEGOSIDA) द्वारा प्रकाशित नवीनतम दरहरू।
-                  {data?.source && <span className="block text-xs mt-1">Source: {data.source}</span>}
+                  {data?.source && (
+                    <span className={`block text-xs mt-1 ${data.source.includes('Fallback') || data.source.includes('Error') ? 'text-amber-600' : 'text-green-600'}`}>
+                      <span className="inline-block w-2 h-2 rounded-full mr-1 align-middle" style={{ backgroundColor: data.source.includes('Fallback') || data.source.includes('Error') ? '#f59e0b' : '#10b981' }}></span>
+                      Source: {data.source}
+                    </span>
+                  )}
                 </motion.p>
               </div>
               
@@ -192,8 +197,8 @@ const Metals = () => {
                     metalName="सुन (Gold)"
                     icon={<FaCoins />}
                     prices= {[
-                      { label: 'फाइन गोल्ड (Fine Gold)', value: data.gold.fineGold || 'N/A' },
-                      { label: 'तेजाबी गोल्ड (Tejabi Gold)', value: data.gold.tejabiGold || 'N/A' },
+                      { label: 'फाइन गोल्ड (Fine Gold)', value: data.gold.fineGold || 'N/A', unit: 'per tola' },
+                      { label: 'तेजाबी गोल्ड (Tejabi Gold)', value: data.gold.tejabiGold || 'N/A', unit: 'per tola' },
                     ]}
                     bgColorClass="bg-gradient-to-br from-yellow-50 via-amber-100 to-yellow-100"
                     borderColorClass="border-amber-400"
@@ -204,7 +209,7 @@ const Metals = () => {
                     metalName="चाँदी (Silver)"
                     icon={<FaCoins />}
                     prices={[
-                      { label: 'स्ट्यान्डर्ड चाँदी (Standard Silver)', value: data.silver.standardSilver || 'N/A' }
+                      { label: 'स्ट्यान्डर्ड चाँदी (Standard Silver)', value: data.silver.standardSilver || 'N/A', unit: 'per tola' }
                     ]}
                     bgColorClass="bg-gradient-to-br from-gray-50 via-slate-100 to-gray-100"
                     borderColorClass="border-slate-400"
@@ -218,6 +223,12 @@ const Metals = () => {
                   <p className="font-bold text-xl">आजको लागि कुनै धातु मूल्य उपलब्ध छैन।</p>
                   <p>No metal prices available for today. Please check back later.</p>
                   <p className="text-sm mt-2 text-blue-600">API response received, but no valid price data was found.</p>
+                  <button 
+                    className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                    onClick={() => window.location.reload()}
+                  >
+                    Refresh Data
+                  </button>
                 </div>
               )}
 

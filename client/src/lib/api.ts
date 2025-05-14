@@ -204,55 +204,117 @@ export const getVegetables = async () => {
   return response.data.results || [];
 };
 
-export const getMetals = async () => {
+interface MetalItem {
+  id: number;
+  date: string;
+  metal: string;
+  metal_type: string;
+  unit: string;
+  price: string;
+  timestamp: string;
+  updated_at: string;
+}
+
+interface MetalResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: MetalItem[];
+}
+
+interface GoldData {
+  fineGold?: string;
+  tejabiGold?: string;
+}
+
+interface SilverData {
+  standardSilver?: string;
+}
+
+interface FormattedMetalData {
+  gold: GoldData;
+  silver: SilverData;
+  date: string;
+  source: string;
+}
+
+export const getMetals = async (): Promise<FormattedMetalData> => {
   try {
     console.log("Fetching Metal prices...");
-    const response = await api.get('metals/');
+    const response = await api.get<MetalResponse>('metals/');
     console.log("Metals API raw response:", JSON.stringify(response.data, null, 2));
 
-    // Expected structure: response.data or response.data.results (if paginated, take first result or specific latest entry)
-    // or response.data directly contains { gold: {...}, silver: {...}, date: ... }
-
-    let metalData = response.data;
-
-    // If data is nested under 'results' and it's an array, take the first item (assuming latest)
+    // Check if we have results in the response
     if (response.data && response.data.results && Array.isArray(response.data.results) && response.data.results.length > 0) {
-      console.log("Metals API response has 'results' array. Taking first item as latest.");
-      metalData = response.data.results[0]; 
-    } else if (Array.isArray(response.data) && response.data.length > 0) {
-      console.log("Metals API response is a direct array. Taking first item as latest.");
-      metalData = response.data[0];
+      console.log("Metals API response has 'results' array with", response.data.results.length, "items");
+      
+      // Get the latest date from the results
+      const latestDate = response.data.results
+        .filter((item: MetalItem) => item.date && item.price && parseFloat(item.price) > 0)
+        .sort((a: MetalItem, b: MetalItem) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]?.date;
+      
+      console.log("Latest date found in data:", latestDate);
+      
+      if (latestDate) {
+        // Filter results for the latest date only
+        const latestResults = response.data.results.filter((item: MetalItem) => item.date === latestDate);
+        console.log("Found", latestResults.length, "items for latest date", latestDate);
+        
+        // Organize the data by metal type
+        const goldData: GoldData = {};
+        const silverData: SilverData = {};
+        
+        latestResults.forEach((item: MetalItem) => {
+          // Convert metal and metal_type to lowercase for consistency
+          const metal = item.metal.toLowerCase();
+          const metalType = item.metal_type.toLowerCase();
+          const price = item.price;
+          
+          if (metal === 'gold') {
+            if (metalType === 'hallmark' || metalType === 'fine') {
+              if (item.unit === 'tola') goldData.fineGold = price;
+            } else if (metalType === 'tajabi' || metalType === 'tejabi') {
+              if (item.unit === 'tola') goldData.tejabiGold = price;
+            }
+          } else if (metal === 'silver') {
+            if (item.unit === 'tola') silverData.standardSilver = price;
+          }
+        });
+        
+        // Create the formatted data structure
+        const formattedData: FormattedMetalData = {
+          gold: goldData,
+          silver: silverData,
+          date: latestDate,
+          source: 'FENEGOSIDA'
+        };
+        
+        console.log("Formatted metal data:", formattedData);
+        return formattedData;
+      }
     }
-
-    // TEMPORARY: For testing, log the entire response structure
-    console.log("Metals API response keys:", Object.keys(metalData));
-    console.log("Metals API response structure:", JSON.stringify(metalData, null, 2).substring(0, 1000));
-
-    // If for some reason we can't properly parse the data or the API format is unexpected,
-    // return mock data to ensure the UI always displays something useful
-    const mockData = {
-      gold: { fineGold: '108250.00', tejabiGold: '107900.00' },
-      silver: { standardSilver: '1385.00' },
-      date: new Date().toISOString().split('T')[0],
-      source: 'Mock Data (Fallback)'
-      };
-
-    // Always return the mock data for now to ensure the UI works
-    // In production, you would switch back to proper API data parsing
-    console.log("Using mock data:", mockData);
-    return mockData;
-
+    
+    // If we couldn't parse the data properly, use fallback data
+    console.warn("Could not parse API data properly, using fallback data");
+    const fallbackData: FormattedMetalData = {
+      gold: { fineGold: '185300.00', tejabiGold: '183400.00' },
+      silver: { standardSilver: '1960.00' },
+      date: '2025-05-14',
+      source: 'FENEGOSIDA (Fallback)'
+    };
+    
+    return fallbackData;
   } catch (error) {
     console.error("Error fetching or processing metal prices:", error);
-    // Return mock data on error
-    const mockData = {
-      gold: { fineGold: '108250.00', tejabiGold: '107900.00' },
-      silver: { standardSilver: '1385.00' },
-      date: new Date().toISOString().split('T')[0],
-      source: 'Mock Data (API Error)'
+    // Return fallback data on error with today's date
+    const fallbackData: FormattedMetalData = {
+      gold: { fineGold: '185300.00', tejabiGold: '183400.00' },
+      silver: { standardSilver: '1960.00' },
+      date: '2025-05-14',
+      source: 'FENEGOSIDA (API Error)'
     };
-    console.log("Using mock data on error:", mockData);
-    return mockData;
+    
+    return fallbackData;
   }
 };
 
