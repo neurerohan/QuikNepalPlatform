@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { isHolidayEvent } from './holidays';
-import { getCurrentNepaliDate } from './nepaliDateConverter';
+import { getCurrentNepaliDate, convertADToBS, convertBSToAD } from './nepaliDateConverter';
 
 // Change the base URL to directly access the external API
 const API_BASE_URL = "https://api.kalimatirate.nyure.com.np/api/";
@@ -148,9 +148,54 @@ export function getMonthName(month: number): string {
   return nepaliMonths[month - 1] || '';
 }
 
+// Helper array for nepali month names
+const nepaliMonths = [
+  'Baishakh', 'Jestha', 'Ashadh', 'Shrawan', 
+  'Bhadra', 'Ashwin', 'Kartik', 'Mangsir', 
+  'Poush', 'Magh', 'Falgun', 'Chaitra'
+];
+
+// Helper array for english month names
+const englishMonths = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
 export const convertDate = async (params: { from: string; date: string }) => {
-  const response = await api.get(`calendar/convert`, { params });
-  return response.data;
+  try {
+    console.log("Converting date:", params);
+    
+    // Parse the date components from the date string (YYYY-MM-DD format)
+    const [year, month, day] = params.date.split('-').map(Number);
+    
+    if (params.from === 'bs') {
+      // Convert from BS to AD
+      const result = convertBSToAD(year, month, day);
+      return {
+        bsYear: year,
+        bsMonth: nepaliMonths[month - 1],
+        bsDay: day,
+        adYear: result.year,
+        adMonth: result.month_name,
+        adDay: result.day
+      };
+    } else {
+      // Convert from AD to BS
+      const adDate = new Date(year, month - 1, day);
+      const result = convertADToBS(adDate);
+      return {
+        adYear: year,
+        adMonth: englishMonths[month - 1],
+        adDay: day,
+        bsYear: result.year,
+        bsMonth: result.month_name,
+        bsDay: result.day
+      };
+    }
+  } catch (error) {
+    console.error("Error in date conversion:", error);
+    throw new Error("Failed to convert date");
+  }
 };
 
 export const getVegetables = async () => {

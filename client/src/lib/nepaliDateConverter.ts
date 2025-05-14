@@ -17,7 +17,70 @@ const calendarData = [
   [2008, 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31],
   [2009, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
   [2010, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
-  // Truncated for brevity, but actual implementation would include more years
+  [2011, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2012, 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30],
+  [2013, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2014, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2015, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2016, 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30],
+  [2017, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2018, 31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2019, 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
+  [2020, 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2021, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2022, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
+  [2023, 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
+  [2024, 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2025, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2026, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2027, 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
+  [2028, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2029, 31, 31, 32, 31, 32, 30, 30, 29, 30, 29, 30, 30],
+  [2030, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2031, 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
+  [2032, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2033, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2034, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2035, 30, 32, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31],
+  [2036, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2037, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2038, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2039, 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30],
+  [2040, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2041, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2042, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2043, 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30],
+  [2044, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2045, 31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2046, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2047, 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2048, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2049, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
+  [2050, 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
+  [2051, 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2052, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2053, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
+  [2054, 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
+  [2055, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2056, 31, 31, 32, 31, 32, 30, 30, 29, 30, 29, 30, 30],
+  [2057, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2058, 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
+  [2059, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2060, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2061, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2062, 30, 32, 31, 32, 31, 31, 29, 30, 29, 30, 29, 31],
+  [2063, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2064, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2065, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2066, 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31],
+  [2067, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2068, 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2069, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2070, 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30],
+  [2071, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  [2072, 31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30],
+  [2073, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  [2074, 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
   [2075, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
   [2076, 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
   [2077, 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
@@ -51,6 +114,11 @@ const nepaliMonths = [
   'Baishakh', 'Jestha', 'Ashadh', 'Shrawan', 
   'Bhadra', 'Ashwin', 'Kartik', 'Mangsir', 
   'Poush', 'Magh', 'Falgun', 'Chaitra'
+];
+
+const englishMonths = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
 // Convert AD date to BS date
@@ -111,6 +179,68 @@ export function convertADToBS(adDate: Date): {
   };
 }
 
+// Convert BS date to AD date
+export function convertBSToAD(bsYear: number, bsMonth: number, bsDay: number): {
+  year: number;
+  month: number;
+  month_name: string;
+  day: number;
+  day_of_week: number;
+  bs_date: string;
+  ad_date: string;
+} {
+  // Check if date is within valid range
+  if (bsYear < 2000 || bsYear > 2090) {
+    return fallbackADDate(bsYear, bsMonth, bsDay);
+  }
+  
+  // Calculate days from BS reference date
+  let totalDays = 0;
+  
+  // Days from start Nepali date to 1st day of input year
+  let bsYearIterator = startNepaliDate.year;
+  
+  // Add days for complete years
+  while (bsYearIterator < bsYear) {
+    for (let month = 0; month < 12; month++) {
+      totalDays += getNumDaysInNepaliMonth(bsYearIterator, month);
+    }
+    bsYearIterator++;
+  }
+  
+  // Add days from months of input year
+  for (let month = 0; month < bsMonth - 1; month++) {
+    totalDays += getNumDaysInNepaliMonth(bsYear, month);
+  }
+  
+  // Add days of input month
+  totalDays += bsDay - 1;
+  
+  // Adjust for reference point
+  // Days from reference BS date (17 Poush 2000) to 1 Baishakh 2000
+  let referenceToYearStartDays = -(startNepaliDate.day - 1);
+  for (let month = 0; month < startNepaliDate.month; month++) {
+    referenceToYearStartDays -= getNumDaysInNepaliMonth(startNepaliDate.year, month);
+  }
+  
+  totalDays -= startNepaliDate.day - 1; // Days remaining in reference month
+  
+  // Add days to AD reference date
+  const adDate = new Date(startEnglishDate);
+  adDate.setDate(adDate.getDate() + totalDays);
+  
+  // Format the result
+  return {
+    year: adDate.getFullYear(),
+    month: adDate.getMonth() + 1,
+    month_name: englishMonths[adDate.getMonth()],
+    day: adDate.getDate(),
+    day_of_week: adDate.getDay(),
+    bs_date: `${bsYear}-${bsMonth}-${bsDay}`,
+    ad_date: formatADDate(adDate)
+  };
+}
+
 // Helper function to get number of days in a Nepali month
 function getNumDaysInNepaliMonth(year: number, month: number): number {
   // Find the year data in our calendar array
@@ -126,16 +256,36 @@ function getNumDaysInNepaliMonth(year: number, month: number): number {
 
 // Fallback estimation for dates outside our reference range
 function estimateNepaliDate(adDate: Date) {
-  // May 13, 2025 corresponds to 30 Baishakh 2082 BS
+  // For dates outside our range, calculate an approximation
+  const yearDiff = adDate.getFullYear() - 1944;
+  const estimatedNepaliYear = 2000 + yearDiff;
   
   return {
-    year: 2082, // Current Nepali year
-    month: 1,  // Baishakh is month 1
-    month_name: 'Baishakh',
-    day: 30,  // Correct date is 30th
+    year: estimatedNepaliYear,
+    month: adDate.getMonth() + 1,
+    month_name: nepaliMonths[adDate.getMonth()],
+    day: adDate.getDate(),
     day_of_week: adDate.getDay(),
     ad_date: formatADDate(adDate),
-    bs_date: "2082-01-30"
+    bs_date: `${estimatedNepaliYear}-${adDate.getMonth() + 1}-${adDate.getDate()}`
+  };
+}
+
+function fallbackADDate(bsYear: number, bsMonth: number, bsDay: number) {
+  // For BS dates outside our range, calculate an approximation
+  const yearDiff = bsYear - 2000;
+  const estimatedADYear = 1944 + yearDiff;
+  
+  const adDate = new Date(estimatedADYear, bsMonth - 1, bsDay);
+  
+  return {
+    year: adDate.getFullYear(),
+    month: adDate.getMonth() + 1,
+    month_name: englishMonths[adDate.getMonth()],
+    day: adDate.getDate(),
+    day_of_week: adDate.getDay(),
+    bs_date: `${bsYear}-${bsMonth}-${bsDay}`,
+    ad_date: formatADDate(adDate)
   };
 }
 
@@ -150,17 +300,7 @@ function formatADDate(date: Date): string {
 // Get current Nepali date
 export function getCurrentNepaliDate() {
   const today = new Date();
-  
-  // Force correct date for now until conversion logic is fixed
-  return {
-    year: 2082,
-    month: 1,
-    month_name: 'Baishakh',
-    day: 30,
-    day_of_week: today.getDay(),
-    ad_date: formatADDate(today),
-    bs_date: "2082-01-30"
-  };
+  return convertADToBS(today);
 }
 
 // Format Nepali date in a readable format
