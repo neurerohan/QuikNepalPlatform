@@ -4,7 +4,9 @@ import DateConverterForm from '@/components/ui/DateConverterForm';
 import FadeIn from '@/components/ui/FadeIn';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState, useEffect } from 'react';
-import { getCurrentNepaliDate, formatNepaliDate } from '@/lib/nepaliDateConverter';
+import { getCurrentNepaliDate, formatNepaliDate, getKathmanduTime } from '@/lib/nepaliDateConverter';
+import SEO from '@/components/SEO';
+import { FaCalendarAlt, FaExchangeAlt, FaGlobe, FaHistory, FaInfoCircle } from 'react-icons/fa';
 
 // Background particles animation
 const BackgroundParticles = () => {
@@ -37,7 +39,12 @@ const BackgroundParticles = () => {
 };
 
 // Calendar feature card component
-const CalendarFeatureCard = ({ title, icon, description, className }) => {
+const CalendarFeatureCard = ({ title, icon, description, className }: {
+  title: string;
+  icon: React.ReactNode;
+  description: string;
+  className: string;
+}) => {
   return (
     <motion.div 
       className={`bg-white rounded-xl shadow-md overflow-hidden border ${className} hover:shadow-lg transition-all duration-300`}
@@ -148,9 +155,21 @@ const MonthComparisonTable = () => {
   );
 };
 
+interface NepaliDateType {
+  year: number;
+  month: number;
+  month_name: string;
+  day: number;
+  day_of_week: number;
+  ad_date: string;
+  bs_date: string;
+}
+
 const DateConverter = () => {
-  const [currentNepaliDate, setCurrentNepaliDate] = useState(null);
-  const [currentGregorianDate, setCurrentGregorianDate] = useState(null);
+  const [currentNepaliDate, setCurrentNepaliDate] = useState<NepaliDateType | null>(null);
+  const [currentGregorianDate, setCurrentGregorianDate] = useState<string | null>(null);
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
 
   useEffect(() => {
     // Get current Nepali date
@@ -159,15 +178,37 @@ const DateConverter = () => {
     
     // Get current Gregorian date
     const today = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     setCurrentGregorianDate(today.toLocaleDateString('en-US', options));
   }, []);
 
+  const pageTitle = "नेपाली मिति परिवर्तक | Nepali Date Converter";
+  const pageDescription = "Convert dates between Bikram Sambat (BS) and Gregorian (AD) calendars easily with our date converter tool. Translate Nepali date into English and vice versa. The most accurate Nepali to English date converter available online.";
+  const pageKeywords = "date converter, convert nepali date into english, translate nepali date into english, date converter english, nepali date, english date, BS to AD, AD to BS, bikram sambat, gregorian calendar";
+
   return (
-    <MainLayout
-      title="नेपाली मिति परिवर्तक | Nepali Date Converter"
-      description="Convert dates between Bikram Sambat (BS) and Gregorian (AD) calendars easily with our date converter tool. The official calendar of Nepal explained."
-    >
+    <>
+      <SEO 
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname="/date-converter"
+        ogImage="https://quiknepal.com/og-images/date-converter.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="WebApplication"
+        hrefLangs={[
+          { lang: "en", url: "https://quiknepal.com/en/date-converter" },
+          { lang: "ne", url: "https://quiknepal.com/ne/date-converter" }
+        ]}
+      />
+      <MainLayout
+        title={pageTitle}
+        description={pageDescription}
+      >
       <div className="relative min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50">
         <BackgroundParticles />
       <FadeIn>
@@ -196,8 +237,19 @@ const DateConverter = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  Easily convert dates between Bikram Sambat (BS) and Gregorian (AD) calendars with our comprehensive conversion tool.
+                  Easily convert dates between Bikram Sambat (BS) and Gregorian (AD) calendars with our comprehensive date converter tool. Translate Nepali date into English or convert English date to Nepali with 100% accuracy.
                 </motion.p>
+                <motion.div
+                  className="flex flex-wrap justify-center gap-2 mt-3 text-sm text-indigo-600"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <span className="bg-indigo-100 px-2 py-1 rounded-full">Date Converter</span>
+                  <span className="bg-indigo-100 px-2 py-1 rounded-full">Convert Nepali Date into English</span>
+                  <span className="bg-indigo-100 px-2 py-1 rounded-full">Translate Nepali Date into English</span>
+                  <span className="bg-indigo-100 px-2 py-1 rounded-full">Date Converter English</span>
+                </motion.div>
               </div>
 
               {/* Current Date Display */}
@@ -464,8 +516,61 @@ const DateConverter = () => {
         </div>
       </section>
         </FadeIn>
+
+      {/* Additional SEO Content Section */}
+      <section className="py-12 bg-indigo-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6 border border-indigo-100">
+            <h2 className="text-2xl font-semibold text-indigo-700 mb-4">Why Use Our Nepali Date Converter Tool?</h2>
+            
+            <div className="space-y-4 text-gray-600">
+              <p>
+                Our date converter tool is designed to help you easily convert Nepali date into English and vice versa. Whether you need to translate Nepali date into English for official documents, travel planning, or cultural understanding, our tool provides accurate and reliable conversions.
+              </p>
+              
+              <div className="bg-indigo-50 p-4 rounded-lg">
+                <h3 className="text-lg font-medium text-indigo-700 mb-2">Key Benefits of Our Date Converter:</h3>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>Instantly convert between Bikram Sambat (BS) and Gregorian (AD) calendars</li>
+                  <li>100% accurate date conversion algorithms based on official Nepali calendar data</li>
+                  <li>User-friendly interface that makes date conversion simple and intuitive</li>
+                  <li>Comprehensive information about both calendar systems</li>
+                  <li>Ability to translate Nepali date into English for any date in history</li>
+                  <li>Helpful for travelers, researchers, and anyone working with Nepali dates</li>
+                </ul>
+              </div>
+              
+              <p>
+                The Nepali calendar (Bikram Sambat) is approximately 56.7 years ahead of the Gregorian calendar, making manual conversion challenging. Our date converter English tool eliminates the complexity and potential for errors when you need to convert Nepali date into English.
+              </p>
+              
+              <div className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500">
+                <div className="flex items-start">
+                  <FaInfoCircle className="text-amber-500 mt-1 mr-2 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-medium text-amber-800">Did You Know?</h4>
+                    <p className="text-amber-700">
+                      The Nepali calendar has different month lengths compared to the Gregorian calendar, and these can vary year to year. Our date converter tool accounts for all these variations to provide accurate translations when you convert Nepali date into English.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <p>
+                Whether you're planning travel to Nepal, working with Nepali documents, or simply curious about date differences between calendars, our date converter tool is your reliable solution for all date conversion needs. Try our tool today to easily translate Nepali date into English with just a few clicks!
+              </p>
+            </div>
+            
+            <div className="mt-6 text-sm text-gray-500">
+              <p>Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p>Published: January 1, 2024</p>
+            </div>
+          </div>
+        </div>
+      </section>
       </div>
     </MainLayout>
+    </>
   );
 };
 
