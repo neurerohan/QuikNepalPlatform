@@ -95,7 +95,7 @@ export const getMonthContent = (month: number, year: number): MonthContent => {
       days: 30,
       agriculture: 'harvesting of early rice varieties and planting of winter crops',
       festivals: ['Dashain', 'Fulpati', 'Vijaya Dashami', 'Kojagrat Purnima'],
-      description: 'Ashwin hosts Dashain, a 15-day celebration that's the most important festival in Nepal.',
+      description: 'Ashwin hosts Dashain, a 15-day celebration that\'s the most important festival in Nepal.',
       culturalNotes: 'During Dashain, people travel long distances to celebrate with family and receive tika and blessings from elders.'
     },
     {
