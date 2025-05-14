@@ -824,7 +824,7 @@ const Calendar = () => {
                                     {eventDays.map((day: string | number, i: number) => (
                                       <span key={i} className="bg-white/20 rounded-full px-2 py-0.5">
                                         {day} {getMonthName(parseInt(month))}
-                                      </span>
+                                </span>
                                     ))}
                                   </div>
                                 </div>
@@ -858,10 +858,10 @@ const Calendar = () => {
                         <div key={index} className="bg-gradient-to-br from-purple-50 to-indigo-50 p-4 rounded-lg border border-purple-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
                           <h6 className="font-medium text-purple-700">{festival.name}</h6>
                           <p className="text-sm text-gray-600 mt-1">{festival.description}</p>
-                        </div>
-                      ))}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
                 </div>
                 
                 {/* Month Summary - Using dynamic content */}
@@ -890,9 +890,9 @@ const Calendar = () => {
                                 </h4>
                                 <p className="text-neutral mb-4 bg-gray-50 p-4 rounded-lg border-l-4 border-primary shadow-sm">
                                   <span className="font-semibold text-lg text-primary">{monthContent.name}</span> (Nepali: <span className="font-medium text-lg">{monthContent.nepaliName}</span>) is 
-                                  the {parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month in the Nepali Bikram Sambat calendar. 
-                                  This month typically falls during <span className="font-medium">{monthContent.gregorianMonths}</span> in the Gregorian calendar.
-                                </p>
+                                the {parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month in the Nepali Bikram Sambat calendar. 
+                                This month typically falls during <span className="font-medium">{monthContent.gregorianMonths}</span> in the Gregorian calendar.
+                              </p>
                               </div>
                               
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn" style={{animationDelay: '0.2s'}}>
@@ -904,7 +904,7 @@ const Calendar = () => {
                                     Climate
                                   </h4>
                                   <p className="text-neutral">
-                                    In {monthContent.name}, the average temperature in Nepal ranges from <span className="font-medium">{monthContent.temperature}</span>. 
+                                In {monthContent.name}, the average temperature in Nepal ranges from <span className="font-medium">{monthContent.temperature}</span>. 
                                     {parseInt(month) === 1 && " The weather begins to warm as spring transitions to early summer."}
                                     {parseInt(month) >= 4 && parseInt(month) <= 7 && " Monsoon rains provide relief from the heat and nourish the land."}
                                     {parseInt(month) >= 8 && parseInt(month) <= 9 && " The weather is pleasant after monsoon season with clear skies."}
@@ -1042,8 +1042,8 @@ const Calendar = () => {
                           <div className="bg-white p-4 rounded-lg border-t border-primary shadow-md">
                             <h4 className="text-lg font-medium text-primary mb-2">About Nepali Calendar</h4>
                             <p className="text-neutral mb-3">
-                              The Nepali calendar, officially known as Bikram Sambat (BS), is approximately 56.7 years ahead of the Gregorian calendar (AD) and is the official calendar of Nepal. It was introduced by King Bikramaditya and has been in use for over 2,000 years, making it one of the oldest continuously used calendars in the world.
-                            </p>
+                          The Nepali calendar, officially known as Bikram Sambat (BS), is approximately 56.7 years ahead of the Gregorian calendar (AD) and is the official calendar of Nepal. It was introduced by King Bikramaditya and has been in use for over 2,000 years, making it one of the oldest continuously used calendars in the world.
+                        </p>
                             <p className="text-neutral text-sm">
                               Unlike the Gregorian calendar, the Nepali calendar is based on lunar cycles, with adjustments to synchronize with solar cycles. This results in varying month lengths from 29 to 32 days, with occasional leap months to maintain seasonal alignment.
                             </p>
@@ -1196,10 +1196,10 @@ const Calendar = () => {
                               </li>
                             </ul>
                           </div>
-                        </div>
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
                 </div>
               </TabsContent>
               

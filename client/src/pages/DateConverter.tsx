@@ -170,9 +170,9 @@ const DateConverter = () => {
     >
       <div className="relative min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50">
         <BackgroundParticles />
-        <FadeIn>
+      <FadeIn>
           <section className="py-12 md:py-16 relative z-10">
-            <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4">
               <div className="text-center mb-10">
                 <motion.h1 
                   className="text-4xl md:text-5xl font-extrabold text-indigo-600 mb-3 tracking-tight"
@@ -224,20 +224,20 @@ const DateConverter = () => {
                     <h3 className="text-lg font-medium text-indigo-800 mb-1">Today's Nepali Date</h3>
                     <p className="text-2xl font-bold text-gray-700">
                       {currentNepaliDate ? `${currentNepaliDate.day} ${currentNepaliDate.month_name} ${currentNepaliDate.year}` : "Loading..."}
-                    </p>
-                  </div>
+            </p>
+          </div>
                 </motion.div>
               </div>
 
               {/* Main Converter Section */}
               <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-indigo-100 mb-10">
                 <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-5">
-                  <h3 className="text-xl font-semibold text-white">BS/AD Date Converter</h3>
+              <h3 className="text-xl font-semibold text-white">BS/AD Date Converter</h3>
                   <p className="text-white/80 text-sm">Convert between Nepali (Bikram Sambat) and Gregorian calendar systems</p>
-                </div>
-                
-                <DateConverterForm />
-              </div>
+            </div>
+            
+            <DateConverterForm />
+          </div>
 
               {/* Calendar Info Tabs */}
               <motion.div 
@@ -458,11 +458,11 @@ const DateConverter = () => {
                         </li>
                       </ul>
                     </div>
-                  </div>
+          </div>
                 </div>
               </motion.div>
-            </div>
-          </section>
+        </div>
+      </section>
         </FadeIn>
       </div>
     </MainLayout>

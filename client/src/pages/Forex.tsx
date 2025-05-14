@@ -175,9 +175,9 @@ const Forex = () => {
       <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
         <BackgroundParticles />
         
-        <FadeIn>
+      <FadeIn>
           <section className="py-12 relative z-10">
-            <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <motion.h1 
                   className="text-4xl md:text-5xl font-bold text-primary mb-3"
@@ -231,32 +231,32 @@ const Forex = () => {
                       <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mb-4"></div>
                       <p className="text-lg text-gray-600">पछिल्लो दरहरू लोड हुँदैछ...</p>
                       <p className="text-sm text-gray-500">Loading latest rates...</p>
-                    </div>
+                  </div>
                   ) : errorForex ? (
                     <div className="bg-red-50 p-6 rounded-lg text-red-700 text-center h-80 flex flex-col justify-center items-center">
                       <span className="text-4xl mb-3">⚠️</span>
                       <p className="font-semibold text-xl">Forex डाटा लोड गर्न असमर्थ।</p>
                       <p className="text-md">Failed to load Forex data.</p>
                       <p className="text-sm mt-2">कृपया पछि प्रयास गर्नुहोस् वा आफ्नो इन्टरनेट जडान जाँच गर्नुहोस्।</p>
-                    </div>
+                </div>
                   ) : forexData && forexData.rates && forexData.rates.length > 0 ? (
                     <div className="overflow-x-auto bg-blue-50/30 p-2 sm:p-4 rounded-xl">
-                      <DataTable
-                        columns={forexColumns}
+                    <DataTable
+                      columns={forexColumns}
                         data={forexData.rates}
                         isLoading={isLoadingForex} // For internal DataTable shimmer perhaps
-                      />
-                      
+                    />
+                    
                       {forexData.totalPages > 1 && (
                         <div className="mt-6 flex justify-center">
-                          <Pagination>
-                            <PaginationContent>
-                              <PaginationItem>
-                                <PaginationPrevious 
-                                  onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                        <Pagination>
+                          <PaginationContent>
+                            <PaginationItem>
+                              <PaginationPrevious 
+                                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                                   className={`${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10 hover:text-primary'} transition-colors`}
-                                />
-                              </PaginationItem>
+                              />
+                            </PaginationItem>
                               
                               {Array.from({ length: Math.min(forexData.totalPages, 5) }, (_, i) => {
                                 let pageNum = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
@@ -264,33 +264,33 @@ const Forex = () => {
                                    pageNum = forexData.totalPages - 4 + i;
                                 }
                                 if (pageNum > 0 && pageNum <= forexData.totalPages) {
-                                return (
+                              return (
                                     <PaginationItem key={pageNum}>
-                                      <PaginationLink 
-                                        onClick={() => handlePageChange(pageNum)}
-                                        isActive={currentPage === pageNum}
+                                  <PaginationLink 
+                                    onClick={() => handlePageChange(pageNum)}
+                                    isActive={currentPage === pageNum}
                                         className={`${currentPage === pageNum ? 'bg-primary text-white hover:bg-primary/90' : 'hover:bg-primary/10 hover:text-primary'} transition-colors px-3 py-1.5 rounded-md`}
-                                      >
-                                        {pageNum}
-                                      </PaginationLink>
-                                    </PaginationItem>
-                                );
+                                  >
+                                    {pageNum}
+                                  </PaginationLink>
+                                </PaginationItem>
+                              );
                                 }
                                 return null;
-                              })}
-                              
-                              <PaginationItem>
-                                <PaginationNext 
+                            })}
+                            
+                            <PaginationItem>
+                              <PaginationNext 
                                   onClick={() => handlePageChange(Math.min(currentPage + 1, forexData.totalPages))}
                                   className={`${currentPage === forexData.totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10 hover:text-primary'} transition-colors`}
-                                />
-                              </PaginationItem>
-                            </PaginationContent>
-                          </Pagination>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
+                              />
+                            </PaginationItem>
+                          </PaginationContent>
+                        </Pagination>
+                      </div>
+                    )}
+                  </div>
+                ) : (
                     <div className="bg-blue-50 p-6 rounded-lg text-blue-700 text-center h-80 flex flex-col justify-center items-center">
                        <span className="text-4xl mb-3">ℹ️</span>
                       <p className="font-semibold text-xl">आजको लागि कुनै विनिमय दरहरू उपलब्ध छैनन्।</p>
@@ -334,7 +334,7 @@ const Forex = () => {
                         Foreign exchange (Forex) is crucial for international trade and investment. It allows businesses and individuals to convert one currency to another, facilitating global economic activities.
                         अन्तर्राष्ट्रिय व्यापार र लगानीको लागि विदेशी विनिमय महत्वपूर्ण छ। यसले व्यवसाय र व्यक्तिहरूलाई एक मुद्रालाई अर्कोमा रूपान्तरण गर्न अनुमति दिन्छ, जसले विश्वव्यापी आर्थिक गतिविधिहरूलाई सहज बनाउँछ।
                       </p>
-                    </div>
+              </div>
 
                     <div>
                       <h4 className="text-xl font-semibold text-gray-800 mb-2">विनिमय दर निर्धारण (Exchange Rate Determination)</h4>
@@ -342,8 +342,8 @@ const Forex = () => {
                         Exchange rates are determined by various factors, including supply and demand in forex markets, interest rates, inflation, political stability, and economic performance. Central banks like Nepal Rastra Bank play a role in managing exchange rates.
                         विनिमय दरहरू विदेशी विनिमय बजारमा माग र आपूर्ति, ब्याज दर, मुद्रास्फीति, राजनीतिक स्थिरता, र आर्थिक प्रदर्शन सहित विभिन्न कारकहरूद्वारा निर्धारण गरिन्छ। नेपाल राष्ट्र बैंक जस्ता केन्द्रीय बैंकहरूले विनिमय दर व्यवस्थापनमा भूमिका खेल्छन्।
                       </p>
-                    </div>
-                    
+            </div>
+
                     <div>
                       <h4 className="text-xl font-semibold text-gray-800 mb-2">नेपालमा रेमिट्यान्सको प्रभाव (Impact of Remittances in Nepal)</h4>
                       <p className="mb-2">
@@ -358,12 +358,12 @@ const Forex = () => {
                         Banks and licensed money transfer operators provide forex services in Nepal, including currency exchange, international money transfers, and foreign currency accounts, under the regulation of Nepal Rastra Bank.
                         नेपालमा बैंक तथा इजाजतपत्र प्राप्त मुद्रा स्थानान्तरण अपरेटरहरूले विदेशी विनिमय सेवाहरू प्रदान गर्दछन्, जसमा मुद्रा विनिमय, अन्तर्राष्ट्रिय मुद्रा स्थानान्तरण, र विदेशी मुद्रा खाताहरू समावेश छन्, जुन नेपाल राष्ट्र बैंकको नियमन अन्तर्गत पर्दछन्।
                       </p>
-                    </div>
+            </div>
                   </div>
                 </motion.div>
-              </div>
-            </div> 
-          </section>
+          </div>
+        </div>
+      </section>
         </FadeIn>
       </div>
     </MainLayout>

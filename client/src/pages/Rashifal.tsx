@@ -304,9 +304,9 @@ const Rashifal = () => {
       <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
         <BackgroundParticles />
         
-        <FadeIn>
+      <FadeIn>
           <section className="py-12 relative z-10">
-            <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4">
               <div className="text-center mb-8">
                 <motion.h1 
                   className="text-4xl font-bold text-primary mb-2"
@@ -349,26 +349,26 @@ const Rashifal = () => {
                     <span className="text-xl">✨</span>
                     <h3 className="font-medium">Today's Meditation Tip</h3>
                     <span className="text-xl">✨</span>
-                  </div>
+          </div>
                   <p className="text-sm text-gray-700 italic">"{dailyTip}"</p>
                 </motion.div>
               </div>
-
+              
               {/* Zodiac Signs Grid with Predictions */}
               <div className="max-w-7xl mx-auto">
-                {isLoading ? (
+              {isLoading ? (
                   <div className="flex items-center justify-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                  </div>
-                ) : error ? (
+                </div>
+              ) : error ? (
                   <div className="bg-red-50 p-4 rounded-lg text-red-800 max-w-2xl mx-auto">
                     Failed to load rashifal data. Please try again later.
-                  </div>
-                ) : (
+                </div>
+              ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {mergedZodiacData.map((sign, index) => (
                       <motion.div 
-                        key={index}
+                        key={index} 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: index * 0.05 }}
@@ -401,11 +401,11 @@ const Rashifal = () => {
                         <p className="text-sm text-gray-700 mb-3">{element.description}</p>
                         <div className="mt-2 text-sm font-medium text-primary">
                           राशिहरू (Signs): {element.signs.join(', ')}
-                        </div>
+                </div>
                       </motion.div>
                     ))}
-                  </div>
-                  
+            </div>
+
                   <h3 className="text-xl font-semibold text-primary mb-4 mt-8">त्रिगुण: राशिको प्रकृति (Three Gunas in Astrology)</h3>
                   <div className="grid md:grid-cols-3 gap-4">
                     {nepaliAstrologyDetails.nature.map((nature, i) => (
@@ -424,7 +424,7 @@ const Rashifal = () => {
                         </div>
                       </motion.div>
                     ))}
-                  </div>
+            </div>
                 </motion.div>
                 
                 {/* About Vedic Rashifal */}
@@ -484,9 +484,9 @@ const Rashifal = () => {
                     वैज्ञानिक प्रगति र आधुनिक शिक्षाको बावजुद, वैदिक ज्योतिष र राशिफलको प्रभाव नेपाली समाजमा अझै पनि बलियो छ। धेरै पढेलेखेका र आधुनिक विचारका नेपालीहरू पनि आफ्नो जीवनका महत्त्वपूर्ण निर्णयहरूमा ज्योतिषीय परामर्श लिन्छन्, जसले परम्परा र आधुनिकताको बीचमा सन्तुलन देखाउँछ।
                   </p>
                 </motion.div>
-              </div>
-            </div>
-          </section>
+          </div>
+        </div>
+      </section>
         </FadeIn>
       </div>
     </MainLayout>
