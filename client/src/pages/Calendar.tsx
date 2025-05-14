@@ -535,14 +535,14 @@ const Calendar = () => {
         publishedDate="2024-01-01"
         modifiedDate={modifiedDate}
         canonicalUrl="https://quiknepal.com"
-        pathname={`/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`}
+        pathname={`/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`}
         ogImage="https://quiknepal.com/og-images/nepali-calendar.jpg"
         ogType="website"
         twitterCardType="summary_large_image"
         schemaType="WebPage"
         hrefLangs={[
-          { lang: "en", url: `https://quiknepal.com/en/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` },
-          { lang: "ne", url: `https://quiknepal.com/ne/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` }
+          { lang: "en", url: `https://quiknepal.com/en/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` },
+          { lang: "ne", url: `https://quiknepal.com/ne/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` }
         ]}
       >
         {/* Calendar Schema */}
@@ -577,7 +577,7 @@ const Calendar = () => {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Nepali Calendar",
-                "item": "https://quiknepal.com/calendar"
+                "item": "https://quiknepal.com/nepalicalendar"
               },
               {
                 "@type": "ListItem",
@@ -716,7 +716,7 @@ const Calendar = () => {
             },
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": `https://quiknepal.com/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`
+              "@id": `https://quiknepal.com/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`
             }
           })}
         </script>
@@ -786,73 +786,73 @@ const Calendar = () => {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Baishakh (बैशाख)",
-                "url": `https://quiknepal.com/calendar/${params.year}/baishakh`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/baishakh`
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Jestha (जेष्ठ)",
-                "url": `https://quiknepal.com/calendar/${params.year}/jestha`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/jestha`
               },
               {
                 "@type": "ListItem",
                 "position": 3,
                 "name": "Ashadh (असार)",
-                "url": `https://quiknepal.com/calendar/${params.year}/ashadh`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/ashadh`
               },
               {
                 "@type": "ListItem",
                 "position": 4,
                 "name": "Shrawan (श्रावण)",
-                "url": `https://quiknepal.com/calendar/${params.year}/shrawan`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/shrawan`
               },
               {
                 "@type": "ListItem",
                 "position": 5,
                 "name": "Bhadra (भाद्र)",
-                "url": `https://quiknepal.com/calendar/${params.year}/bhadra`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/bhadra`
               },
               {
                 "@type": "ListItem",
                 "position": 6,
                 "name": "Ashwin (आश्विन)",
-                "url": `https://quiknepal.com/calendar/${params.year}/ashwin`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/ashwin`
               },
               {
                 "@type": "ListItem",
                 "position": 7,
                 "name": "Kartik (कार्तिक)",
-                "url": `https://quiknepal.com/calendar/${params.year}/kartik`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/kartik`
               },
               {
                 "@type": "ListItem",
                 "position": 8,
                 "name": "Mangsir (मंसिर)",
-                "url": `https://quiknepal.com/calendar/${params.year}/mangsir`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/mangsir`
               },
               {
                 "@type": "ListItem",
                 "position": 9,
                 "name": "Poush (पौष)",
-                "url": `https://quiknepal.com/calendar/${params.year}/poush`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/poush`
               },
               {
                 "@type": "ListItem",
                 "position": 10,
                 "name": "Magh (माघ)",
-                "url": `https://quiknepal.com/calendar/${params.year}/magh`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/magh`
               },
               {
                 "@type": "ListItem",
                 "position": 11,
                 "name": "Falgun (फाल्गुन)",
-                "url": `https://quiknepal.com/calendar/${params.year}/falgun`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/falgun`
               },
               {
                 "@type": "ListItem",
                 "position": 12,
                 "name": "Chaitra (चैत्र)",
-                "url": `https://quiknepal.com/calendar/${params.year}/chaitra`
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/chaitra`
               }
             ]
           })}

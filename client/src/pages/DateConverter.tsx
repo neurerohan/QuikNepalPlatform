@@ -195,14 +195,14 @@ const DateConverter = () => {
         publishedDate="2024-01-01"
         modifiedDate={modifiedDate}
         canonicalUrl="https://quiknepal.com"
-        pathname="/nepali-date-converter"
+        pathname="/date-converter"
         ogImage="https://quiknepal.com/og-images/date-converter.jpg"
         ogType="website"
         twitterCardType="summary_large_image"
         schemaType="WebApplication"
         hrefLangs={[
-          { lang: "en", url: "https://quiknepal.com/en/nepali-date-converter" },
-          { lang: "ne", url: "https://quiknepal.com/ne/nepali-date-converter" }
+          { lang: "en", url: "https://quiknepal.com/en/date-converter" },
+          { lang: "ne", url: "https://quiknepal.com/ne/date-converter" }
         ]}
       />
       <MainLayout

@@ -20,12 +20,12 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://quiknepal.com/calendar/</loc>
+    <loc>https://quiknepal.com/nepalicalendar</loc>
     <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/calendar/"/>
-    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/calendar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/nepalicalendar"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/nepalicalendar"/>
   </url>
   <url>
     <loc>https://quiknepal.com/nepali-date-converter</loc>
@@ -43,11 +43,9 @@
   </url>
   <url>
     <loc>https://quiknepal.com/kalimati-vegetable-price</loc>
-    <lastmod>2024-05-15</lastmod>
+    <lastmod>2023-11-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/kalimati-vegetable-price"/>
-    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/kalimati-vegetable-price"/>
   </url>
   <url>
     <loc>https://quiknepal.com/gold-and-silver-in-nepal</loc>
