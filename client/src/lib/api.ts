@@ -319,7 +319,7 @@ export const getMetals = async (): Promise<FormattedMetalData> => {
 };
 
 // Helper function to find the first non-empty value from an array of potential values
-function getFirstNonEmptyValue(values) {
+function getFirstNonEmptyValue(values: (string | number | null | undefined)[]): string | number | null {
   for (const value of values) {
     if (value !== undefined && value !== null && value !== '') {
       return value;
@@ -329,7 +329,7 @@ function getFirstNonEmptyValue(values) {
 }
 
 // Helper function to format price correctly
-function formatPrice(price) {
+function formatPrice(price: string | number | null | undefined): string {
   if (price === null || price === undefined || price === '') {
     return '0.00';
   }
@@ -349,7 +349,7 @@ function formatPrice(price) {
 }
 
 // Helper function to recursively search for any values that look like prices
-function findPossiblePrices(obj, results = []) {
+function findPossiblePrices(obj: Record<string, any>, results: (string | number)[] = []): (string | number)[] {
   if (!obj || typeof obj !== 'object') return results;
   
   for (const [key, value] of Object.entries(obj)) {
@@ -363,12 +363,12 @@ function findPossiblePrices(obj, results = []) {
           key.toLowerCase().includes('silver') ||
           key.toLowerCase().includes('amount') ||
           key.toLowerCase().includes('value')) {
-        results.push(value);
+        results.push(value as string | number);
       } 
       // If the value is in a typical price range for gold/silver in Nepal (500-150000)
       else if ((typeof value === 'number' && value >= 500 && value <= 150000) ||
               (typeof value === 'string' && parseFloat(value) >= 500 && parseFloat(value) <= 150000)) {
-        results.push(value);
+        results.push(value as string | number);
   }
     } 
     // Recursively check nested objects

@@ -447,14 +447,14 @@ const Calendar = () => {
       if (nepaliToday) {
         // Use the accurate Nepali date from API
         const nepaliMonthName = nepaliToday.month_name.toLowerCase();
-        setLocation(`/nepalicalendar/${nepaliToday.year}/${nepaliMonthName}`);
+        setLocation(`/calendar/${nepaliToday.year}/${nepaliMonthName}`);
       } else {
         // Fallback to approximation if API data not available yet
         const today = new Date();
         const currentNepaliYear = today.getFullYear() + 57; // Approximate
         const currentMonth = today.getMonth() + 1;
         const nepaliMonthName = getMonthName(currentMonth).toLowerCase();
-        setLocation(`/nepalicalendar/${currentNepaliYear}/${nepaliMonthName}`);
+        setLocation(`/calendar/${currentNepaliYear}/${nepaliMonthName}`);
       }
     }
   }, [params, setLocation, nepaliToday]);
@@ -492,14 +492,14 @@ const Calendar = () => {
     const prevMonth = parseInt(month) === 1 ? 12 : parseInt(month) - 1;
     const prevYear = parseInt(month) === 1 ? parseInt(year) - 1 : parseInt(year);
     const prevMonthName = getMonthName(prevMonth).toLowerCase();
-    setLocation(`/nepalicalendar/${prevYear}/${prevMonthName}`);
+    setLocation(`/calendar/${prevYear}/${prevMonthName}`);
   };
 
   const handleNextMonth = () => {
     const nextMonth = parseInt(month) === 12 ? 1 : parseInt(month) + 1;
     const nextYear = parseInt(month) === 12 ? parseInt(year) + 1 : parseInt(year);
     const nextMonthName = getMonthName(nextMonth).toLowerCase();
-    setLocation(`/nepalicalendar/${nextYear}/${nextMonthName}`);
+    setLocation(`/calendar/${nextYear}/${nextMonthName}`);
   };
 
   // Get today's date to highlight
@@ -534,15 +534,15 @@ const Calendar = () => {
         keywords={pageKeywords}
         publishedDate="2024-01-01"
         modifiedDate={modifiedDate}
-        canonicalUrl="https://quiknepal.com"
-        pathname={`/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`}
+        canonicalUrl="https://quiknepal.com/calendar"
+        pathname={`/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`}
         ogImage="https://quiknepal.com/og-images/nepali-calendar.jpg"
         ogType="website"
         twitterCardType="summary_large_image"
         schemaType="WebPage"
         hrefLangs={[
-          { lang: "en", url: `https://quiknepal.com/en/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` },
-          { lang: "ne", url: `https://quiknepal.com/ne/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` }
+          { lang: "en", url: `https://quiknepal.com/en/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` },
+          { lang: "ne", url: `https://quiknepal.com/ne/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` }
         ]}
       >
         {/* Calendar Schema */}
@@ -577,7 +577,7 @@ const Calendar = () => {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Nepali Calendar",
-                "item": "https://quiknepal.com/nepalicalendar"
+                "item": "https://quiknepal.com/calendar"
               },
               {
                 "@type": "ListItem",
@@ -891,14 +891,14 @@ const Calendar = () => {
                     if (nepaliToday) {
                       // Use accurate Nepali date from the API
                       const nepaliMonthName = nepaliToday.month_name.toLowerCase();
-                      setLocation(`/nepalicalendar/${nepaliToday.year}/${nepaliMonthName}`);
+                      setLocation(`/calendar/${nepaliToday.year}/${nepaliMonthName}`);
                     } else {
                       // Fallback to approximation if API data not available
                       const today = new Date();
                       const currentNepaliYear = today.getFullYear() + 57;
                       const currentMonth = today.getMonth() + 1;
                       const nepaliMonthName = getMonthName(currentMonth).toLowerCase();
-                      setLocation(`/nepalicalendar/${currentNepaliYear}/${nepaliMonthName}`);
+                      setLocation(`/calendar/${currentNepaliYear}/${nepaliMonthName}`);
                     }
                   }}
                 >
@@ -911,7 +911,7 @@ const Calendar = () => {
                     defaultValue={month}
                     onChange={(e) => {
                       const monthName = getMonthName(parseInt(e.target.value)).toLowerCase();
-                      setLocation(`/nepalicalendar/${year}/${monthName}`);
+                      setLocation(`/calendar/${year}/${monthName}`);
                     }}
                   >
                     {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
@@ -924,7 +924,7 @@ const Calendar = () => {
                     defaultValue={year}
                     onChange={(e) => {
                       const monthName = getMonthName(parseInt(month)).toLowerCase();
-                      setLocation(`/nepalicalendar/${e.target.value}/${monthName}`);
+                      setLocation(`/calendar/${e.target.value}/${monthName}`);
                     }}
                   >
                     {/* Range from 2000 BS to current year plus a few years */}

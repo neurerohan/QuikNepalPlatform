@@ -9,59 +9,49 @@
   <!-- Main Pages -->
   <url>
     <loc>https://quiknepal.com/</loc>
-    <lastmod>2024-05-14</lastmod>
+    <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://quiknepal.com/calendar/</loc>
-    <lastmod>2024-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://quiknepal.com/nepalicalendar</loc>
     <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/nepalicalendar"/>
-    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/nepalicalendar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/calendar"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/calendar"/>
   </url>
   <url>
     <loc>https://quiknepal.com/nepali-date-converter</loc>
-    <lastmod>2023-11-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://quiknepal.com/nepali-date-converter</loc>
-    <lastmod>2024-05-14</lastmod>
+    <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/date-converter"/>
-    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/date-converter"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/nepali-date-converter"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/nepali-date-converter"/>
   </url>
   <url>
     <loc>https://quiknepal.com/kalimati-vegetable-price</loc>
-    <lastmod>2023-11-01</lastmod>
+    <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/kalimati-vegetable-price"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/kalimati-vegetable-price"/>
   </url>
   <url>
     <loc>https://quiknepal.com/gold-and-silver-in-nepal</loc>
-    <lastmod>2023-11-01</lastmod>
+    <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://quiknepal.com/nepali-rashifal</loc>
-    <lastmod>2023-11-01</lastmod>
+    <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://quiknepal.com/foreign-currency-exchange</loc>
-    <lastmod>2023-11-01</lastmod>
+    <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>

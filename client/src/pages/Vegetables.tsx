@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input';
 import { FaInfoCircle, FaLeaf, FaFilter, FaSort, FaSyncAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { getCurrentNepaliDate, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
+import { getCurrentNepaliDate, getFormattedKathmanduTime, getKathmanduTime } from '@/lib/nepaliDateConverter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SEO from '@/components/SEO';
 
 // Define types for our vegetable data
 interface VegetableData {
@@ -277,11 +278,282 @@ const Vegetables = () => {
     setFilterByTrend(trend);
   };
 
+  // SEO optimization
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
+  
+  // SEO title and description with keywords
+  const pageTitle = "Kalimati Tarkari Rate Today | Kalimati Market Prices | Kalimati Tarkari Bazar";
+  const pageDescription = "Check today's Kalimati tarkari rate from Nepal's largest wholesale market. Daily updated Kalimati tarkari bazar price today with minimum, maximum and average rates for all vegetables.";
+  const pageKeywords = "kali mati tarkari rate, kalimati tarkari rate today, kalimati tarkari, kalimati market, kalimati tarkari bazar price today, kalimati tarkari bazar rate today";
+
   return (
-    <MainLayout
-      title="तरकारी मूल्य - Vegetable Prices Nepal"
-      description="नेपालमा ताजा तरकारीको मूल्य। Track current vegetable prices from Kalimati market to make informed shopping decisions."
-    >
+    <>
+      <SEO 
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname="/kalimati-vegetable-price"
+        ogImage="https://quiknepal.com/og-images/kalimati-vegetables.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="Dataset"
+        hrefLangs={[
+          { lang: "en", url: "https://quiknepal.com/en/kalimati-vegetable-price" },
+          { lang: "ne", url: "https://quiknepal.com/ne/kalimati-vegetable-price" }
+        ]}
+      >
+        {/* Dataset Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "Kalimati Tarkari Rate Today Dataset",
+            "description": "Comprehensive dataset of vegetable prices from Kalimati tarkari bazar, updated daily with current rates for all vegetables in the market.",
+            "keywords": ["kalimati tarkari rate today", "kalimati market", "kalimati tarkari bazar price today"],
+            "creator": {
+              "@type": "Organization",
+              "name": "QuikNepal"
+            },
+            "temporalCoverage": "2023/2025"
+          })}
+        </script>
+
+        {/* BreadcrumbList Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://quiknepal.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Kalimati Tarkari Rates",
+                "item": "https://quiknepal.com/kalimati-vegetable-price"
+              }
+            ]
+          })}
+        </script>
+
+        {/* FAQPage Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How often are the Kalimati tarkari rates updated?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Kalimati tarkari rate today is updated daily based on the latest price information from Kalimati tarkari bazar. Our system fetches the latest prices every morning to ensure you have access to the most current vegetable rates."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is Kalimati Market?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Kalimati Market (Kalimati Tarkari Bazar) is the largest wholesale vegetable and fruit market in Kathmandu, Nepal. It serves as the primary distribution center for fresh produce in the Kathmandu Valley, with farmers and traders bringing their goods daily to sell to retailers and consumers."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I search for specific vegetable prices?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "You can use the search box at the top of our Kalimati tarkari rate page to find specific vegetables. Simply type the name of the vegetable you're looking for, and the table will instantly filter to show only that item with its current price from Kalimati tarkari bazar."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What do the minimum, maximum, and average prices mean?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Kalimati tarkari bazar price today is displayed with three values: Minimum price (lowest rate at which the vegetable was sold), Maximum price (highest rate), and Average price (the mean rate). These variations reflect differences in quality, freshness, and supply-demand dynamics."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why do vegetable prices fluctuate in Kalimati Market?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Kalimati tarkari rates fluctuate due to several factors: seasonal availability, weather conditions affecting crops, transportation issues, fuel prices, and market demand. During festivals or adverse weather, prices typically increase due to higher demand or reduced supply."
+                }
+              }
+            ]
+          })}
+        </script>
+
+        {/* WebApplication Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Kalimati Tarkari Rate Checker",
+            "description": "Online tool to check today's vegetable prices from Kalimati tarkari bazar. Get the latest Kalimati tarkari rate today with sorting and filtering options.",
+            "applicationCategory": "UtilityApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          })}
+        </script>
+
+        {/* LocalBusiness Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Kalimati Tarkari Bazar",
+            "description": "The largest wholesale vegetable and fruit market in Kathmandu, Nepal, providing fresh produce daily with updated Kalimati tarkari rates.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Kathmandu",
+              "addressRegion": "Bagmati",
+              "addressCountry": "Nepal"
+            },
+            "openingHours": "Mo-Su 04:00-19:00",
+            "telephone": "+977-1-4274016"
+          })}
+        </script>
+
+        {/* Article Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Kalimati Tarkari Rate Today - Latest Vegetable Prices",
+            "description": "Check the latest Kalimati tarkari bazar price today for all vegetables. Daily updated rates from Nepal's largest wholesale market.",
+            "image": "https://quiknepal.com/og-images/kalimati-vegetables.jpg",
+            "datePublished": "2024-01-01T00:00:00+05:45",
+            "dateModified": modifiedDate,
+            "author": {
+              "@type": "Organization",
+              "name": "QuikNepal"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://quiknepal.com/logo.png"
+              }
+            },
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": "https://quiknepal.com/kalimati-vegetable-price"
+            }
+          })}
+        </script>
+
+        {/* Table Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Table",
+            "about": "Kalimati Tarkari Rate Today",
+            "name": "Kalimati Vegetable Price Table",
+            "description": "Daily updated table of vegetable prices from Kalimati tarkari bazar with minimum, maximum, and average rates."
+          })}
+        </script>
+
+        {/* ItemList Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Featured Vegetables at Kalimati Market",
+            "description": "List of featured vegetables with current Kalimati tarkari bazar rate today",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Tomato (गोलभेडा)",
+                "url": "https://quiknepal.com/kalimati-vegetable-price#tomato"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Potato (आलु)",
+                "url": "https://quiknepal.com/kalimati-vegetable-price#potato"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Onion (प्याज)",
+                "url": "https://quiknepal.com/kalimati-vegetable-price#onion"
+              }
+            ]
+          })}
+        </script>
+
+        {/* Service Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Price Information Service",
+            "name": "Kalimati Tarkari Rate Today Service",
+            "description": "Daily updated information service providing the latest Kalimati tarkari bazar price today for all vegetables and fruits.",
+            "provider": {
+              "@type": "Organization",
+              "name": "QuikNepal"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Nepal"
+            }
+          })}
+        </script>
+
+        {/* HowTo Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "How to Check Kalimati Tarkari Rate Today",
+            "description": "Step by step guide to finding the latest vegetable prices from Kalimati tarkari bazar.",
+            "step": [
+              {
+                "@type": "HowToStep",
+                "name": "Search for Specific Vegetable",
+                "text": "Use the search box at the top of the page to find a specific vegetable's Kalimati tarkari rate."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Sort Prices",
+                "text": "Click on column headers to sort vegetables by name or price in ascending or descending order."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Filter by Price Trend",
+                "text": "Use the filter options to see vegetables with increasing, decreasing, or stable prices in the Kalimati market."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "View Detailed Information",
+                "text": "Click on the Market Info tab to learn more about Kalimati tarkari bazar and vegetable pricing factors."
+              }
+            ]
+          })}
+        </script>
+      </SEO>
+      <MainLayout 
+        title={pageTitle}
+        description={pageDescription}
+      >
       <div className="relative min-h-screen bg-gradient-to-br from-green-50 via-gray-50 to-slate-100">
         <BackgroundParticles />
         <FadeIn>
@@ -829,6 +1101,7 @@ const Vegetables = () => {
         </FadeIn>
       </div>
     </MainLayout>
+    </>
   );
 };
 
