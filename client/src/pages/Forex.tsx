@@ -14,6 +14,8 @@ import {
   PaginationPrevious 
 } from '@/components/ui/pagination';
 import { format, parseISO } from 'date-fns'; // For formatting dates
+import SEO from '@/components/SEO';
+import { getKathmanduTime } from '@/lib/nepaliDateConverter';
 
 // Popular currency information - adding more for flag mapping if needed
 const currencyDetails: {[key: string]: { name: string; flag: string; color?: string; about?: string }} = {
@@ -104,6 +106,13 @@ const Forex = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(15); // Show more items per page
 
+  // SEO optimization
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
+  const pageKeywords = "usd to npr, us dollar to npr, money converter, usd to inr, dollar rate, usd rate, aussie dollar, usd dollar rate, us dollar to rupees, aud dollar, usdinr, 1 dollar in nepali rupees, 1 usd to npr, dollar to npr, npr to usd, us dollar in indian rupees, us to rupees, usd dollar to inr, usd in rupees, usd to indian rupees, usd to rs";
+  const seoTitle = "USD to NPR Exchange Rate Today | Dollar to Nepali Rupee Converter";
+  const seoDescription = "Get today's USD to NPR exchange rate. Live currency conversion for US Dollar to Nepali Rupee and other major currencies with historical charts and data.";
+
   // Fetch current Nepali date
   const { data: todayNepaliDateData, isLoading: isLoadingNepaliDate } = useQuery({
     queryKey: ['/api/todayNepaliDate'],
@@ -168,14 +177,132 @@ const Forex = () => {
   const pageDescription = `Check ${currentFormattedNepaliDate}'s latest foreign exchange rates for Nepali Rupee (NPR) from Nepal Rastra Bank.`;
 
   return (
-    <MainLayout
-      title={pageTitle}
-      description={pageDescription}
-    >
-      <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
-        <BackgroundParticles />
+    <>
+      <SEO 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname="/foreign-currency-exchange"
+        ogImage="https://quiknepal.com/og-images/forex-rates-nepal.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="WebPage"
+        hrefLangs={[
+          { lang: "en", url: "https://quiknepal.com/en/foreign-currency-exchange" },
+          { lang: "ne", url: "https://quiknepal.com/ne/foreign-currency-exchange" }
+        ]}
+      >
+        {/* Article Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "USD to NPR Exchange Rate Today - Nepal Forex Rates",
+            "image": "https://quiknepal.com/og-images/forex-rates-nepal.jpg",
+            "datePublished": "2024-01-01",
+            "dateModified": modifiedDate,
+            "author": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "url": "https://quiknepal.com"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://quiknepal.com/logo.png"
+              }
+            },
+            "description": seoDescription
+          })}
+        </script>
         
-      <FadeIn>
+        {/* FAQPage Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is the current USD to NPR exchange rate?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": `The current USD to NPR exchange rate is ${forexData?.rates?.find((r: any) => r.currency_code === 'USD')?.buy || 'updated daily'} for buying and ${forexData?.rates?.find((r: any) => r.currency_code === 'USD')?.sell || 'updated daily'} for selling. These rates are provided by Nepal Rastra Bank and are updated daily.`
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How often are the foreign exchange rates updated in Nepal?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Foreign exchange rates in Nepal are typically updated once daily by Nepal Rastra Bank (NRB), the central bank of Nepal. Commercial banks and money exchangers may have slightly different rates based on their own margins."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect the NPR exchange rate?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Nepali Rupee (NPR) exchange rate is primarily affected by the Indian Rupee (INR) rate as NPR is pegged to INR. Other factors include Nepal's balance of payments, remittance inflows, foreign reserves, inflation rates, and global economic conditions."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Dataset Schema for Currency Rates */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "Nepal Foreign Currency Exchange Rates",
+            "description": "Daily updated foreign currency exchange rates for Nepali Rupee (NPR) from Nepal Rastra Bank.",
+            "keywords": ["USD to NPR", "EUR to NPR", "GBP to NPR", "foreign exchange", "currency converter"],
+            "url": "https://quiknepal.com/foreign-currency-exchange",
+            "dateModified": modifiedDate,
+            "variableMeasured": [
+              {
+                "@type": "PropertyValue",
+                "name": "Currency Code",
+                "description": "ISO currency code"
+              },
+              {
+                "@type": "PropertyValue",
+                "name": "Buy Rate",
+                "description": "Rate at which banks buy foreign currency"
+              },
+              {
+                "@type": "PropertyValue",
+                "name": "Sell Rate",
+                "description": "Rate at which banks sell foreign currency"
+              }
+            ],
+            "creator": {
+              "@type": "Organization",
+              "name": "Nepal Rastra Bank",
+              "url": "https://www.nrb.org.np/"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "url": "https://quiknepal.com"
+            }
+          })}
+        </script>
+      </SEO>
+      <MainLayout
+        title={pageTitle}
+        description={pageDescription}
+      >
+        <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
+          <BackgroundParticles />
+          
+        <FadeIn>
           <section className="py-12 relative z-10">
           <div className="container mx-auto px-4">
               <div className="text-center mb-12">
@@ -367,6 +494,7 @@ const Forex = () => {
         </FadeIn>
       </div>
     </MainLayout>
+    </>
   );
 };
 

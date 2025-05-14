@@ -50,12 +50,16 @@
     <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/nepali-rashifal"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/nepali-rashifal"/>
   </url>
   <url>
     <loc>https://quiknepal.com/foreign-currency-exchange</loc>
     <lastmod>2024-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quiknepal.com/en/foreign-currency-exchange"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://quiknepal.com/ne/foreign-currency-exchange"/>
   </url>
   
 </urlset> 

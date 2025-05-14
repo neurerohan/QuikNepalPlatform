@@ -4,8 +4,9 @@ import MainLayout from '@/components/layout/MainLayout';
 import ZodiacCard from '@/components/ui/ZodiacCard';
 import FadeIn from '@/components/ui/FadeIn';
 import { motion } from 'framer-motion';
-import { formatNepaliDate, getCurrentNepaliDate, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
+import { formatNepaliDate, getCurrentNepaliDate, getFormattedKathmanduTime, getKathmanduTime } from '@/lib/nepaliDateConverter';
 import { useEffect, useState } from 'react';
+import SEO from '@/components/SEO';
 
 const zodiacSigns = [
   { name: 'Mesh', englishName: 'Aries', symbol: '♈', element: 'Fire', ruling_planet: 'Mars', lucky_color: 'Red', lucky_number: '9', lucky_day: 'Tuesday', compatible_signs: ['Leo', 'Sagittarius'] },
@@ -155,6 +156,14 @@ const Rashifal = () => {
     queryFn: getCurrentNepaliDate,
     staleTime: 5 * 60 * 1000 // 5 minutes - shorter to keep time more accurate
   });
+  
+  // SEO optimization
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
+  const pageKeywords = "rashifal, horoscope, horoscope today, aquarius horoscope today, rashifal today, aaja ko rashifal, aajako rashifal";
+  const seoTitle = "Nepali Rashifal Today | Daily Horoscope | Aaja Ko Rashifal";
+  const seoDescription = "Read today's Nepali rashifal (horoscope) for all 12 zodiac signs. Daily predictions for love, career, health, and finances based on Vedic astrology.";
+
 
   useEffect(() => {
     if (nepaliDateData) {
@@ -295,16 +304,108 @@ const Rashifal = () => {
   };
 
   const dynamicAstrologyData = generateDynamicTithi();
+  
+  // Define page title and description for MainLayout
+  const pageTitle = "आजको राशिफल - Today's Horoscope";
+  const pageDescription = "Read daily horoscope predictions for all zodiac signs in the Nepali tradition.";
 
   return (
-    <MainLayout
-      title="आजको राशिफल - Today's Horoscope"
-      description="Read daily horoscope predictions for all zodiac signs in the Nepali tradition."
-    >
-      <div className="relative min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
-        <BackgroundParticles />
+    <>
+      <SEO 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname="/nepali-rashifal"
+        ogImage="https://quiknepal.com/og-images/nepali-rashifal.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="WebPage"
+        hrefLangs={[
+          { lang: "en", url: "https://quiknepal.com/en/nepali-rashifal" },
+          { lang: "ne", url: "https://quiknepal.com/ne/nepali-rashifal" }
+        ]}
+      >
+        {/* Article Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Daily Nepali Rashifal - Horoscope Predictions",
+            "image": "https://quiknepal.com/og-images/nepali-rashifal.jpg",
+            "datePublished": "2024-01-01",
+            "dateModified": modifiedDate,
+            "author": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "url": "https://quiknepal.com"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://quiknepal.com/logo.png"
+              }
+            },
+            "description": seoDescription
+          })}
+        </script>
         
-      <FadeIn>
+        {/* FAQPage Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Rashifal?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Rashifal is the Nepali term for horoscope or zodiac predictions. It provides daily, weekly, or monthly forecasts for each zodiac sign based on Vedic astrology principles."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How is Nepali Rashifal different from Western horoscopes?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Nepali Rashifal is based on Vedic astrology which uses the sidereal zodiac, while Western horoscopes use the tropical zodiac. This creates a difference in dates and interpretations between the two systems."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "When is the best time to read daily rashifal?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The best time to read your daily rashifal is in the morning before starting your day, as it can provide guidance for the upcoming day's events and challenges."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* ItemList Schema for Zodiac Signs */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": zodiacSigns.map((sign, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "name": `${sign.name} (${sign.englishName})`,
+              "description": `${sign.englishName} horoscope and predictions. Element: ${sign.element}, Ruling Planet: ${sign.ruling_planet}, Lucky Color: ${sign.lucky_color}`
+            }))
+          })}
+        </script>
+      </SEO>
+      <MainLayout title={pageTitle} description={pageDescription}>
+        <div className="relative min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-slate-100">
+          <BackgroundParticles />
+        <FadeIn>
           <section className="py-12 relative z-10">
           <div className="container mx-auto px-4">
               <div className="text-center mb-8">
@@ -490,6 +591,7 @@ const Rashifal = () => {
         </FadeIn>
       </div>
     </MainLayout>
+    </>
   );
 };
 
