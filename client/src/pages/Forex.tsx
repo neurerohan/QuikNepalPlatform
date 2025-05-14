@@ -257,7 +257,7 @@ const Forex = () => {
                                   className={`${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10 hover:text-primary'} transition-colors`}
                               />
                             </PaginationItem>
-                            
+                              
                               {Array.from({ length: Math.min(forexData.totalPages, 5) }, (_, i) => {
                                 let pageNum = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
                                 if (forexData.totalPages - currentPage < 2 && currentPage > 3 && forexData.totalPages > 5) {
