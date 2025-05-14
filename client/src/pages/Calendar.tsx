@@ -879,7 +879,7 @@ const Calendar = () => {
                                     {eventDays.map((day: string | number, i: number) => (
                                       <span key={i} className="bg-white/20 rounded-full px-2 py-0.5">
                                         {day} {getMonthName(parseInt(month))}
-                                      </span>
+                                </span>
                                     ))}
                                   </div>
                                 </div>
@@ -913,10 +913,10 @@ const Calendar = () => {
                         <div key={index} className="bg-gradient-to-br from-purple-50 to-indigo-50 p-4 rounded-lg border border-purple-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
                           <h6 className="font-medium text-purple-700">{festival.name}</h6>
                           <p className="text-sm text-gray-600 mt-1">{festival.description}</p>
-                        </div>
-                      ))}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
                 </div>
                 
                 {/* Month Summary - Enhanced with better design and more content */}
@@ -934,22 +934,22 @@ const Calendar = () => {
                           </div>
                           About {getMonthName(parseInt(month))} Month
                         </h3>
-                        
+                    
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                           <div className="lg:col-span-2 animate-fadeIn" style={{ animationDelay: '0.1s' }}>
                             {/* Main content area - enhanced and sectioned */}
-                            {(() => {
-                              const monthContent = getMonthContent(parseInt(month), parseInt(params.year));
-                              return (
+                        {(() => {
+                          const monthContent = getMonthContent(parseInt(month), parseInt(params.year));
+                          return (
                                 <div className="space-y-6">
                                   {/* Introduction section with better styling */}
                                   <div className="bg-gradient-to-r from-primary/10 to-transparent p-5 rounded-lg border-l-4 border-primary">
                                     <p className="text-neutral">
                                       <span className="font-medium text-lg">{monthContent.name}</span> 
                                       (Nepali: <span className="font-medium text-lg">{monthContent.nepaliName}</span>) is 
-                                      the {parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month in the Nepali Bikram Sambat calendar. 
-                                      This month typically falls during <span className="font-medium">{monthContent.gregorianMonths}</span> in the Gregorian calendar.
-                                    </p>
+                                the {parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month in the Nepali Bikram Sambat calendar. 
+                                This month typically falls during <span className="font-medium">{monthContent.gregorianMonths}</span> in the Gregorian calendar.
+                              </p>
                                   </div>
                                   
                                   {/* Climate and highlights section with icon */}
@@ -962,11 +962,11 @@ const Calendar = () => {
                                     <div>
                                       <h4 className="text-lg font-medium text-gray-800 mb-2">Climate & Highlights</h4>
                                       <p className="text-neutral mb-3">
-                                        In {monthContent.name}, the average temperature in Nepal ranges from <span className="font-medium">{monthContent.temperature}</span>.
+                                In {monthContent.name}, the average temperature in Nepal ranges from <span className="font-medium">{monthContent.temperature}</span>. 
                                       </p>
                                       <p className="text-neutral">
-                                        This month is particularly known for <span className="font-medium">{monthContent.highlights}</span>.
-                                      </p>
+                                This month is particularly known for <span className="font-medium">{monthContent.highlights}</span>.
+                              </p>
                                     </div>
                                   </div>
                                   
@@ -980,11 +980,11 @@ const Calendar = () => {
                                     <div>
                                       <h4 className="text-lg font-medium text-gray-800 mb-2">Agricultural Activities</h4>
                                       <p className="text-neutral mb-3">
-                                        {monthContent.name} typically has <span className="font-medium">{monthContent.days} days</span> in most years of the Nepali calendar.
+                                {monthContent.name} typically has <span className="font-medium">{monthContent.days} days</span> in most years of the Nepali calendar. 
                                       </p>
                                       <p className="text-neutral">
-                                        The agricultural activities during this month generally include <span className="font-medium">{monthContent.agriculture}</span>.
-                                      </p>
+                                The agricultural activities during this month generally include <span className="font-medium">{monthContent.agriculture}</span>.
+                              </p>
                                     </div>
                                   </div>
                                   
@@ -1003,16 +1003,16 @@ const Calendar = () => {
                                         Cultural Significance
                                       </h4>
                                       <p className="text-neutral mb-3 bg-white/60 p-3 rounded-lg shadow-sm">
-                                        {monthContent.name} falls within {(() => {
-                                          if ([1, 2, 3].includes(parseInt(month))) return "spring season in Nepal";
-                                          if ([4, 5, 6, 7].includes(parseInt(month))) return "monsoon season in Nepal";
-                                          if ([8, 9].includes(parseInt(month))) return "autumn season in Nepal";
-                                          return "winter season in Nepal";
-                                        })()} with particular importance to the agricultural calendar and cultural traditions.
+                                  {monthContent.name} falls within {(() => {
+                                    if ([1, 2, 3].includes(parseInt(month))) return "spring season in Nepal";
+                                    if ([4, 5, 6, 7].includes(parseInt(month))) return "monsoon season in Nepal";
+                                    if ([8, 9].includes(parseInt(month))) return "autumn season in Nepal";
+                                    return "winter season in Nepal";
+                                  })()} with particular importance to the agricultural calendar and cultural traditions.
                                         {parseInt(month) === 1 && " This is the beginning of the Nepali calendar year, celebrated with festivities and social gatherings across the country."}
                                         {parseInt(month) === 6 && " This month hosts Dashain, Nepal's most significant festival celebrated for 15 days with family reunions, feasting, and worship."}
                                         {parseInt(month) === 7 && " This month hosts Tihar, the festival of lights, second only to Dashain in importance, with five days of celebrations honoring different deities and strengthening family bonds."}
-                                      </p>
+                                </p>
                                       
                                       {/* Festival cards */}
                                       {monthContent.festivals.length > 0 && (
@@ -1035,7 +1035,7 @@ const Calendar = () => {
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                                                     </svg>
-                                                  </div>
+                              </div>
                                                   <h6 className="font-medium text-primary-dark">{festival}</h6>
                                                 </div>
                                                 <div className="mt-2 bg-primary-light/10 text-xs text-gray-600 p-1.5 rounded">
@@ -1053,8 +1053,8 @@ const Calendar = () => {
                                   <div className="p-5 bg-white rounded-lg shadow-sm border border-gray-100">
                                     <h4 className="font-medium text-lg text-gray-800 mb-3">Nepali Calendar Context</h4>
                                     <p className="text-neutral mb-3">
-                                      The Nepali calendar, officially known as Bikram Sambat (BS), is approximately 56.7 years ahead of the Gregorian calendar (AD) and is the official calendar of Nepal. It was introduced by King Bikramaditya and has been in use for over 2,000 years, making it one of the oldest continuously used calendars in the world.
-                                    </p>
+                          The Nepali calendar, officially known as Bikram Sambat (BS), is approximately 56.7 years ahead of the Gregorian calendar (AD) and is the official calendar of Nepal. It was introduced by King Bikramaditya and has been in use for over 2,000 years, making it one of the oldest continuously used calendars in the world.
+                        </p>
                                     
                                     <div className="flex flex-col sm:flex-row gap-3 text-sm mt-4">
                                       <div className="flex-1 bg-gray-50 p-3 rounded-lg">
@@ -1074,8 +1074,8 @@ const Calendar = () => {
                                 </div>
                               )
                             })()}
-                          </div>
-                          
+                      </div>
+                      
                           <div className="animate-fadeIn" style={{ animationDelay: '0.3s' }}>
                             {/* Sidebar with enhanced design */}
                             <div className="space-y-5">
@@ -1100,7 +1100,7 @@ const Calendar = () => {
                                       <span className="text-white/70 text-sm block">Position</span>
                                       <span className="font-medium">{parseInt(month)}{parseInt(month) === 1 ? 'st' : parseInt(month) === 2 ? 'nd' : parseInt(month) === 3 ? 'rd' : 'th'} month</span>
                                     </div>
-                                  </li>
+                            </li>
                                   <li className="flex items-center">
                                     <div className="bg-white/20 rounded-full p-1.5 mr-3">
                                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1111,7 +1111,7 @@ const Calendar = () => {
                                       <span className="text-white/70 text-sm block">Nepali Name</span>
                                       <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).nepaliName}</span>
                                     </div>
-                                  </li>
+                            </li>
                                   <li className="flex items-center">
                                     <div className="bg-white/20 rounded-full p-1.5 mr-3">
                                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1122,7 +1122,7 @@ const Calendar = () => {
                                       <span className="text-white/70 text-sm block">Days</span>
                                       <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).days}</span>
                                     </div>
-                                  </li>
+                            </li>
                                   <li className="flex items-center">
                                     <div className="bg-white/20 rounded-full p-1.5 mr-3">
                                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1133,7 +1133,7 @@ const Calendar = () => {
                                       <span className="text-white/70 text-sm block">Major Festivals</span>
                                       <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).festivals.length}</span>
                                     </div>
-                                  </li>
+                            </li>
                                   <li className="flex items-center">
                                     <div className="bg-white/20 rounded-full p-1.5 mr-3">
                                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1144,9 +1144,9 @@ const Calendar = () => {
                                       <span className="text-white/70 text-sm block">Gregorian</span>
                                       <span className="font-medium">{getMonthContent(parseInt(month), parseInt(params.year)).gregorianMonths}</span>
                                     </div>
-                                  </li>
-                                </ul>
-                              </div>
+                            </li>
+                          </ul>
+                        </div>
                               
                               {/* Weather widget-style card */}
                               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-100 animate-gentle-float">

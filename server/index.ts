@@ -17,7 +17,7 @@ app.use((req, res, next) => {
     capturedJsonResponse = bodyJson;
     return originalResJson.call(res, bodyJson);
   };
-  
+
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path3.startsWith("/api")) {
@@ -54,10 +54,10 @@ async function initializeApp() {
     const port = process.env.PORT || 5000;
     httpServer.listen({
       port: Number(port),
-      host: "0.0.0.0",
-    }, () => {
+    host: "0.0.0.0",
+  }, () => {
       log(`Server listening on port ${port}`);
-    });
+  });
   }
 }
 

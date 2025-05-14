@@ -59,7 +59,7 @@ const DataTable = ({
                   onClick={column.onClick}
                 >
                   <div className="flex items-center">
-                    {column.header}
+                  {column.header}
                     {column.onClick && renderSortIndicator(column.accessor)}
                   </div>
                 </th>

@@ -235,7 +235,7 @@ export const getMetals = async () => {
       silver: { standardSilver: '1385.00' },
       date: new Date().toISOString().split('T')[0],
       source: 'Mock Data (Fallback)'
-    };
+      };
 
     // Always return the mock data for now to ensure the UI works
     // In production, you would switch back to proper API data parsing
@@ -307,7 +307,7 @@ function findPossiblePrices(obj, results = []) {
       else if ((typeof value === 'number' && value >= 500 && value <= 150000) ||
               (typeof value === 'string' && parseFloat(value) >= 500 && parseFloat(value) <= 150000)) {
         results.push(value);
-      }
+  }
     } 
     // Recursively check nested objects
     else if (typeof value === 'object' && value !== null) {
@@ -510,7 +510,7 @@ export const getForex = async (params: { from?: string; to?: string; page?: numb
         totalRates: sourceTotalRates
       };
     }
-
+    
     console.warn("No processable rates found in Forex API response. Response data:", response.data);
     return { rates: [], currentPage: 1, totalPages: 1, totalRates: 0 }; // Fallback
 

@@ -80,8 +80,8 @@ const ZodiacCard = ({ sign }: ZodiacCardProps) => {
             <div className="text-xs font-medium text-gray-700">शुभ अंक (Lucky Number)</div>
             <div className="text-sm font-semibold text-indigo-700">{sign.lucky_number}</div>
           </div>
-        </div>
-        
+      </div>
+
         {/* Planet & Compatibility */}
         <div className="flex justify-between">
           <div className="text-sm">

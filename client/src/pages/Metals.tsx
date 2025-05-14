@@ -138,9 +138,9 @@ const Metals = () => {
     <MainLayout title={pageTitle} description={pageDescription}>
       <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200">
         <BackgroundParticles />
-        <FadeIn>
+      <FadeIn>
           <section className="py-12 md:py-16 relative z-10">
-            <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4">
               <div className="text-center mb-10 md:mb-14">
                 <motion.h1 
                   className="text-4xl md:text-5xl font-extrabold text-amber-500 mb-3 tracking-tight"
@@ -168,7 +168,7 @@ const Metals = () => {
                   {data?.source && <span className="block text-xs mt-1">Source: {data.source}</span>}
                 </motion.p>
               </div>
-
+              
               {/* Prices Display Section */}
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center h-64 bg-white/50 backdrop-blur-sm shadow-md rounded-xl p-6">
@@ -181,7 +181,7 @@ const Metals = () => {
                   <FaInfoCircle className="text-3xl mx-auto mb-3" />
                   <p className="font-bold text-xl">मूल्यहरू लोड गर्न असमर्थ।</p>
                   <p>Could not load metal prices. Please try again later.</p>
-                </div>
+                  </div>
               ) : data && hasRealData() ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto mb-12 md:mb-16">
                   <MetalDisplayCard 
@@ -265,8 +265,8 @@ const Metals = () => {
                       नेपालमा सुनचाँदीको मूल्य अन्तर्राष्ट्रिय बजार दर, अमेरिकी डलरको विनिमय दर, सरकारी कर तथा शुल्क, र स्थानीय बजारको माग तथा आपूर्तिमा आधारित हुन्छ। नेपाल सुनचाँदी व्यवसायी महासंघ (FENEGOSIDA) ले दैनिक रूपमा यी मूल्यहरू प्रकाशित गर्दछ।
                       The price of gold and silver in Nepal is influenced by international market rates, the USD exchange rate, government taxes and duties, and local market demand and supply. The Federation of Nepal Gold and Silver Dealers' Association (FENEGOSIDA) typically publishes these rates daily.
                     </p>
-                  </div>
-                  
+            </div>
+
                   <div>
                     <h4 className="text-xl font-semibold text-gray-700 mb-2">खरिद गर्दा ध्यान दिनुपर्ने कुराहरू (Tips for Buying)</h4>
                     <ul className="list-disc list-inside space-y-1 pl-2">
@@ -275,11 +275,11 @@ const Metals = () => {
                       <li>हलमार्क (Hallmark) भए नभएको सुनिश्चित गर्नुहोस्। (Ensure items are hallmarked if possible.)</li>
                       <li>खरिद बिल (Purchase Bill) लिन नबिर्सनुहोस्। (Don't forget to take a purchase bill.)</li>
                     </ul>
-                  </div>
-                </div>
-              </motion.div>
             </div>
-          </section>
+          </div>
+              </motion.div>
+        </div>
+      </section>
         </FadeIn>
       </div>
     </MainLayout>
