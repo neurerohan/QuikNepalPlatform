@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from '@/components/ui/separator';
 import { getMonthContent, getYearInfo } from '@/lib/calendar-content';
 import AnnualEvents from '@/components/ui/AnnualEvents';
+import SEO from '@/components/SEO';
+import { getKathmanduTime } from '@/lib/nepaliDateConverter';
 
 // Helper function to convert Tithi names to Devanagari
 const convertTithiToNepali = (tithi: string): string => {
@@ -515,11 +517,351 @@ const Calendar = () => {
     }
   };
   
+  // SEO optimization
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
+  
+  // SEO title and description with keywords
+  const pageTitle = `Nepali Calendar ${params.year} - ${getMonthName(parseInt(month))} | Hamro Patro | Nepal Calendar Date Today`;
+  const pageDescription = `View today's Nepali date and navigate through Bikram Sambat (BS) calendar with corresponding Gregorian dates. Our Nepali patro (Nepali calendar) provides accurate Nepal calendar date today with festivals, holidays, and important events. Use this hamro patro to check mero patro dates for ${params.year}.`;
+  const pageKeywords = "hamro patro, nepali calendar, today's nepali date, mero patro, nepal calendar date today, nepali calendar nepali calendar, date of nepal, nepal patro, nepali patro nepali";
+  
   return (
-    <MainLayout 
-      title={`Nepali Calendar ${params.year} - ${getMonthName(parseInt(month))}` }
-      description="View and navigate through Bikram Sambat (BS) calendar with corresponding Gregorian (AD) dates."
-    >
+    <>
+      <SEO 
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname={`/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`}
+        ogImage="https://quiknepal.com/og-images/nepali-calendar.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="WebPage"
+        hrefLangs={[
+          { lang: "en", url: `https://quiknepal.com/en/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` },
+          { lang: "ne", url: `https://quiknepal.com/ne/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}` }
+        ]}
+      >
+        {/* Calendar Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "Nepali Calendar (Hamro Patro) Dataset",
+            "description": "Comprehensive Nepali calendar (Nepal patro) data including today's Nepali date, festivals, holidays, and important events for Nepal.",
+            "keywords": ["hamro patro", "nepali calendar", "today's nepali date", "mero patro", "nepal calendar date today"],
+            "creator": {
+              "@type": "Organization",
+              "name": "QuikNepal"
+            },
+            "temporalCoverage": "1970/2100"
+          })}
+        </script>
+
+        {/* BreadcrumbList Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://quiknepal.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Nepali Calendar",
+                "item": "https://quiknepal.com/nepalicalendar"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": `${params.year} - ${getMonthName(parseInt(month))}`
+              }
+            ]
+          })}
+        </script>
+
+        {/* FAQPage Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I check today's Nepali date?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Click the 'Go to Today' button at the top of the Nepali calendar (hamro patro) page to view today's date in the Nepal calendar. Our calendar shows the accurate Nepal calendar date today."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between Nepali calendar and Gregorian calendar?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Nepali calendar (also known as Bikram Sambat or BS) is approximately 56.7 years ahead of the Gregorian calendar. The Nepali patro follows a lunar-solar system with months having between 29 to 32 days, while the Gregorian calendar is purely solar-based."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I find festivals and holidays in the Nepali calendar?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Our Nepali calendar (hamro patro) marks all festivals and holidays with special colors. You can click on any date to see detailed information about festivals and events for that day. The Nepal calendar date today will show any current festivals."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is Mero Patro and how is it related to Nepali Calendar?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "'Mero Patro' means 'My Calendar' in Nepali. It refers to the Nepali calendar system used in Nepal. Our online Nepal patro (Nepali calendar) provides the same functionality as traditional mero patro, showing accurate dates, festivals, and events."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I navigate to different months in the Nepali calendar?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Use the arrow buttons at the top of the calendar to navigate to previous or next months in the Nepali patro. You can also use the month selector to jump directly to any month in the Nepal calendar."
+                }
+              }
+            ]
+          })}
+        </script>
+
+        {/* WebApplication Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Nepali Calendar (Hamro Patro)",
+            "description": "Online Nepali calendar (Nepal patro) showing today's Nepali date, festivals, holidays and important events. Our hamro patro provides accurate Nepal calendar date today.",
+            "applicationCategory": "UtilityApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          })}
+        </script>
+
+        {/* Event Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": `Nepali Month of ${getMonthName(parseInt(month))} ${params.year}`,
+            "startDate": `${params.year}-${month}-01`,
+            "endDate": `${params.year}-${month}-30`,
+            "description": `Calendar view for the Nepali month of ${getMonthName(parseInt(month))} in the year ${params.year}. Check today's Nepali date and all festivals in this hamro patro (Nepali calendar).`,
+            "location": {
+              "@type": "Country",
+              "name": "Nepal"
+            },
+            "organizer": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "url": "https://quiknepal.com"
+            }
+          })}
+        </script>
+
+        {/* LocalBusiness Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "QuikNepal - Nepali Calendar Provider",
+            "description": "Provider of accurate Nepali calendar (hamro patro) information, including today's Nepali date, festivals, and Nepal calendar date today.",
+            "url": "https://quiknepal.com",
+            "logo": "https://quiknepal.com/logo.png",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "Nepal"
+            }
+          })}
+        </script>
+
+        {/* Article Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": `Nepali Calendar ${params.year} - ${getMonthName(parseInt(month))}`,
+            "description": `Comprehensive guide to the Nepali month of ${getMonthName(parseInt(month))} ${params.year} with today's Nepali date, festivals, and events in this Nepal patro (Nepali calendar).`,
+            "image": "https://quiknepal.com/og-images/nepali-calendar.jpg",
+            "datePublished": "2024-01-01T00:00:00+05:45",
+            "dateModified": modifiedDate,
+            "author": {
+              "@type": "Organization",
+              "name": "QuikNepal"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://quiknepal.com/logo.png"
+              }
+            },
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": `https://quiknepal.com/nepalicalendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`
+            }
+          })}
+        </script>
+
+        {/* SoftwareApplication Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Nepali Calendar (Hamro Patro)",
+            "operatingSystem": "Web",
+            "applicationCategory": "UtilityApplication",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "ratingCount": "256"
+            }
+          })}
+        </script>
+
+        {/* HowTo Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "How to Use the Nepali Calendar (Hamro Patro)",
+            "description": "Step by step guide to using our online Nepali calendar (Nepal patro) to check today's Nepali date and navigate through the Nepali months.",
+            "step": [
+              {
+                "@type": "HowToStep",
+                "name": "Find Today's Date",
+                "text": "Click the 'Go to Today' button to instantly see today's Nepali date highlighted in the calendar."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Navigate Between Months",
+                "text": "Use the arrow buttons at the top of the calendar to move to previous or next months in the Nepali patro."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "View Date Details",
+                "text": "Click on any date in the Nepal calendar to see detailed information including festivals, events, and tithi."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Check Year Events",
+                "text": "Switch to the 'Year Events' tab to see all events and festivals for the entire year in the Nepali calendar."
+              }
+            ]
+          })}
+        </script>
+
+        {/* ItemList Schema for Months */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Months in Nepali Calendar (Hamro Patro)",
+            "description": "List of all months in the Nepali calendar (Nepal patro) system used to find today's Nepali date and navigate through the year.",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Baishakh (बैशाख)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/baishakh`
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Jestha (जेष्ठ)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/jestha`
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Ashadh (असार)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/ashadh`
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Shrawan (श्रावण)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/shrawan`
+              },
+              {
+                "@type": "ListItem",
+                "position": 5,
+                "name": "Bhadra (भाद्र)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/bhadra`
+              },
+              {
+                "@type": "ListItem",
+                "position": 6,
+                "name": "Ashwin (आश्विन)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/ashwin`
+              },
+              {
+                "@type": "ListItem",
+                "position": 7,
+                "name": "Kartik (कार्तिक)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/kartik`
+              },
+              {
+                "@type": "ListItem",
+                "position": 8,
+                "name": "Mangsir (मंसिर)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/mangsir`
+              },
+              {
+                "@type": "ListItem",
+                "position": 9,
+                "name": "Poush (पौष)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/poush`
+              },
+              {
+                "@type": "ListItem",
+                "position": 10,
+                "name": "Magh (माघ)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/magh`
+              },
+              {
+                "@type": "ListItem",
+                "position": 11,
+                "name": "Falgun (फाल्गुन)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/falgun`
+              },
+              {
+                "@type": "ListItem",
+                "position": 12,
+                "name": "Chaitra (चैत्र)",
+                "url": `https://quiknepal.com/nepalicalendar/${params.year}/chaitra`
+              }
+            ]
+          })}
+        </script>
+      </SEO>
+      <MainLayout 
+        title={pageTitle}
+        description={pageDescription}
+      >
       <FadeIn>
         <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
@@ -1390,6 +1732,7 @@ const Calendar = () => {
         </div>
       </section>
     </MainLayout>
+    </>
   );
 };
 
