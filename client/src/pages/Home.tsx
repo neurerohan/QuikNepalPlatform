@@ -10,9 +10,9 @@ import {
   getVegetables, 
   getMetals, 
   getRashifal, 
-  getTodayNepaliDate,
   getCalendarEvents 
 } from '@/lib/api';
+import { getCurrentNepaliDate, getKathmanduTime, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 
 const Home = () => {
   // Get sample vegetable data for the preview
@@ -32,23 +32,26 @@ const Home = () => {
   // Get sample rashifal data for the preview
   const rashifalQuery = useQuery({
     queryKey: ['/api/rashifal'],
-    queryFn: getRashifal,
+    queryFn: () => getRashifal(), // Wrap in anonymous function to match expected signature
     staleTime: 3600000 // 1 hour
   });
 
-  // Get current date in AD format
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString('en-US', {
+  // Get current date in AD format based on Kathmandu time
+  const kathmanduTime = getKathmanduTime();
+  const formattedDate = kathmanduTime.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
   
-  // Get today's Nepali date
+  // Get current time in Kathmandu
+  const formattedTime = getFormattedKathmanduTime('short');
+  
+  // Get today's Nepali date based on Kathmandu time
   const { data: nepaliToday, isLoading: loadingNepaliToday } = useQuery({
-    queryKey: ['/api/today'],
-    queryFn: getTodayNepaliDate,
-    staleTime: 60 * 60 * 1000, // 1 hour
+    queryKey: ['/api/today-kathmandu-time'],
+    queryFn: getCurrentNepaliDate,
+    staleTime: 5 * 60 * 1000, // 5 minutes - shorter to keep time more accurate
   });
   
   // Get today's events
@@ -174,6 +177,8 @@ const Home = () => {
                   <div className="bg-white rounded-lg p-2 shadow-sm flex-1">
                     <p className="text-xs text-gray-500">Gregorian (AD)</p>
                     <p className="text-primary-dark font-medium">{formattedDate}</p>
+                    <p className="text-xs text-gray-500 mt-1">Kathmandu Time</p>
+                    <p className="text-primary-dark font-medium">{formattedTime}</p>
                   </div>
                   
                   {nepaliToday ? (
@@ -181,6 +186,10 @@ const Home = () => {
                       <p className="text-xs text-gray-500">Bikram Sambat (BS)</p>
                       <p className="text-primary-dark font-medium">
                         {nepaliToday.day} {nepaliToday.month_name} {nepaliToday.year}
+                      </p>
+                      <p className="text-xs text-primary-dark/70 mt-1 bg-green-50 inline-block px-2 py-1 rounded">
+                        <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
+                        Nepal Time Zone (UTC+5:45)
                       </p>
                     </div>
                   ) : loadingNepaliToday ? (

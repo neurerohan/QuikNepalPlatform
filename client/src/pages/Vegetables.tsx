@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { FaInfoCircle, FaLeaf, FaFilter, FaSort, FaSyncAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { getCurrentNepaliDate } from '@/lib/nepaliDateConverter';
+import { getCurrentNepaliDate, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Define types for our vegetable data
@@ -106,19 +106,19 @@ const Vegetables = () => {
   const [nepaliDate, setNepaliDate] = useState('');
   const [filterByTrend, setFilterByTrend] = useState<'all' | 'up' | 'down' | 'stable'>('all');
   
-  // Get current Nepali date
+  // Get current Nepali date based on Kathmandu time
+  const { data: nepaliDateData, isLoading: loadingNepaliDate } = useQuery({
+    queryKey: ['/api/today-kathmandu-time'],
+    queryFn: getCurrentNepaliDate,
+    staleTime: 5 * 60 * 1000 // 5 minutes - shorter to keep time more accurate
+  });
+  
+  // Update the Nepali date display when data is available
   useEffect(() => {
-    async function fetchNepaliDate() {
-      try {
-        const dateInfo = await getCurrentNepaliDate();
-        setNepaliDate(`${dateInfo.year} ${dateInfo.month_name} ${dateInfo.day}`);
-      } catch (error) {
-        console.error("Error fetching Nepali date:", error);
-      }
+    if (nepaliDateData) {
+      setNepaliDate(`${nepaliDateData.year} ${nepaliDateData.month_name} ${nepaliDateData.day}`);
     }
-    
-    fetchNepaliDate();
-  }, []);
+  }, [nepaliDateData]);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['vegetables'],

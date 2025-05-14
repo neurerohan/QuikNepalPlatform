@@ -297,14 +297,53 @@ function formatADDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-// Get current Nepali date
+// Get the exact Kathmandu time (Nepal Time - UTC+5:45)
+export function getKathmanduTime(): Date {
+  // Create a date object for the current time
+  const now = new Date();
+  
+  // Get the UTC time in milliseconds
+  const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+  
+  // Nepal Time is UTC+5:45 (5 hours and 45 minutes ahead of UTC)
+  // 5 hours = 5 * 60 * 60000 = 18000000 milliseconds
+  // 45 minutes = 45 * 60000 = 2700000 milliseconds
+  const nepalTimeOffset = 18000000 + 2700000;
+  
+  // Create a new date object with Nepal Time
+  return new Date(utcTime + nepalTimeOffset);
+}
+
+// Get current Nepali date based on Kathmandu time
 export function getCurrentNepaliDate() {
-  const today = new Date();
-  return convertADToBS(today);
+  const kathmanduTime = getKathmanduTime();
+  return convertADToBS(kathmanduTime);
+}
+
+// Format the Kathmandu time in a readable format
+export function getFormattedKathmanduTime(format: 'short' | 'long' = 'long'): string {
+  const kathmanduTime = getKathmanduTime();
+  
+  if (format === 'short') {
+    // Return time in HH:MM format
+    return kathmanduTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  } else {
+    // Return time in HH:MM:SS format
+    return kathmanduTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  }
 }
 
 // Format Nepali date in a readable format
 export function formatNepaliDate(bsDate: { year: number; month: number; day: number; month_name?: string }) {
   const monthName = bsDate.month_name || nepaliMonths[bsDate.month - 1];
   return `${bsDate.day} ${monthName} ${bsDate.year}`;
-} 
+}

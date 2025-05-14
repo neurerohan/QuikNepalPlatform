@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getRashifal, getTodayNepaliDate } from '@/lib/api';
+import { getRashifal } from '@/lib/api';
 import MainLayout from '@/components/layout/MainLayout';
 import ZodiacCard from '@/components/ui/ZodiacCard';
 import FadeIn from '@/components/ui/FadeIn';
 import { motion } from 'framer-motion';
-import { formatNepaliDate } from '@/lib/nepaliDateConverter';
+import { formatNepaliDate, getCurrentNepaliDate, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 import { useEffect, useState } from 'react';
 
 const zodiacSigns = [
@@ -151,9 +151,9 @@ const Rashifal = () => {
   });
   
   const { data: nepaliDateData } = useQuery({
-    queryKey: ['/api/today-nepali-date'],
-    queryFn: () => getTodayNepaliDate(),
-    staleTime: 3600000 // 1 hour
+    queryKey: ['/api/today-kathmandu-time'],
+    queryFn: getCurrentNepaliDate,
+    staleTime: 5 * 60 * 1000 // 5 minutes - shorter to keep time more accurate
   });
 
   useEffect(() => {

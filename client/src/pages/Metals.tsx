@@ -5,7 +5,8 @@ import FadeIn from '@/components/ui/FadeIn';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { FaInfoCircle, FaCoins } from 'react-icons/fa'; // Using FaCoins for gold/silver, FaInfoCircle from fa
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getKathmanduTime, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 
 // Background particles (similar to other pages)
 const BackgroundParticles = () => {
@@ -130,7 +131,10 @@ const Metals = () => {
     return goldFine > 0 || goldTejabi > 0 || silver > 0;
   };
 
-  const pricesDate = data?.date ? format(parseISO(data.date), 'MMMM dd, yyyy') : "Today";
+  // Use Kathmandu time for the date if no specific date is provided in the data
+  const pricesDate = data?.date ? 
+    format(parseISO(data.date), 'MMMM dd, yyyy') : 
+    format(getKathmanduTime(), 'MMMM dd, yyyy');
   const pageTitle = `सुन चाँदीको मूल्य (${pricesDate}) - Gold/Silver Prices Nepal`;
   const pageDescription = `नेपालमा ${pricesDate}को लागि नवीनतम सुन (Fine Gold, Tejabi Gold) र चाँदीको मूल्यहरू। FENEGOSIDA द्वारा प्रकाशित।`;
 

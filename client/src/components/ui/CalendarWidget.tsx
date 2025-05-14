@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getCalendar, getTodayNepaliDate, getMonthName } from '@/lib/api';
+import { getCalendar, getMonthName } from '@/lib/api';
+import { getCurrentNepaliDate, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 import { Link } from 'wouter';
 
 // Helper function to convert Tithi names to Devanagari
@@ -40,11 +41,11 @@ const CalendarWidget = () => {
   // State for tracking selected day for modal
   const [selectedDay, setSelectedDay] = useState<any>(null);
   
-  // Fetch today's Nepali date
+  // Fetch today's Nepali date based on Kathmandu time
   const { data: nepaliToday, isLoading: loadingNepaliToday } = useQuery({
-    queryKey: ['/api/today'],
-    queryFn: getTodayNepaliDate,
-    staleTime: 60 * 60 * 1000, // 1 hour
+    queryKey: ['/api/today-kathmandu-time'],
+    queryFn: getCurrentNepaliDate,
+    staleTime: 5 * 60 * 1000, // 5 minutes - shorter to keep time more accurate
   });
 
   // State to track current month/year being displayed
