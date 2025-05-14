@@ -7,6 +7,7 @@ import { format, parseISO } from 'date-fns';
 import { FaInfoCircle, FaCoins } from 'react-icons/fa'; // Using FaCoins for gold/silver, FaInfoCircle from fa
 import { useEffect, useState } from 'react';
 import { getKathmanduTime, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
+import SEO from '@/components/SEO';
 
 // Background particles (similar to other pages)
 const BackgroundParticles = () => {
@@ -118,6 +119,11 @@ const Metals = () => {
       console.log('Source:', data.source);
     }
   }, [data, isLoading, error]);
+  
+  // SEO optimization
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
+  const pageKeywords = "gold price in nepal, cost of gold in nepal, gold value in nepal, gold, gold price, gold price today, gold rate today, cost of gold today, 1 tola gold price nepal, gold price at nepal today";
 
   // Helper function to check if we have real data (non-zero values)
   const hasRealData = () => {
@@ -138,11 +144,116 @@ const Metals = () => {
   const pageTitle = `सुन चाँदीको मूल्य (${pricesDate}) - Gold/Silver Prices Nepal`;
   const pageDescription = `नेपालमा ${pricesDate}को लागि नवीनतम सुन (Fine Gold, Tejabi Gold) र चाँदीको मूल्यहरू। FENEGOSIDA द्वारा प्रकाशित।`;
 
+  // Update page title and description with SEO-optimized versions
+  const seoTitle = "Gold Price in Nepal Today | 1 Tola Gold Rate | Gold Value in Nepal";
+  const seoDescription = "Check today's gold price in Nepal with real-time updates. Current gold rate today in Nepal per tola and gram. Daily gold and silver price updates from FENEGOSIDA.";
+  
   return (
-    <MainLayout title={pageTitle} description={pageDescription}>
-      <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200">
-        <BackgroundParticles />
-      <FadeIn>
+    <>
+      <SEO 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname="/gold-and-silver-in-nepal"
+        ogImage="https://quiknepal.com/og-images/gold-price-nepal.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="WebPage"
+        hrefLangs={[
+          { lang: "en", url: "https://quiknepal.com/en/gold-and-silver-in-nepal" },
+          { lang: "ne", url: "https://quiknepal.com/ne/gold-and-silver-in-nepal" }
+        ]}
+      >
+        {/* Product Schema for Gold */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Gold in Nepal",
+            "description": "Current gold prices in Nepal including fine gold and tejabi gold rates.",
+            "image": "https://quiknepal.com/images/gold-nepal.jpg",
+            "offers": {
+              "@type": "AggregateOffer",
+              "lowPrice": data?.gold?.tejabiGold || "0",
+              "highPrice": data?.gold?.fineGold || "0",
+              "priceCurrency": "NPR",
+              "availability": "https://schema.org/InStock",
+              "priceValidUntil": new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]
+            },
+            "brand": {
+              "@type": "Brand",
+              "name": "FENEGOSIDA"
+            }
+          })}
+        </script>
+        
+        {/* Article Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Gold Price in Nepal Today - Daily Updates",
+            "image": "https://quiknepal.com/og-images/gold-price-nepal.jpg",
+            "datePublished": "2024-01-01",
+            "dateModified": modifiedDate,
+            "author": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "url": "https://quiknepal.com"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "QuikNepal",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://quiknepal.com/logo.png"
+              }
+            },
+            "description": seoDescription
+          })}
+        </script>
+        
+        {/* FAQPage Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is the current gold price in Nepal?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": `The current price of fine gold (24K) in Nepal is NPR ${data?.gold?.fineGold || "N/A"} per tola, while tejabi gold (22K) is NPR ${data?.gold?.tejabiGold || "N/A"} per tola. These rates are updated daily based on international market prices and local factors.`
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect gold prices in Nepal?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Gold prices in Nepal are influenced by international market rates, USD exchange rates, government taxes and duties, and local market demand and supply. The Federation of Nepal Gold and Silver Dealers' Association (FENEGOSIDA) publishes these rates daily."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between fine gold and tejabi gold?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Fine gold refers to 24 karat (99.99% pure) gold, while tejabi gold refers to 22 karat (91.6% pure) gold which is commonly used for jewelry making. Fine gold is more expensive due to its higher purity level."
+                }
+              }
+            ]
+          })}
+        </script>
+      </SEO>
+      <MainLayout title={pageTitle} description={pageDescription}>
+        <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200">
+          <BackgroundParticles />
+        <FadeIn>
           <section className="py-12 md:py-16 relative z-10">
           <div className="container mx-auto px-4">
               <div className="text-center mb-10 md:mb-14">
@@ -298,6 +409,7 @@ const Metals = () => {
         </FadeIn>
       </div>
     </MainLayout>
+    </>
   );
 };
 
