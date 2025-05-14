@@ -8,6 +8,8 @@ interface MonthContent {
   days: number;
   agriculture: string;
   festivals: string[];
+  description: string;
+  culturalNotes: string;
 }
 
 interface FestivalEvent {
@@ -23,138 +25,155 @@ interface FestivalEvent {
 
 // Month-specific dynamic content
 export const getMonthContent = (month: number, year: number): MonthContent => {
-  const baseMonths: MonthContent[] = [
+  const monthsData: MonthContent[] = [
     {
       name: 'Baishakh',
       nepaliName: 'बैशाख',
       gregorianMonths: 'April-May',
       temperature: '18-30°C in the Terai region and 12-22°C in the hilly regions',
       highlights: 'the start of summer and the celebration of Nepali New Year',
-      days: 30,
+      days: 31,
       agriculture: 'preparation of fields for rice cultivation and harvesting of wheat',
-      festivals: ['Nepali New Year', 'Bisket Jatra', 'Baisakh Purnima (Buddha Jayanti)']
+      festivals: ['Nepali New Year (Navavarsha)', 'Buddha Jayanti', 'Mata Tirtha Ausi (Mother\'s Day)'],
+      description: 'Baishakh marks the beginning of the Nepali calendar year and is a time of celebration and fresh starts.',
+      culturalNotes: 'Many people visit temples and make donations to start the new year with good karma.'
     },
     {
       name: 'Jestha',
       nepaliName: 'जेठ',
       gregorianMonths: 'May-June',
-      temperature: '22-33°C in the Terai region and 15-26°C in the hilly regions',
-      highlights: 'increasingly warmer days and preparation for monsoon season',
+      temperature: '22-35°C in the Terai region and 15-25°C in the hilly regions',
+      highlights: 'increasing heat as summer progresses and pre-monsoon showers',
       days: 31,
-      agriculture: 'preparation for paddy plantation and vegetable farming',
-      festivals: ['Sithi Nakha', 'Jestha Purnima']
+      agriculture: 'continued field preparation and early planting of certain crops',
+      festivals: ['Sithi Nakha', 'Guru Purnima'],
+      description: 'Jestha brings increasing temperatures and the first pre-monsoon showers to much of Nepal.',
+      culturalNotes: 'Many Newar communities clean water sources during Sithi Nakha festival in this month.'
     },
     {
       name: 'Ashadh',
       nepaliName: 'असार',
       gregorianMonths: 'June-July',
-      temperature: '25-35°C in the Terai region and 18-28°C in the hilly regions',
-      highlights: 'the onset of monsoon rains and rice planting activities',
-      days: 31,
-      agriculture: 'rice plantation and tending to summer crops',
-      festivals: ['Dahi Chiura Khane Din (Yogurt and Beaten Rice Day)', 'Ashadh Purnima']
+      temperature: '25-35°C with high humidity as monsoon arrives',
+      highlights: 'the arrival of the monsoon season and rice planting celebrations',
+      days: 32,
+      agriculture: 'rice planting (ropai) is the major agricultural activity with celebratory traditions',
+      festivals: ['Ropai Jatra (Rice Planting Festival)', 'Jagannath Rath Yatra'],
+      description: 'Ashadh is synonymous with the arrival of monsoon rains and rice planting across Nepal.',
+      culturalNotes: 'Farmers often sing special songs called "Asare Geet" while planting rice in muddy fields.'
     },
     {
       name: 'Shrawan',
-      nepaliName: 'साउन',
+      nepaliName: 'श्रावण',
       gregorianMonths: 'July-August',
-      temperature: '25-33°C in the Terai region and 19-27°C in the hilly regions',
-      highlights: 'heavy monsoon rainfall and lush greenery across the country',
-      days: 32,
-      agriculture: 'weeding rice fields and planting vegetables',
-      festivals: ['Shrawan Sombar (Mondays of Shrawan)', 'Nag Panchami', 'Janai Purnima/Rakshya Bandhan']
+      temperature: '25-33°C with very high humidity during peak monsoon',
+      highlights: 'peak monsoon season with religious observations and fasting',
+      days: 31,
+      agriculture: 'caring for newly planted rice crops and planting other monsoon vegetables',
+      festivals: ['Shrawan Sombar', 'Nag Panchami', 'Janai Purnima', 'Raksha Bandhan', 'Ghanta Karna'],
+      description: 'Shrawan is considered a holy month with many religious observances and fasting traditions.',
+      culturalNotes: 'Women often wear green bangles (pote) and apply mehendi during this month for good fortune.'
     },
     {
       name: 'Bhadra',
-      nepaliName: 'भदौ',
+      nepaliName: 'भाद्र',
       gregorianMonths: 'August-September',
-      temperature: '24-32°C in the Terai region and 18-26°C in the hilly regions',
-      highlights: 'continued monsoon and the beginning of major festival preparations',
+      temperature: '24-32°C with gradually decreasing rainfall',
+      highlights: 'the transition from monsoon to autumn with several important festivals',
       days: 31,
-      agriculture: 'monitoring of paddy growth and early harvests of some vegetables',
-      festivals: ['Gai Jatra', 'Krishna Janmashtami', 'Teej']
+      agriculture: 'monitoring of rice crops and preparation for harvesting early varieties',
+      festivals: ['Gai Jatra', 'Krishna Janmashtami', 'Teej', 'Rishi Panchami'],
+      description: 'Bhadra is filled with important festivals as the monsoon begins to retreat.',
+      culturalNotes: 'Gai Jatra combines commemoration of deceased loved ones with humor and social commentary.'
     },
     {
       name: 'Ashwin',
-      nepaliName: 'असोज',
+      nepaliName: 'आश्विन',
       gregorianMonths: 'September-October',
-      temperature: '23-31°C in the Terai region and 17-25°C in the hilly regions',
-      highlights: 'the end of monsoon and the start of festival season including Dashain',
+      temperature: '20-30°C with clearer skies as monsoon ends',
+      highlights: 'the celebration of Dashain, Nepal\'s biggest festival',
       days: 30,
-      agriculture: 'harvesting early rice varieties and planting winter vegetables',
-      festivals: ['Dashain (Vijaya Dashami)', 'Ghatasthapana', 'Fulpati']
+      agriculture: 'harvesting of early rice varieties and planting of winter crops',
+      festivals: ['Dashain', 'Fulpati', 'Vijaya Dashami', 'Kojagrat Purnima'],
+      description: 'Ashwin hosts Dashain, a 15-day celebration that's the most important festival in Nepal.',
+      culturalNotes: 'During Dashain, people travel long distances to celebrate with family and receive tika and blessings from elders.'
     },
     {
       name: 'Kartik',
       nepaliName: 'कार्तिक',
       gregorianMonths: 'October-November',
-      temperature: '18-28°C in the Terai region and 14-22°C in the hilly regions',
-      highlights: 'post-Dashain celebrations and clearer skies',
-      days: 30,
-      agriculture: 'rice harvesting and preparation of fields for winter crops',
-      festivals: ['Tihar/Deepawali', 'Chhath Parva', 'Kartik Purnima']
+      temperature: '15-28°C with cool, dry conditions beginning',
+      highlights: 'the festival of lights (Tihar) and worship of various deities',
+      days: 29,
+      agriculture: 'main rice harvesting season and preparation for winter crops',
+      festivals: ['Tihar', 'Nepal Sambat', 'Chhath Parva', 'Guru Nanak Jayanti'],
+      description: 'Kartik features Tihar (festival of lights) with five days of celebrations honoring different deities and relationships.',
+      culturalNotes: 'Houses are illuminated with oil lamps and candles during Tihar to invite the goddess of wealth, Laxmi.'
     },
     {
       name: 'Mangsir',
       nepaliName: 'मंसिर',
       gregorianMonths: 'November-December',
-      temperature: '15-24°C in the Terai region and 10-18°C in the hilly regions',
-      highlights: 'cooler temperatures and the start of winter clothing',
+      temperature: '12-25°C with cool, dry winter beginning',
+      highlights: 'the beginning of winter with decreasing temperatures',
       days: 29,
-      agriculture: 'planting winter crops like wheat, barley, and mustard',
-      festivals: ['Bibaha Panchami', 'Yomari Punhi']
+      agriculture: 'harvesting of late rice varieties and planting of winter crops like wheat and barley',
+      festivals: ['Yomari Punhi', 'Sita Bibaha Panchami', 'Bala Chaturdashi'],
+      description: 'Mangsir marks the proper beginning of winter season with dropping temperatures across Nepal.',
+      culturalNotes: 'The Yomari Punhi festival celebrates the harvest with special sweet dumplings called Yomari.'
     },
     {
       name: 'Poush',
-      nepaliName: 'पुष',
+      nepaliName: 'पौष',
       gregorianMonths: 'December-January',
-      temperature: '12-22°C in the Terai region and 8-15°C in the hilly regions',
-      highlights: 'winter season and cultural ceremonies like Yomari Punhi',
-      days: 30,
-      agriculture: 'tending to winter crops and vegetable harvesting',
-      festivals: ['Tamu Lhosar', 'Maghe Sankranti preparations']
+      temperature: '8-20°C with cold winter temperatures, especially in the mornings and evenings',
+      highlights: 'the peak of winter season with cold temperatures and celebratory feasts',
+      days: 29,
+      agriculture: 'caring for winter crops and limited agricultural activity in higher elevations',
+      festivals: ['Tamu Lhosar', 'Udhauli', 'Christmas', 'Dhanya Purnima'],
+      description: 'Poush is one of the coldest months with several ethnic new year celebrations.',
+      culturalNotes: 'Tamu Lhosar marks the beginning of the new year for the Gurung community with feasting and cultural programs.'
     },
     {
       name: 'Magh',
       nepaliName: 'माघ',
       gregorianMonths: 'January-February',
-      temperature: '10-20°C in the Terai region and 5-15°C in the hilly regions',
-      highlights: 'the coldest month with clear Himalayan views',
+      temperature: '10-23°C with continuing winter conditions',
+      highlights: 'winter festivals and the celebration of Maghe Sankranti',
       days: 29,
-      agriculture: 'limited agricultural activities due to cold conditions in many regions',
-      festivals: ['Maghe Sankranti', 'Sonam Lhosar', 'Basanta Panchami']
+      agriculture: 'maintenance of winter crops and preparation for spring planting',
+      festivals: ['Maghe Sankranti', 'Sonam Lhosar', 'Basanta Panchami', 'Shree Panchami'],
+      description: 'Magh is marked by Maghe Sankranti, which signals the end of the winter solstice period.',
+      culturalNotes: 'Special foods like til ko laddu (sesame treats), ghee, and sweet potatoes are eaten during Maghe Sankranti.'
     },
     {
       name: 'Falgun',
-      nepaliName: 'फागुन',
+      nepaliName: 'फाल्गुन',
       gregorianMonths: 'February-March',
-      temperature: '12-22°C in the Terai region and 8-18°C in the hilly regions',
-      highlights: 'the late winter with warming trends and celebration of Holi',
+      temperature: '12-25°C with warming temperatures signaling the approach of spring',
+      highlights: 'the colorful festival of Holi and the beginning of spring season',
       days: 30,
-      agriculture: 'preparing fields for spring crops and tending to fruit trees',
-      festivals: ['Holi', 'Falgu Purnima', 'Gyalpo Lhosar']
+      agriculture: 'harvesting of winter crops and preparation for spring planting',
+      festivals: ['Holi', 'Gyalpo Lhosar', 'Fagun Purnima', 'Ghode Jatra'],
+      description: 'Falgun brings color and joy with the celebration of Holi, the festival of colors.',
+      culturalNotes: 'During Holi, people throw colored powders and water at each other while sharing sweets and festivities.'
     },
     {
       name: 'Chaitra',
-      nepaliName: 'चैत',
+      nepaliName: 'चैत्र',
       gregorianMonths: 'March-April',
-      temperature: '15-25°C in the Terai region and 10-20°C in the hilly regions',
-      highlights: 'the end of winter and preparations for the New Year',
+      temperature: '15-28°C with increasing warmth as spring progresses',
+      highlights: 'the conclusion of the Nepali calendar year with various regional celebrations',
       days: 30,
-      agriculture: 'harvesting winter crops and preparing for summer vegetables',
-      festivals: ['Chaitra Dashain', 'Fagu Purnima (Holi)', 'Ghode Jatra']
+      agriculture: 'preparation for the coming agricultural year and planting summer vegetables',
+      festivals: ['Chaite Dashain', 'Ghode Jatra', 'Ram Navami'],
+      description: 'Chaitra is the last month of the Nepali year, featuring a smaller version of the Dashain festival.',
+      culturalNotes: 'Ghode Jatra (Horse Festival) in Kathmandu dates back to ancient times and is still celebrated with military displays.'
     }
   ];
-
-  // Apply any year-specific modifications here
-  const monthContent = { ...baseMonths[month - 1] };
   
-  // Adjust days for leap years - simplified example
-  if (year % 4 === 0 && month === 11) {
-    monthContent.days = 31; // Adjust Falgun for leap years
-  }
-  
-  return monthContent;
+  // Adjust for 1-indexed months (January = 1, etc.)
+  return monthsData[month - 1] || monthsData[0];
 };
 
 // Major festivals and events of Nepal
@@ -284,54 +303,61 @@ export const getMajorEvents = (year: number): FestivalEvent[] => {
 };
 
 // Get year-specific information
-export const getYearInfo = (year: number): { description: string; highlights: string[] } => {
-  // Base information applicable to most years
-  const baseInfo = {
-    description: `The Nepali year ${year} BS corresponds approximately to ${year - 57}-${year - 56} AD in the Gregorian calendar. The Bikram Sambat calendar, Nepal's official calendar, is approximately 56.7 years ahead of the Western calendar.`,
+export const getYearInfo = (year: number): { description: string; highlights: string[]; specialEvents: string[] } => {
+  // Default year information if specific year not found
+  const defaultYearInfo = {
+    description: `Nepali year ${year} BS (${year - 57}-${year - 56} AD) is projected to see advancement in several socio-economic areas.`,
     highlights: [
-      'The Nepali calendar consists of 12 months, with each month having 29 to 32 days',
-      'The year begins in mid-April with the month of Baishakh',
-      'Major festivals like Dashain and Tihar follow the lunar calendar and move slightly each year',
-      'The Nepali calendar incorporates both solar and lunar elements in its calculation'
-    ]
+      'Major urban development projects in Kathmandu Valley',
+      'Expansion of international air connectivity',
+      'Focus on renewable energy infrastructure',
+      'Educational reforms and skill development initiatives'
+    ],
+    specialEvents: []
   };
-
-  // Add any specific information for particular years
-  // This could be filled with actual historical data or upcoming known events
-  const yearSpecificInfo: Record<number, { description?: string; highlights?: string[] }> = {
+  
+  // You could expand this with specific information for particular years
+  const yearData: Record<number, any> = {
     2080: {
-      description: 'Nepali year 2080 BS (2023-2024 AD) is notable for several political developments and infrastructure projects.',
+      description: 'Nepali year 2080 BS (2023-2024 AD) is a significant year for infrastructure development and digitalization initiatives in Nepal.',
       highlights: [
-        'Several major hydropower projects are scheduled for completion',
-        'Implementation of federalism continues with local government empowerment',
-        'Tourism recovery efforts following the global pandemic',
-        'Digital transformation initiatives across government services'
+        'Major expansion of digital payment systems across rural Nepal',
+        'Inauguration of new international airport facilities',
+        'Implementation of federal administrative reforms',
+        'Launch of national digital literacy campaign'
+      ],
+      specialEvents: [
+        'Golden Jubilee celebration of Nepal Tourism Board',
+        'Nepal Investment Summit 2023'
       ]
     },
     2081: {
-      description: 'Nepali year 2081 BS (2024-2025 AD) marks continued development in infrastructure and technology adoption.',
+      description: 'Nepali year 2081 BS (2024-2025 AD) focuses on sustainability and climate resilience initiatives throughout Nepal.',
       highlights: [
-        'Expansion of road networks connecting remote areas',
-        'Growth in digital payment systems and e-commerce',
-        'Initiatives for sustainable tourism development',
-        'Agricultural modernization programs in various provinces'
+        'Launch of National Climate Resilience Program',
+        'Expansion of clean energy projects in rural areas',
+        'Implementation of plastic reduction initiatives in major cities',
+        'New conservation efforts in national parks and protected areas'
+      ],
+      specialEvents: [
+        'Nepal Sustainable Development Conference',
+        'International Mountain Day Summit in Kathmandu'
       ]
     },
     2082: {
-      description: 'Nepali year 2082 BS (2025-2026 AD) is projected to see advancement in several socio-economic areas.',
+      description: 'Nepali year 2082 BS (2025-2026 AD) marks significant advancements in technology adoption and international partnerships.',
       highlights: [
-        'Major urban development projects in Kathmandu Valley',
-        'Expansion of international air connectivity',
-        'Focus on renewable energy infrastructure',
-        'Educational reforms and skill development initiatives'
+        'Nationwide 5G network expansion to provincial capitals',
+        'Launch of digital governance platform for citizen services',
+        'Implementation of new trade agreements with neighboring countries',
+        'Major reforms in education technology and distance learning'
+      ],
+      specialEvents: [
+        'SAARC Cultural Festival in Kathmandu',
+        '75th Anniversary of Nepal-UK Diplomatic Relations'
       ]
     }
   };
-
-  // Merge base info with any year-specific information
-  const yearData = yearSpecificInfo[year] || {};
-  return {
-    description: yearData.description || baseInfo.description,
-    highlights: yearData.highlights || baseInfo.highlights
-  };
+  
+  return yearData[year] || defaultYearInfo;
 };
