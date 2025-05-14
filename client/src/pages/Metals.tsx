@@ -7,7 +7,6 @@ import { format, parseISO } from 'date-fns';
 import { FaInfoCircle, FaCoins } from 'react-icons/fa'; // Using FaCoins for gold/silver, FaInfoCircle from fa
 import { useEffect, useState } from 'react';
 import { getKathmanduTime, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
-import SEO from '@/components/SEO';
 
 // Background particles (similar to other pages)
 const BackgroundParticles = () => {
@@ -98,11 +97,6 @@ const MetalDisplayCard: React.FC<MetalDisplayCardProps> = ({
 };
 
 const Metals = () => {
-  // SEO metadata for the Metals page
-  const seoKeywords = "gold price in nepal, cost of gold in nepal, gold value in nepal, gold, gold price, gold price today, gold rate today, cost of gold today, 1 tola gold price nepal, gold price at nepal today";
-  const seoTitle = "Today's Gold & Silver Price in Nepal | Live Rates & Market Trends";
-  const seoDescription = "Get the latest gold price in Nepal today. Track real-time updates on 1 tola gold price, gold rate today, and cost of gold in Nepal. Trusted source for gold value and market trends.";
-  
   const { data, isLoading, error } = useQuery({
     queryKey: ['/api/metals'],
     queryFn: getMetals,
@@ -144,240 +138,8 @@ const Metals = () => {
   const pageTitle = `सुन चाँदीको मूल्य (${pricesDate}) - Gold/Silver Prices Nepal`;
   const pageDescription = `नेपालमा ${pricesDate}को लागि नवीनतम सुन (Fine Gold, Tejabi Gold) र चाँदीको मूल्यहरू। FENEGOSIDA द्वारा प्रकाशित।`;
 
-  // Schema markup for the Metals page
-  const schemaMarkup = [
-    // Dataset Schema for gold and silver prices
-    {
-      "@context": "https://schema.org",
-      "@type": "Dataset",
-      "name": "Gold and Silver Prices in Nepal",
-      "description": "Daily updated gold and silver prices in Nepal, including fine gold, tejabi gold, and silver rates per tola.",
-      "keywords": ["gold price in nepal", "gold rate today", "cost of gold in nepal", "1 tola gold price nepal", "gold value in nepal"],
-      "url": "https://quiknepal.com/gold-and-silver-in-nepal",
-      "temporalCoverage": "2023-01-01/2025-12-31",
-      "spatialCoverage": {
-        "@type": "Place",
-        "name": "Nepal"
-      },
-      "variableMeasured": [
-        "Gold Price per Tola",
-        "Silver Price per Tola"
-      ],
-      "creator": {
-        "@type": "Organization",
-        "name": "QuikNepal",
-        "url": "https://quiknepal.com"
-      }
-    },
-    // BreadcrumbList Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://quiknepal.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Gold & Silver Prices",
-          "item": "https://quiknepal.com/gold-and-silver-in-nepal"
-        }
-      ]
-    },
-    // FAQPage Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is today's gold price in Nepal?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Today's gold price in Nepal is updated daily on our website. We provide real-time rates for fine gold, tejabi gold, and silver per tola as published by the Nepal Gold and Silver Dealers' Association (FENEGOSIDA)."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How much does 1 tola of gold cost in Nepal?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The cost of 1 tola of gold in Nepal varies daily based on international market rates, USD exchange rates, and local factors. Our website provides the current rate for 1 tola of gold in Nepal, which is approximately 11.66 grams."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What factors affect gold prices in Nepal?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Gold prices in Nepal are influenced by international market rates, USD exchange rates, government taxes and duties, and local market demand and supply. The Federation of Nepal Gold and Silver Dealers' Association (FENEGOSIDA) publishes these rates daily."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is the difference between Fine Gold and Tejabi Gold?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Fine Gold (Chhapawal) is usually 99.9% pure, while Tejabi Gold is about 99.5% pure and more commonly used for jewelry making in Nepal. The price difference reflects this variation in purity."
-          }
-        }
-      ]
-    },
-    // WebApplication Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Nepal Gold Price Tracker",
-      "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "NPR"
-      },
-      "description": "Track daily gold and silver prices in Nepal with our free online tool. Get accurate rates for fine gold, tejabi gold, and silver per tola."
-    },
-    // Table Schema for price data
-    {
-      "@context": "https://schema.org",
-      "@type": "Table",
-      "about": "Gold and Silver Prices in Nepal",
-      "description": "Current gold and silver prices in Nepal per tola",
-      "keywords": "gold price today, gold rate today, cost of gold in nepal"
-    },
-    // LocalBusiness Schema for gold dealers
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "Nepal Gold and Silver Market",
-      "description": "Information about gold and silver prices in the Nepali market",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "Nepal"
-      },
-      "priceRange": "$$$$"
-    },
-    // Article Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Today's Gold & Silver Price in Nepal",
-      "description": "Get the latest gold price in Nepal today. Track real-time updates on 1 tola gold price, gold rate today, and cost of gold in Nepal.",
-      "author": {
-        "@type": "Organization",
-        "name": "QuikNepal"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "QuikNepal",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://quiknepal.com/logo.png"
-        }
-      },
-      "datePublished": "2024-01-01",
-      "dateModified": new Date().toISOString(),
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://quiknepal.com/gold-and-silver-in-nepal"
-      }
-    },
-    // ItemList Schema for gold types
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "name": "Types of Gold in Nepal",
-      "description": "Different types of gold available in Nepal market",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Fine Gold (Chhapawal)"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Tejabi Gold"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Silver"
-        }
-      ]
-    },
-    // HowTo Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "name": "How to Check Gold Prices in Nepal",
-      "description": "A step-by-step guide to checking the current gold price in Nepal",
-      "step": [
-        {
-          "@type": "HowToStep",
-          "name": "Visit QuikNepal",
-          "text": "Go to the QuikNepal website for the most up-to-date gold prices."
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Check Today's Rates",
-          "text": "View the current rates for Fine Gold, Tejabi Gold, and Silver per tola."
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Compare Historical Data",
-          "text": "Compare today's prices with previous days to track trends."
-        }
-      ]
-    },
-    // Service Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "serviceType": "Gold Price Information",
-      "provider": {
-        "@type": "Organization",
-        "name": "QuikNepal"
-      },
-      "description": "Daily updated information on gold and silver prices in Nepal",
-      "areaServed": {
-        "@type": "Country",
-        "name": "Nepal"
-      }
-    }
-  ];
-
   return (
-    <>
-      <SEO
-        title={seoTitle}
-        description={seoDescription}
-        keywords={seoKeywords}
-        publishedDate="2024-01-01"
-        modifiedDate={new Date().toISOString()}
-        canonicalUrl="https://quiknepal.com/gold-and-silver-in-nepal"
-        ogImage="https://quiknepal.com/gold-price-og-image.jpg"
-        ogType="website"
-        twitterCardType="summary_large_image"
-        schemaType="WebPage"
-        hrefLangs={[
-          { lang: "en", url: "https://quiknepal.com/en/gold-and-silver-in-nepal" },
-          { lang: "ne", url: "https://quiknepal.com/ne/gold-and-silver-in-nepal" }
-        ]}
-        pathname="/gold-and-silver-in-nepal"
-      >
-        {/* Add custom schema markup */}
-        {schemaMarkup.map((schema, index) => (
-          <script key={index} type="application/ld+json">
-            {JSON.stringify(schema)}
-          </script>
-        ))}
-      </SEO>
-      <MainLayout title={pageTitle} description={pageDescription}>
+    <MainLayout title={pageTitle} description={pageDescription}>
       <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200">
         <BackgroundParticles />
       <FadeIn>
@@ -536,7 +298,6 @@ const Metals = () => {
         </FadeIn>
       </div>
     </MainLayout>
-  </>
   );
 };
 
