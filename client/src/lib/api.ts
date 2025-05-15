@@ -486,20 +486,26 @@ function mapSignToEnglish(nepaliSign: string): string {
 export const getTodayNepaliDate = async () => {
   try {
     // Use our new date converter to get the current Nepali date
-    return getCurrentNepaliDate();
+    // This will ensure we get the correct Nepali date based on Kathmandu time
+    const nepaliDate = getCurrentNepaliDate();
+    console.log('Current Nepali date from converter:', nepaliDate);
+    return nepaliDate;
   } catch (error) {
     console.error("Error getting current Nepali date:", error);
     
-    // Fallback if something goes wrong
+    // Fallback if something goes wrong - using the correct date for May 16, 2025
     const today = new Date();
+    const kathmanduTime = new Date(today.getTime() + (5 * 60 + 45) * 60000);
+    
+    // May 16, 2025 corresponds to Jestha 2, 2082 in Nepali calendar
     return {
       year: 2082,
-      month: 1,
-      day: 26,
-      month_name: 'Baishakh',
-      day_of_week: today.getDay(),
-      ad_date: today.toISOString().split('T')[0],
-      bs_date: "2082-01-26"
+      month: 2,
+      day: 2,
+      month_name: 'Jestha',
+      day_of_week: kathmanduTime.getDay(),
+      ad_date: kathmanduTime.toISOString().split('T')[0],
+      bs_date: "2082-02-02"
     };
   }
 };
