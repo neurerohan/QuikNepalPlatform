@@ -441,15 +441,19 @@ const Calendar = () => {
     }
   }, [nepaliToday]);
   
-  // If no params are provided, use current Nepali date from API and redirect
+  // If no params are provided, use current Nepali date and redirect
   useEffect(() => {
-    if (!params.year || !params.month) {
+    if (location === '/calendar' || !params.year || !params.month) {
       // Get current Nepali date using our utility function
       const currentNepaliDate = getCurrentNepaliDate();
       const nepaliMonthName = currentNepaliDate.month_name.toLowerCase();
-      setLocation(`/calendar/${currentNepaliDate.year}/${nepaliMonthName}`);
+      
+      // Add a small delay to ensure the redirect happens properly
+      setTimeout(() => {
+        setLocation(`/calendar/${currentNepaliDate.year}/${nepaliMonthName}`);
+      }, 50);
     }
-  }, [params, setLocation]);
+  }, [params, location, setLocation]);
   
   // Helper function to get month number from name
   const getMonthNumberFromName = (monthName: string): number => {

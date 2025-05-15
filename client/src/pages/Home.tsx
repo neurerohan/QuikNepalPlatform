@@ -388,7 +388,7 @@ const Home = () => {
                 
                 <div className="p-5">
                   <div className="flex justify-between items-center mb-4">
-                    <h4 className="text-xl font-semibold text-primary">Today's Vegetable Prices</h4>
+                    <h3 className="text-xl font-semibold text-primary">Today's Vegetable Prices</h3>
                     <span className="text-xs text-gray-500">{`Last updated: ${formattedDate}`}</span>
                   </div>
                   
@@ -536,7 +536,7 @@ const Home = () => {
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center">
                       <i className="ri-moon-fill text-2xl mr-2 text-yellow-200"></i>
-                      <h4 className="text-xl font-semibold">आजको राशिफल</h4>
+                      <h3 className="text-xl font-semibold">आजको राशिफल</h3>
                     </div>
                     <span className="text-sm bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">{formattedDate}</span>
                   </div>
@@ -550,7 +550,7 @@ const Home = () => {
                               <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 text-white">
                                 {sign.sign_english ? sign.sign_english.charAt(0) : '✨'}
                               </div>
-                              <h5 className="font-medium text-white">{sign.sign_nepali}</h5>
+                              <h4 className="font-medium text-white">{sign.sign_nepali}</h4>
                             </div>
                             <p className="text-sm text-white/90 mt-2 line-clamp-3 group-hover:text-white transition-colors duration-300">{sign.prediction}</p>
                           </div>
@@ -653,10 +653,10 @@ const Home = () => {
                 
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-6">
-                    <h4 className="text-xl font-semibold text-primary flex items-center">
+                    <h3 className="text-xl font-semibold text-primary flex items-center">
                       <i className="ri-calendar-event-line mr-2 text-blue-500"></i>
                       Date Converter
-                    </h4>
+                    </h3>
                     <div className="flex items-center text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-full">
                       <i className="ri-time-line mr-1"></i> Instant
                     </div>
