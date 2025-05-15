@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { convertDate } from '@/lib/api';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { convertADToBS, convertBSToAD } from '@/lib/nepaliDateConverter';
 
 const bsMonthNames = [
   'Baisakh', 'Jestha', 'Asar', 'Shrawan', 'Bhadra', 'Ashwin',
@@ -28,8 +27,6 @@ const bsDays = Array.from({ length: 32 }, (_, i) => i + 1);
 const adDays = Array.from({ length: 31 }, (_, i) => i + 1);
 
 const DateConverterForm = () => {
-  const queryClient = useQueryClient();
-  
   // BS to AD conversion state
   const [bsYear, setBsYear] = useState<string>('2080');
   const [bsMonth, setBsMonth] = useState<string>('1'); // 1-indexed month
@@ -40,56 +37,69 @@ const DateConverterForm = () => {
   const [adMonth, setAdMonth] = useState<string>('1'); // 1-indexed month
   const [adDay, setAdDay] = useState<string>('1');
 
-  const [bsToAdTrigger, setBsToAdTrigger] = useState(false);
-  const [adToBsTrigger, setAdToBsTrigger] = useState(false);
+  // Conversion results
+  const [bsToAdResult, setBsToAdResult] = useState<string>('Conversion result will appear here');
+  const [adToBsResult, setAdToBsResult] = useState<string>('Conversion result will appear here');
+  
+  // Loading states
+  const [bsToAdLoading, setBsToAdLoading] = useState(false);
+  const [adToBsLoading, setAdToBsLoading] = useState(false);
 
-  // BS to AD conversion query
-  const bsToAdQuery = useQuery({
-    queryKey: ['/calendar/convert', { from: 'bs', date: `${bsYear}-${bsMonth}-${bsDay}` }],
-    queryFn: () => convertDate({ from: 'bs', date: `${bsYear}-${bsMonth}-${bsDay}` }),
-    enabled: bsToAdTrigger,
-    retry: 1
-  });
-
-  // AD to BS conversion query
-  const adToBsQuery = useQuery({
-    queryKey: ['/calendar/convert', { from: 'ad', date: `${adYear}-${adMonth}-${adDay}` }],
-    queryFn: () => convertDate({ from: 'ad', date: `${adYear}-${adMonth}-${adDay}` }),
-    enabled: adToBsTrigger,
-    retry: 1
-  });
-
-  // Effects to reset triggers when query finishes
-  useEffect(() => {
-    if (bsToAdQuery.isSuccess || bsToAdQuery.isError) {
-      setBsToAdTrigger(false);
-    }
-  }, [bsToAdQuery.isSuccess, bsToAdQuery.isError]);
-
-  useEffect(() => {
-    if (adToBsQuery.isSuccess || adToBsQuery.isError) {
-      setAdToBsTrigger(false);
-    }
-  }, [adToBsQuery.isSuccess, adToBsQuery.isError]);
+  // Month names for display
+  const nepaliMonthNames = [
+    'Baishakh', 'Jestha', 'Ashadh', 'Shrawan', 
+    'Bhadra', 'Ashwin', 'Kartik', 'Mangsir', 
+    'Poush', 'Magh', 'Falgun', 'Chaitra'
+  ];
+  
+  const englishMonthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
   const handleBsToAdConvert = () => {
-    // Reset any previous results
-    queryClient.invalidateQueries({
-      queryKey: ['/calendar/convert', { from: 'bs' }]
-    });
+    setBsToAdLoading(true);
     
-    // Trigger the conversion
-    setBsToAdTrigger(true);
+    try {
+      // Convert BS to AD using the direct function
+      const bsYearNum = parseInt(bsYear);
+      const bsMonthNum = parseInt(bsMonth);
+      const bsDayNum = parseInt(bsDay);
+      
+      const result = convertBSToAD(bsYearNum, bsMonthNum, bsDayNum);
+      
+      // Format the result
+      const formattedResult = `${result.month_name} ${result.day}, ${result.year}`;
+      setBsToAdResult(formattedResult);
+    } catch (error) {
+      setBsToAdResult('Error converting date. Please check your input.');
+      console.error('BS to AD conversion error:', error);
+    } finally {
+      setBsToAdLoading(false);
+    }
   };
 
   const handleAdToBsConvert = () => {
-    // Reset any previous results
-    queryClient.invalidateQueries({
-      queryKey: ['/calendar/convert', { from: 'ad' }]
-    });
+    setAdToBsLoading(true);
     
-    // Trigger the conversion
-    setAdToBsTrigger(true);
+    try {
+      // Convert AD to BS using the direct function
+      const adYearNum = parseInt(adYear);
+      const adMonthNum = parseInt(adMonth) - 1; // JS Date months are 0-indexed
+      const adDayNum = parseInt(adDay);
+      
+      const adDate = new Date(adYearNum, adMonthNum, adDayNum);
+      const result = convertADToBS(adDate);
+      
+      // Format the result
+      const formattedResult = `${result.day} ${result.month_name} ${result.year}`;
+      setAdToBsResult(formattedResult);
+    } catch (error) {
+      setAdToBsResult('Error converting date. Please check your input.');
+      console.error('AD to BS conversion error:', error);
+    } finally {
+      setAdToBsLoading(false);
+    }
   };
 
   return (
@@ -144,22 +154,16 @@ const DateConverterForm = () => {
           <Button 
             onClick={handleBsToAdConvert} 
             className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors cursor-pointer"
-            disabled={bsToAdQuery.isPending}
+            disabled={bsToAdLoading}
             type="button"
           >
-            {bsToAdQuery.isPending ? 'Converting...' : 'Convert to AD'}
+            {bsToAdLoading ? 'Converting...' : 'Convert to AD'}
           </Button>
           
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
             <p className="text-sm text-gray-500">Result (AD):</p>
             <p className="font-medium">
-              {bsToAdQuery.isError ? (
-                <span className="text-red-500">Error converting date</span>
-              ) : bsToAdQuery.data ? (
-                `${bsToAdQuery.data.adMonth} ${bsToAdQuery.data.adDay}, ${bsToAdQuery.data.adYear}`
-              ) : (
-                'Conversion result will appear here'
-              )}
+              {bsToAdResult}
             </p>
           </div>
         </div>
@@ -213,22 +217,16 @@ const DateConverterForm = () => {
           <Button 
             onClick={handleAdToBsConvert} 
             className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors cursor-pointer"
-            disabled={adToBsQuery.isPending}
+            disabled={adToBsLoading}
             type="button"
           >
-            {adToBsQuery.isPending ? 'Converting...' : 'Convert to BS'}
+            {adToBsLoading ? 'Converting...' : 'Convert to BS'}
           </Button>
           
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
             <p className="text-sm text-gray-500">Result (BS):</p>
             <p className="font-medium">
-              {adToBsQuery.isError ? (
-                <span className="text-red-500">Error converting date</span>
-              ) : adToBsQuery.data ? (
-                `${adToBsQuery.data.bsMonth} ${adToBsQuery.data.bsDay}, ${adToBsQuery.data.bsYear}`
-              ) : (
-                'Conversion result will appear here'
-              )}
+              {adToBsResult}
             </p>
           </div>
         </div>
