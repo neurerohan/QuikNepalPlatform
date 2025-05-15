@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCalendar, getMonthName } from '@/lib/api';
 import { getCurrentNepaliDate, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 
 // Helper function to convert Tithi names to Devanagari
 const convertTithiToNepali = (tithi: string): string => {
@@ -38,6 +38,9 @@ const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const fullWeekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const CalendarWidget = () => {
+  // For navigation
+  const [, setLocation] = useLocation();
+  
   // State for tracking selected day for modal
   const [selectedDay, setSelectedDay] = useState<any>(null);
   
@@ -69,21 +72,41 @@ const CalendarWidget = () => {
   });
 
   const handlePreviousMonth = () => {
+    let newMonth, newYear;
+    
     if (parseInt(currentMonth) === 1) {
-      setCurrentMonth('12');
-      setCurrentYear((parseInt(currentYear) - 1).toString());
+      newMonth = '12';
+      newYear = (parseInt(currentYear) - 1).toString();
     } else {
-      setCurrentMonth((parseInt(currentMonth) - 1).toString());
+      newMonth = (parseInt(currentMonth) - 1).toString();
+      newYear = currentYear;
     }
+    
+    setCurrentMonth(newMonth);
+    setCurrentYear(newYear);
+    
+    // Navigate to calendar page with the new month/year
+    const monthName = getMonthName(parseInt(newMonth)).toLowerCase();
+    setLocation(`/calendar/${newYear}/${monthName}`);
   };
 
   const handleNextMonth = () => {
+    let newMonth, newYear;
+    
     if (parseInt(currentMonth) === 12) {
-      setCurrentMonth('1');
-      setCurrentYear((parseInt(currentYear) + 1).toString());
+      newMonth = '1';
+      newYear = (parseInt(currentYear) + 1).toString();
     } else {
-      setCurrentMonth((parseInt(currentMonth) + 1).toString());
+      newMonth = (parseInt(currentMonth) + 1).toString();
+      newYear = currentYear;
     }
+    
+    setCurrentMonth(newMonth);
+    setCurrentYear(newYear);
+    
+    // Navigate to calendar page with the new month/year
+    const monthName = getMonthName(parseInt(newMonth)).toLowerCase();
+    setLocation(`/calendar/${newYear}/${monthName}`);
   };
 
   // Check if a date is today
@@ -96,16 +119,30 @@ const CalendarWidget = () => {
     return false;
   };
 
+  // Navigate to calendar page
+  const navigateToCalendar = () => {
+    if (currentYear && currentMonth) {
+      const monthName = getMonthName(parseInt(currentMonth)).toLowerCase();
+      setLocation(`/calendar/${currentYear}/${monthName}`);
+    }
+  };
+  
   // Check if we need to show loading state
   const showLoading = isLoading || loadingNepaliToday || !currentYear || !currentMonth;
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+    <div 
+      className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300 cursor-pointer"
+      onClick={navigateToCalendar}
+    >
       <div className="bg-primary p-4 flex justify-between items-center">
         <button 
           aria-label="Previous Month" 
           className="text-white hover:bg-primary-dark rounded-full p-2 transition-colors"
-          onClick={handlePreviousMonth}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent triggering the parent onClick
+            handlePreviousMonth();
+          }}
           disabled={showLoading}
         >
           <i className="ri-arrow-left-s-line text-xl"></i>
@@ -117,7 +154,10 @@ const CalendarWidget = () => {
         <button 
           aria-label="Next Month" 
           className="text-white hover:bg-primary-dark rounded-full p-2 transition-colors"
-          onClick={handleNextMonth}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent triggering the parent onClick
+            handleNextMonth();
+          }}
           disabled={showLoading}
         >
           <i className="ri-arrow-right-s-line text-xl"></i>
@@ -175,7 +215,10 @@ const CalendarWidget = () => {
                         'border-gray-100 hover:bg-gray-50/80'}
                       ${isTodayHighlight ? 'ring-2 ring-green-500 shadow-sm' : ''}
                       transition-all duration-300 cursor-pointer relative overflow-hidden`}
-                    onClick={() => setSelectedDay(day)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the parent onClick
+                      setSelectedDay(day);
+                    }}
                   >
                     {/* Subtle hover effect */}
                     <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -236,8 +279,9 @@ const CalendarWidget = () => {
         {/* View full calendar link */}
         <div className="mt-4 text-center">
           <Link 
-            href={`/nepalicalendar/${currentYear}/${getMonthName(parseInt(currentMonth)).toLowerCase()}`}
+            href={`/calendar/${currentYear}/${getMonthName(parseInt(currentMonth)).toLowerCase()}`}
             className="text-primary text-sm font-medium hover:underline"
+            onClick={(e) => e.stopPropagation()} // Prevent triggering the parent onClick
           >
             View Full Calendar →
           </Link>

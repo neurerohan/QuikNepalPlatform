@@ -9,7 +9,14 @@ Disallow: /login
 Disallow: /api/
 
 # Crawl delay to prevent overloading server
-Crawl-delay: 00
+Crawl-delay: 10
 
 # Sitemap location
-Sitemap: https://quiknepal.com/sitemap.xml 
+Sitemap: https://quiknepal.com/sitemap.xml
+
+# Allow Google and Bing bots to access all resources
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
