@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCalendar, getCalendarEvents, getMonthName, getTodayNepaliDate } from '@/lib/api';
 import MainLayout from '@/components/layout/MainLayout';
-import { useParams, useLocation } from 'wouter';
+import { useParams, useLocation, useRoute, Route } from 'wouter';
 import FadeIn from '@/components/ui/FadeIn';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from '@/components/ui/separator';
 import { getMonthContent, getYearInfo } from '@/lib/calendar-content';
 import AnnualEvents from '@/components/ui/AnnualEvents';
 import SEO from '@/components/SEO';
-import { getKathmanduTime } from '@/lib/nepaliDateConverter';
+import { getKathmanduTime, getCurrentNepaliDate } from '@/lib/nepaliDateConverter';
 
 // Helper function to convert Tithi names to Devanagari
 const convertTithiToNepali = (tithi: string): string => {
@@ -416,6 +416,33 @@ interface CalendarParams {
   month?: string;
 }
 
+// CalendarRedirect component to handle redirection from /calendar to current month/year
+const CalendarRedirect = () => {
+  const [, setLocation] = useLocation();
+  
+  useEffect(() => {
+    // Get current Nepali date
+    const currentNepaliDate = getCurrentNepaliDate();
+    const nepaliMonthName = currentNepaliDate.month_name.toLowerCase();
+    
+    // Redirect to current month/year
+    setLocation(`/calendar/${currentNepaliDate.year}/${nepaliMonthName}`);
+  }, [setLocation]);
+  
+  // Show loading indicator while redirecting
+  return (
+    <MainLayout title="Loading Calendar..." description="Redirecting to the current Nepali month.">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <h2 className="text-xl font-medium text-gray-700">Loading Nepali Calendar</h2>
+          <p className="text-gray-500 mt-2">Redirecting to the current month...</p>
+        </div>
+      </div>
+    </MainLayout>
+  );
+};
+
 const Calendar = () => {
   const [location, setLocation] = useLocation();
   const params = useParams<CalendarParams>();
@@ -441,19 +468,7 @@ const Calendar = () => {
     }
   }, [nepaliToday]);
   
-  // If no params are provided, use current Nepali date and redirect
-  useEffect(() => {
-    if (location === '/calendar' || !params.year || !params.month) {
-      // Get current Nepali date using our utility function
-      const currentNepaliDate = getCurrentNepaliDate();
-      const nepaliMonthName = currentNepaliDate.month_name.toLowerCase();
-      
-      // Add a small delay to ensure the redirect happens properly
-      setTimeout(() => {
-        setLocation(`/calendar/${currentNepaliDate.year}/${nepaliMonthName}`);
-      }, 50);
-    }
-  }, [params, location, setLocation]);
+  // We no longer need this redirection logic here since we're using the CalendarRedirect component
   
   // Helper function to get month number from name
   const getMonthNumberFromName = (monthName: string): number => {
@@ -1732,4 +1747,14 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+// App component to handle routing
+const CalendarApp = () => {
+  return (
+    <>
+      <Route path="/calendar" component={CalendarRedirect} />
+      <Route path="/calendar/:year/:month" component={Calendar} />
+    </>
+  );
+};
+
+export default CalendarApp;
