@@ -4,6 +4,7 @@ import Bounce from '@/components/ui/Bounce';
 import CalendarWidget from '@/components/ui/CalendarWidget';
 import FeatureCard from '@/components/ui/FeatureCard';
 import DataTable from '@/components/ui/DataTable';
+import SEO from '@/components/SEO';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { 
@@ -69,11 +70,105 @@ const Home = () => {
     { header: 'Avg Price', accessor: 'avgPrice', cell: (value: number) => `Rs. ${value}` },
   ];
 
+  // SEO optimization
+  const kathmanduTime = getKathmanduTime();
+  const modifiedDate = kathmanduTime.toISOString();
+  
+  // SEO title and description with keywords
+  const pageTitle = "QuikNepal - Your Essential Nepali Information Hub | Nepali Calendar, Rashifal, Vegetable Rates";
+  const pageDescription = "Access Nepali calendars, vegetable rates, metal prices, rashifal readings and more at QuikNepal, your comprehensive Nepali information portal. Get today's Nepali date, daily horoscope, and latest market prices in Nepal.";
+  const pageKeywords = "nepali calendar, hamro patro, mero patro, vegetable rates in nepal, gold price in nepal, rashifal, horoscope, nepali date today, nepal calendar, nepali patro";
+  
   return (
-    <MainLayout
-      title="QuikNepal - Your Essential Nepali Information Hub"
-      description="Access Nepali calendars, vegetable rates, metal prices, rashifal readings and more at QuikNepal, your comprehensive Nepali information portal."
-    >
+    <>
+      <SEO 
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        publishedDate="2024-01-01"
+        modifiedDate={modifiedDate}
+        canonicalUrl="https://quiknepal.com"
+        pathname="/"
+        ogImage="https://quiknepal.com/og-images/home-page.jpg"
+        ogType="website"
+        twitterCardType="summary_large_image"
+        schemaType="WebPage"
+        hrefLangs={[
+          { lang: "en", url: "https://quiknepal.com/en" },
+          { lang: "ne", url: "https://quiknepal.com/ne" }
+        ]}
+      >
+        {/* Organization Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "QuikNepal",
+            "url": "https://quiknepal.com",
+            "logo": "https://quiknepal.com/logo.png",
+            "description": "Your comprehensive Nepali information portal for calendars, vegetable rates, metal prices, and rashifal readings.",
+            "sameAs": [
+              "https://facebook.com/quiknepal",
+              "https://twitter.com/quiknepal",
+              "https://instagram.com/quiknepal"
+            ]
+          })}
+        </script>
+
+        {/* WebSite Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "QuikNepal",
+            "url": "https://quiknepal.com",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://quiknepal.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
+
+        {/* FAQPage Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I check today's Nepali date?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "You can check today's Nepali date on our homepage or by visiting our Calendar page. We display both Gregorian (AD) and Bikram Sambat (BS) dates based on Nepal Time Zone (UTC+5:45)."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How often are vegetable prices updated?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Vegetable prices are updated daily based on the latest market rates in Kalimati, Kathmandu. Each update includes minimum, maximum, and average prices per unit."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Where can I find today's gold and silver prices in Nepal?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "You can find today's gold and silver prices on our Metals page. We provide daily updates for different types of gold (24K, 22K, etc.) and silver as per Nepal Gold and Silver Dealers' Association."
+                }
+              }
+            ]
+          })}
+        </script>
+      </SEO>
+      
+      <MainLayout
+        title="QuikNepal - Your Essential Nepali Information Hub"
+        description="Access Nepali calendars, vegetable rates, metal prices, rashifal readings and more at QuikNepal, your comprehensive Nepali information portal."
+      >
       {/* Hero Section - Completely Rebuilt */}
       <section className="relative min-h-[80vh] bg-gradient-to-br from-primary to-primary-light overflow-hidden flex items-center">
         {/* Background animated pattern */}
@@ -842,6 +937,7 @@ const Home = () => {
         </div>
       </section>
     </MainLayout>
+    </>
   );
 };
 

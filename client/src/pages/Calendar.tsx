@@ -444,20 +444,12 @@ const Calendar = () => {
   // If no params are provided, use current Nepali date from API and redirect
   useEffect(() => {
     if (!params.year || !params.month) {
-      if (nepaliToday) {
-        // Use the accurate Nepali date from API
-        const nepaliMonthName = nepaliToday.month_name.toLowerCase();
-        setLocation(`/calendar/${nepaliToday.year}/${nepaliMonthName}`);
-      } else {
-        // Fallback to approximation if API data not available yet
-        const today = new Date();
-        const currentNepaliYear = today.getFullYear() + 57; // Approximate
-        const currentMonth = today.getMonth() + 1;
-        const nepaliMonthName = getMonthName(currentMonth).toLowerCase();
-        setLocation(`/calendar/${currentNepaliYear}/${nepaliMonthName}`);
-      }
+      // Get current Nepali date using our utility function
+      const currentNepaliDate = getCurrentNepaliDate();
+      const nepaliMonthName = currentNepaliDate.month_name.toLowerCase();
+      setLocation(`/calendar/${currentNepaliDate.year}/${nepaliMonthName}`);
     }
-  }, [params, setLocation, nepaliToday]);
+  }, [params, setLocation]);
   
   // Helper function to get month number from name
   const getMonthNumberFromName = (monthName: string): number => {
@@ -534,7 +526,7 @@ const Calendar = () => {
         keywords={pageKeywords}
         publishedDate="2024-01-01"
         modifiedDate={modifiedDate}
-        canonicalUrl="https://quiknepal.com/calendar"
+        canonicalUrl="https://quiknepal.com"
         pathname={`/calendar/${params.year}/${getMonthName(parseInt(month)).toLowerCase()}`}
         ogImage="https://quiknepal.com/og-images/nepali-calendar.jpg"
         ogType="website"
