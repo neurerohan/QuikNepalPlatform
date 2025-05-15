@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { convertDate } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -28,6 +28,8 @@ const bsDays = Array.from({ length: 32 }, (_, i) => i + 1);
 const adDays = Array.from({ length: 31 }, (_, i) => i + 1);
 
 const DateConverterForm = () => {
+  const queryClient = useQueryClient();
+  
   // BS to AD conversion state
   const [bsYear, setBsYear] = useState<string>('2080');
   const [bsMonth, setBsMonth] = useState<string>('1'); // 1-indexed month
@@ -45,14 +47,16 @@ const DateConverterForm = () => {
   const bsToAdQuery = useQuery({
     queryKey: ['/calendar/convert', { from: 'bs', date: `${bsYear}-${bsMonth}-${bsDay}` }],
     queryFn: () => convertDate({ from: 'bs', date: `${bsYear}-${bsMonth}-${bsDay}` }),
-    enabled: bsToAdTrigger
+    enabled: bsToAdTrigger,
+    retry: 1
   });
 
   // AD to BS conversion query
   const adToBsQuery = useQuery({
     queryKey: ['/calendar/convert', { from: 'ad', date: `${adYear}-${adMonth}-${adDay}` }],
     queryFn: () => convertDate({ from: 'ad', date: `${adYear}-${adMonth}-${adDay}` }),
-    enabled: adToBsTrigger
+    enabled: adToBsTrigger,
+    retry: 1
   });
 
   // Effects to reset triggers when query finishes
@@ -69,10 +73,22 @@ const DateConverterForm = () => {
   }, [adToBsQuery.isSuccess, adToBsQuery.isError]);
 
   const handleBsToAdConvert = () => {
+    // Reset any previous results
+    queryClient.invalidateQueries({
+      queryKey: ['/calendar/convert', { from: 'bs' }]
+    });
+    
+    // Trigger the conversion
     setBsToAdTrigger(true);
   };
 
   const handleAdToBsConvert = () => {
+    // Reset any previous results
+    queryClient.invalidateQueries({
+      queryKey: ['/calendar/convert', { from: 'ad' }]
+    });
+    
+    // Trigger the conversion
     setAdToBsTrigger(true);
   };
 
@@ -127,8 +143,9 @@ const DateConverterForm = () => {
           
           <Button 
             onClick={handleBsToAdConvert} 
-            className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors"
+            className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors cursor-pointer"
             disabled={bsToAdQuery.isPending}
+            type="button"
           >
             {bsToAdQuery.isPending ? 'Converting...' : 'Convert to AD'}
           </Button>
@@ -195,8 +212,9 @@ const DateConverterForm = () => {
           
           <Button 
             onClick={handleAdToBsConvert} 
-            className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors"
+            className="w-full bg-gradient-to-r from-[#57c84d] to-[#83d475] text-white py-2 px-4 rounded-md hover:from-[#4ab640] hover:to-[#72c364] transition-colors cursor-pointer"
             disabled={adToBsQuery.isPending}
+            type="button"
           >
             {adToBsQuery.isPending ? 'Converting...' : 'Convert to BS'}
           </Button>
