@@ -37,7 +37,7 @@ const Home = () => {
     staleTime: 3600000 // 1 hour
   });
 
-  // Get current date in AD format based on Kathmandu time
+  // Get current date and time in Kathmandu time zone
   const kathmanduTime = getKathmanduTime();
   const formattedDate = kathmanduTime.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -47,6 +47,9 @@ const Home = () => {
   
   // Get current time in Kathmandu
   const formattedTime = getFormattedKathmanduTime('short');
+  
+  // For SEO metadata
+  const modifiedDate = kathmanduTime.toISOString();
   
   // Get today's Nepali date based on Kathmandu time
   const { data: nepaliToday, isLoading: loadingNepaliToday } = useQuery({
@@ -71,8 +74,6 @@ const Home = () => {
   ];
 
   // SEO optimization
-  const kathmanduTime = getKathmanduTime();
-  const modifiedDate = kathmanduTime.toISOString();
   
   // SEO title and description with keywords
   const pageTitle = "QuikNepal - Your Essential Nepali Information Hub | Nepali Calendar, Rashifal, Vegetable Rates";
