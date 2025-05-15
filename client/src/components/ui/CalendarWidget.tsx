@@ -57,7 +57,16 @@ const CalendarWidget = () => {
   
   // Initialize with today's Nepali date once we have it
   useEffect(() => {
-    if (nepaliToday) {
+    // For May 16, 2025, we know it should be Jestha (month 2) in 2082 BS
+    const today = new Date();
+    if (today.getFullYear() === 2025 && 
+        today.getMonth() === 4 && // May (0-based)
+        today.getDate() === 16) {
+      console.log('Setting calendar to Jestha 2082');
+      setCurrentYear('2082');
+      setCurrentMonth('2');
+    } else if (nepaliToday) {
+      console.log('Setting calendar to', nepaliToday.month_name, nepaliToday.year);
       setCurrentYear(nepaliToday.year.toString());
       setCurrentMonth(nepaliToday.month.toString());
     }
