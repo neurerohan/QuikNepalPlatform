@@ -65,8 +65,7 @@ const Header = () => {
             { path: '/kalimati-vegetable-price', label: 'Vegetables' },
             { path: '/gold-and-silver-in-nepal', label: 'Metals' },
             { path: '/nepali-rashifal', label: 'Rashifal' },
-            { path: '/foreign-currency-exchange', label: 'Forex' },
-            { path: '/news', label: 'News', icon: 'ri-newspaper-line' }
+            { path: '/foreign-currency-exchange', label: 'Forex' }
           ].map((item) => (
             <Link 
               key={item.path}
@@ -135,8 +134,7 @@ const Header = () => {
               { path: '/kalimati-vegetable-price', label: 'Vegetables', icon: 'ri-shopping-basket-line' },
               { path: '/gold-and-silver-in-nepal', label: 'Metals', icon: 'ri-coins-line' },
               { path: '/nepali-rashifal', label: 'Rashifal', icon: 'ri-star-line' },
-              { path: '/foreign-currency-exchange', label: 'Forex', icon: 'ri-exchange-dollar-line' },
-              { path: '/news', label: 'News', icon: 'ri-newspaper-line' }
+              { path: '/foreign-currency-exchange', label: 'Forex', icon: 'ri-exchange-dollar-line' }
             ].map((item, index) => (
               <Link 
                 key={item.path}
