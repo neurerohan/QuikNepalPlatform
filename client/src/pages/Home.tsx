@@ -5,6 +5,7 @@ import CalendarWidget from '@/components/ui/CalendarWidget';
 import FeatureCard from '@/components/ui/FeatureCard';
 import DataTable from '@/components/ui/DataTable';
 import SEO from '@/components/SEO';
+import FeaturedNews from '@/components/sanity/FeaturedNews';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { 
@@ -715,12 +716,38 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+          </div>
+        </section>
+        
+        {/* Featured News Section */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <FadeIn>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Latest News & Updates</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">Stay informed with the latest news and updates from Nepal and around the world.</p>
+              </FadeIn>
+            </div>
+            
+            <FadeIn delay={0.2}>
+              <FeaturedNews limit={3} />
+              
+              <div className="mt-10 text-center">
+                <Link 
+                  href="/news" 
+                  className="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors duration-300"
+                >
+                  <span>View All News</span>
+                  <i className="ri-arrow-right-line ml-2 group-hover:translate-x-1"></i>
+                </Link>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+        
+        {/* Features Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-primary font-poppins mb-4">Explore Our Features</h2>
             <p className="text-neutral max-w-2xl mx-auto">Access a wide range of essential Nepali information and utilities in one place</p>
