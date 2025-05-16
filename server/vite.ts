@@ -1,9 +1,20 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
-import { createServer as createViteServer, createLogger } from "vite";
+import { createServer as createViteServer, createLogger, defineConfig } from "vite";
 import { type Server } from "http";
-import viteConfig from "../vite.config";
+
+// Inline vite config to avoid import issues
+const viteConfig = defineConfig({
+  root: path.resolve(import.meta.dirname, "..", "client"),
+  build: {
+    outDir: process.env.VERCEL 
+      ? path.resolve(import.meta.dirname, "..", "dist")
+      : path.resolve(import.meta.dirname, "..", "dist/public"),
+    emptyOutDir: true,
+    assetsDir: "assets"
+  },
+});
 import { nanoid } from "nanoid";
 
 const viteLogger = createLogger();
@@ -69,6 +80,7 @@ export async function setupVite(app: Express, server: Server) {
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(import.meta.dirname, "public");
+  const publicPath = path.resolve(import.meta.dirname, "..", "public");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
@@ -76,7 +88,24 @@ export function serveStatic(app: Express) {
     );
   }
 
+  // Serve static files from the build directory
   app.use(express.static(distPath));
+  
+  // Explicitly serve static files from the public directory
+  app.use(express.static(publicPath));
+  
+  // Explicitly handle common static files
+  app.get("/favicon.ico", (req, res) => {
+    res.sendFile(path.resolve(publicPath, "favicon.ico"));
+  });
+  
+  app.get("/robots.txt", (req, res) => {
+    res.sendFile(path.resolve(publicPath, "robots.txt"));
+  });
+  
+  app.get("/sitemap.xml", (req, res) => {
+    res.sendFile(path.resolve(publicPath, "sitemap.xml"));
+  });
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {
