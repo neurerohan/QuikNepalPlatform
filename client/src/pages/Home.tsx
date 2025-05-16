@@ -5,7 +5,6 @@ import CalendarWidget from '@/components/ui/CalendarWidget';
 import FeatureCard from '@/components/ui/FeatureCard';
 import DataTable from '@/components/ui/DataTable';
 import SEO from '@/components/SEO';
-import HomeNewsSection from '@/components/sanity/HomeNewsSection';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { 
@@ -715,24 +714,6 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* News Section - Sanity CMS Integration */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <HomeNewsSection className="mb-8" />
-          
-          <div className="mt-12 text-center">
-            <Link 
-              href="/news" 
-              className="inline-flex items-center bg-primary text-white font-medium py-3 px-6 rounded-lg hover:scale-105 hover:shadow-lg transition-all duration-300"
-            >
-              <i className="ri-newspaper-line mr-2"></i>
-              <span>Explore All News</span>
-              <i className="ri-arrow-right-line ml-2"></i>
-            </Link>
           </div>
         </div>
       </section>
