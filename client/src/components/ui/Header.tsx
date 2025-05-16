@@ -31,9 +31,9 @@ const Header = () => {
 
   // Social media links
   const socialLinks = [
-    { icon: 'ri-facebook-fill', label: 'Facebook', url: '#' },
-    { icon: 'ri-tiktok-fill', label: 'TikTok', url: '#' },
-    { icon: 'ri-twitter-x-fill', label: 'Twitter', url: '#' }
+    { icon: 'ri-facebook-fill', label: 'Facebook', url: 'https://facebook.com/quiknepal' },
+    { icon: 'ri-tiktok-fill', label: 'TikTok', url: 'https://tiktok.com/@quiknepal' },
+    { icon: 'ri-twitter-x-fill', label: 'Twitter', url: 'https://twitter.com/quiknepal' }
   ];
 
   return (

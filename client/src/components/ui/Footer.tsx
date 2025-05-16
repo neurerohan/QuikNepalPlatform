@@ -74,8 +74,8 @@ const Footer = () => {
                 {[
                   { path: '/', label: 'Home' },
                   { path: '/calendar', label: 'Calendar' },
-                  { path: '/date-converter', label: 'Date Converter' },
-                  { path: '/vegetables', label: 'Vegetable Rates' }
+                  { path: '/nepali-date-converter', label: 'Date Converter' },
+                  { path: '/kalimati-vegetable-price', label: 'Vegetable Rates' }
                 ].map((item, i) => (
                   <li key={i}>
                     <Link 
@@ -98,10 +98,10 @@ const Footer = () => {
               </h4>
               <ul className="space-y-3">
                 {[
-                  { path: '/metals', label: 'Metal Prices' },
-                  { path: '/rashifal', label: 'Rashifal' },
-                  { path: '/forex', label: 'Forex Rates' },
-                  { path: '#', label: 'API Access' }
+                  { path: '/gold-and-silver-in-nepal', label: 'Metal Prices' },
+                  { path: '/nepali-rashifal', label: 'Rashifal' },
+                  { path: '/foreign-currency-exchange', label: 'Forex Rates' },
+                  { path: '/api', label: 'API Access' }
                 ].map((item, i) => (
                   <li key={i}>
                     <Link 
@@ -124,14 +124,20 @@ const Footer = () => {
               </h4>
               
               <div className="flex space-x-3 mb-5">
-                {['facebook', 'twitter', 'instagram'].map((platform, i) => (
+                {[
+                  { platform: 'facebook', url: 'https://facebook.com/quiknepal' },
+                  { platform: 'twitter', url: 'https://twitter.com/quiknepal' },
+                  { platform: 'instagram', url: 'https://instagram.com/quiknepal' }
+                ].map((item, i) => (
                   <a 
                     key={i}
-                    href="#" 
-                    aria-label={platform}
+                    href={item.url} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.platform}
                     className="w-11 h-11 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors hover:scale-110 transform duration-300 border border-white/10"
                   >
-                    <i className={`ri-${platform}-fill text-lg`}></i>
+                    <i className={`ri-${item.platform}-fill text-lg`}></i>
                   </a>
                 ))}
               </div>

@@ -332,7 +332,7 @@ const Home = () => {
       </section>
 
       {/* Featured Services Sections */}
-      <section className="py-16 bg-white">
+      <section id="features" className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-primary font-poppins mb-10 text-center">Our Featured Services</h2>
           
