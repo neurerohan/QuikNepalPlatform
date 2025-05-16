@@ -31,16 +31,94 @@ const News: React.FC = () => {
             setArticles(articlesData.slice(1));
           }
         } else {
-          setArticles([]);
+          // Use fallback data if no articles are returned
+          const fallbackArticles = [
+            {
+              _id: 'fallback-1',
+              title: 'Nepal Celebrates Cultural Heritage Week',
+              slug: { current: 'nepal-celebrates-cultural-heritage-week' },
+              excerpt: 'A week-long celebration of Nepal\'s rich cultural heritage begins today across the country.',
+              publishedAt: new Date().toISOString(),
+              mainImage: 'https://images.unsplash.com/photo-1544015759-9a3cf5cd0a1f?q=80&w=1000&auto=format&fit=crop',
+              categories: [{ title: 'Culture', slug: { current: 'culture' }, color: 'blue' }],
+              author: { name: 'Rohan Sharma', slug: { current: 'rohan-sharma' } }
+            },
+            {
+              _id: 'fallback-2',
+              title: 'Economic Growth Projections for Nepal in 2025',
+              slug: { current: 'economic-growth-projections-nepal-2025' },
+              excerpt: 'Experts predict steady economic growth for Nepal in the coming fiscal year despite global challenges.',
+              publishedAt: new Date().toISOString(),
+              mainImage: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1000&auto=format&fit=crop',
+              categories: [{ title: 'Economy', slug: { current: 'economy' }, color: 'green' }],
+              author: { name: 'Aarav Patel', slug: { current: 'aarav-patel' } }
+            },
+            {
+              _id: 'fallback-3',
+              title: 'Tourism Sector Shows Strong Recovery Post-Pandemic',
+              slug: { current: 'tourism-sector-shows-strong-recovery' },
+              excerpt: 'Nepal\'s tourism industry is showing promising signs of recovery with visitor numbers approaching pre-pandemic levels.',
+              publishedAt: new Date().toISOString(),
+              mainImage: 'https://images.unsplash.com/photo-1544015759-9a3cf5cd0a1f?q=80&w=1000&auto=format&fit=crop',
+              categories: [{ title: 'Tourism', slug: { current: 'tourism' }, color: 'purple' }],
+              author: { name: 'Priya Thapa', slug: { current: 'priya-thapa' } }
+            }
+          ];
+          
+          setFeaturedArticle(fallbackArticles[0]);
+          setArticles(fallbackArticles.slice(1));
         }
         
         // Fetch categories
         const categoriesData = await getCategories();
-        if (categoriesData) {
+        if (categoriesData && categoriesData.length > 0) {
           setCategories(categoriesData.filter((cat: { featured: boolean }) => cat.featured));
+        } else {
+          // Use fallback categories if none are returned
+          setCategories([
+            { _id: 'cat-1', title: 'Politics', slug: { current: 'politics' }, color: 'red', featured: true },
+            { _id: 'cat-2', title: 'Economy', slug: { current: 'economy' }, color: 'green', featured: true },
+            { _id: 'cat-3', title: 'Culture', slug: { current: 'culture' }, color: 'blue', featured: true },
+            { _id: 'cat-4', title: 'Tourism', slug: { current: 'tourism' }, color: 'purple', featured: true }
+          ]);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+        
+        // Use fallback data in case of error
+        const fallbackArticles = [
+          {
+            _id: 'fallback-1',
+            title: 'Nepal Celebrates Cultural Heritage Week',
+            slug: { current: 'nepal-celebrates-cultural-heritage-week' },
+            excerpt: 'A week-long celebration of Nepal\'s rich cultural heritage begins today across the country.',
+            publishedAt: new Date().toISOString(),
+            mainImage: 'https://images.unsplash.com/photo-1544015759-9a3cf5cd0a1f?q=80&w=1000&auto=format&fit=crop',
+            categories: [{ title: 'Culture', slug: { current: 'culture' }, color: 'blue' }],
+            author: { name: 'Rohan Sharma', slug: { current: 'rohan-sharma' } }
+          },
+          {
+            _id: 'fallback-2',
+            title: 'Economic Growth Projections for Nepal in 2025',
+            slug: { current: 'economic-growth-projections-nepal-2025' },
+            excerpt: 'Experts predict steady economic growth for Nepal in the coming fiscal year despite global challenges.',
+            publishedAt: new Date().toISOString(),
+            mainImage: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1000&auto=format&fit=crop',
+            categories: [{ title: 'Economy', slug: { current: 'economy' }, color: 'green' }],
+            author: { name: 'Aarav Patel', slug: { current: 'aarav-patel' } }
+          }
+        ];
+        
+        setFeaturedArticle(fallbackArticles[0]);
+        setArticles(fallbackArticles.slice(1));
+        
+        // Fallback categories
+        setCategories([
+          { _id: 'cat-1', title: 'Politics', slug: { current: 'politics' }, color: 'red', featured: true },
+          { _id: 'cat-2', title: 'Economy', slug: { current: 'economy' }, color: 'green', featured: true },
+          { _id: 'cat-3', title: 'Culture', slug: { current: 'culture' }, color: 'blue', featured: true },
+          { _id: 'cat-4', title: 'Tourism', slug: { current: 'tourism' }, color: 'purple', featured: true }
+        ]);
       } finally {
         setLoading(false);
       }

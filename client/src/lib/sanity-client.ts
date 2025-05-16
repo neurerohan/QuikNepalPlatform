@@ -8,17 +8,19 @@ const config = {
   useCdn: true,
 };
 
-// Base URL for Sanity API
+// Base URL for Sanity API with CORS handling
 const baseUrl = `https://${config.projectId}.api.sanity.io/v${config.apiVersion}/data/query/${config.dataset}`;
 
 // Helper function to make Sanity API requests
 const fetchSanity = async (query: string) => {
   try {
-    const response = await axios.get(`${baseUrl}?query=${encodeURIComponent(query)}`);
+    // Create a proxy URL through our server to avoid CORS issues
+    // We'll set up this endpoint in the server
+    const response = await axios.post('/api/sanity-proxy', { query });
     return response.data.result;
   } catch (error) {
     console.error('Error fetching from Sanity:', error);
-    return null;
+    return [];
   }
 };
 

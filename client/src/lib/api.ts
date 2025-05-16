@@ -2,11 +2,9 @@ import axios from 'axios';
 import { isHolidayEvent } from './holidays';
 import { getCurrentNepaliDate, convertADToBS, convertBSToAD } from './nepaliDateConverter';
 
-// Change the base URL to directly access the external API
-const API_BASE_URL = "https://api.kalimatirate.nyure.com.np/api/";
-
+// Use our server as a proxy to avoid CORS issues
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: '/api', // Use relative URL to our server endpoints
   headers: {
     'Content-Type': 'application/json',
   },

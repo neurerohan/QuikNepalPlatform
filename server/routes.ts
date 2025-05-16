@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./storage.js";
 import axios, { AxiosError } from "axios";
 
 // Use API_BASE_URL from Vercel environment variables, then NEXT_PUBLIC_API_BASE_URL, then fallback
@@ -206,7 +206,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Response data:", error.response.data);
         console.error("Response status:", error.response.status);
       }
-      res.status(500).json({ message: "Failed to fetch metal prices" });
+      res.status(500).json({ message: "Failed to fetch metal data" });
+    }
+  });
+
+  // Sanity CMS proxy endpoint to avoid CORS issues
+  app.post("/api/sanity-proxy", async (req, res) => {
+    try {
+      const { query } = req.body;
+      if (!query) {
+        return res.status(400).json({ message: "Query is required" });
+      }
+      
+      // Sanity configuration
+      const config = {
+        projectId: '6rcrlnyc',
+        dataset: 'production',
+        apiVersion: '2023-05-03',
+        useCdn: true,
+      };
+      
+      // Base URL for Sanity API
+      const baseUrl = `https://${config.projectId}.api.sanity.io/v${config.apiVersion}/data/query/${config.dataset}`;
+      
+      // Make the request to Sanity
+      const response = await axios.get(`${baseUrl}?query=${encodeURIComponent(query)}`);
+      
+      // Return the data
+      res.json(response.data);
+    } catch (error) {
+      console.error("Error proxying Sanity request:", error);
+      if (error instanceof AxiosError && error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+      }
+      res.status(500).json({ 
+        message: "Failed to fetch data from Sanity",
+        result: [] // Return empty array as fallback
+      });
     }
   });
 
