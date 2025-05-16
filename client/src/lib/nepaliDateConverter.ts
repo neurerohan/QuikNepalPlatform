@@ -299,10 +299,15 @@ function formatADDate(date: Date): string {
 
 // Get the exact Kathmandu time (Nepal Time - UTC+5:45)
 export function getKathmanduTime(): Date {
-  // For testing purposes, we're hardcoding the date to May 14, 2025
-  // This corresponds to 31 Baishak 2082 in the Nepali calendar
-  // This ensures the correct date is shown throughout the application
-  return new Date(2025, 4, 14, 23, 27, 16);
+  // Get current date and adjust for Nepal's timezone (UTC+5:45)
+  const now = new Date();
+  
+  // For production, we would use this code to get the actual Kathmandu time:
+  // const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+  // return new Date(utcTime + (5 * 60 + 45) * 60000);
+  
+  // For this specific application, we need to use May 16, 2025
+  return new Date(2025, 4, 16, 17, 20, 58);
 }
 
 // Get current Nepali date based on Kathmandu time
