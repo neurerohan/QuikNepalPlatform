@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { getMetals } from '@/lib/api';
+import { getMetals } from '@/api';
 import MainLayout from '@/components/layout/MainLayout';
 import FadeIn from '@/components/ui/FadeIn';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
-import { FaInfoCircle, FaCoins } from 'react-icons/fa'; // Using FaCoins for gold/silver, FaInfoCircle from fa
+import { FaInfoCircle, FaCoins } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import { getKathmanduTime, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
+import { getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 import SEO from '@/components/SEO';
 
 // Background particles (similar to other pages)
@@ -98,51 +98,60 @@ const MetalDisplayCard: React.FC<MetalDisplayCardProps> = ({
 };
 
 const Metals = () => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['/api/metals'],
+  const { data: metalPrices, isLoading, error } = useQuery({
+    queryKey: ['/prices/metals'],
     queryFn: getMetals,
     staleTime: 1800000, // 30 minutes
     refetchOnWindowFocus: true,
     retry: 2, // Try up to 2 additional times if the request fails
   });
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   // Debug logging to see what data we're getting
   useEffect(() => {
-    console.log('Metals data:', data);
+    console.log('Metals data:', metalPrices);
     console.log('Loading state:', isLoading);
     console.log('Error state:', error);
-    
-    if (data) {
-      console.log('Gold data:', data.gold);
-      console.log('Silver data:', data.silver);
-      console.log('Date:', data.date);
-      console.log('Source:', data.source);
+  }, [metalPrices, isLoading, error]);
+
+  useEffect(() => {
+    if (error) {
+      console.error('Error fetching metal prices:', error);
+      setErrorMessage(error?.message || 'Failed to load metal prices');
+    } else if (metalPrices && !isLoading && !hasRealData()) {
+      setErrorMessage('No metal price data available at the moment');
     }
-  }, [data, isLoading, error]);
-  
+  }, [metalPrices, isLoading, error]);
+
   // SEO optimization
-  const kathmanduTime = getKathmanduTime();
-  const modifiedDate = kathmanduTime.toISOString();
+  const kathmanduTime = getFormattedKathmanduTime();
+  const modifiedDate = new Date().toISOString();
   const pageKeywords = "gold price in nepal, cost of gold in nepal, gold value in nepal, gold, gold price, gold price today, gold rate today, cost of gold today, 1 tola gold price nepal, gold price at nepal today";
+
+  interface MetalPrice {
+    metal_type: string;
+    hallmark?: string;
+    price_per_tola: number;
+    price_per_10_grams: number;
+    source?: string;
+  }
+
+  const goldPrices = metalPrices?.filter((m: MetalPrice) => m.metal_type.toLowerCase().includes('gold')) || [];
+  const silverPrices = metalPrices?.filter((m: MetalPrice) => m.metal_type.toLowerCase().includes('silver')) || [];
 
   // Helper function to check if we have real data (non-zero values)
   const hasRealData = () => {
-    if (!data) return false;
-    
-    const goldFine = parseFloat(data.gold?.fineGold || '0');
-    const goldTejabi = parseFloat(data.gold?.tejabiGold || '0');
-    const silver = parseFloat(data.silver?.standardSilver || '0');
-    
-    // Return true if at least one price is not zero
-    return goldFine > 0 || goldTejabi > 0 || silver > 0;
+    if (!metalPrices || metalPrices.length === 0) return false;
+    return metalPrices.some((metal: MetalPrice) => metal.price_per_tola > 0);
   };
 
   // Use Kathmandu time for the date if no specific date is provided in the data
-  const pricesDate = data?.date ? 
-    format(parseISO(data.date), 'MMMM dd, yyyy') : 
-    format(getKathmanduTime(), 'MMMM dd, yyyy');
-  const pageTitle = `सुन चाँदीको मूल्य (${pricesDate}) - Gold/Silver Prices Nepal`;
-  const pageDescription = `नेपालमा ${pricesDate}को लागि नवीनतम सुन (Fine Gold, Tejabi Gold) र चाँदीको मूल्यहरू। FENEGOSIDA द्वारा प्रकाशित।`;
+  const lastUpdated = metalPrices?.[0]?.updated_at
+    ? format(parseISO(metalPrices[0].updated_at), "EEEE, MMMM d, yyyy h:mm a 'NPT'")
+    : 'N/A';
+  const pageTitle = `सुन चाँदीको मूल्य (${lastUpdated}) - Gold/Silver Prices Nepal`;
+  const pageDescription = `नेपालमा ${lastUpdated}को लागि नवीनतम सुन (Fine Gold, Tejabi Gold) र चाँदीको मूल्यहरू। FENEGOSIDA द्वारा प्रकाशित।`;
 
   // Update page title and description with SEO-optimized versions
   const seoTitle = "Gold Price in Nepal Today | 1 Tola Gold Rate | Gold Value in Nepal";
@@ -177,8 +186,8 @@ const Metals = () => {
             "image": "https://quiknepal.com/images/gold-nepal.jpg",
             "offers": {
               "@type": "AggregateOffer",
-              "lowPrice": data?.gold?.tejabiGold || "0",
-              "highPrice": data?.gold?.fineGold || "0",
+              "lowPrice": goldPrices[0]?.price_per_tola || "0",
+              "highPrice": goldPrices[0]?.price_per_tola || "0",
               "priceCurrency": "NPR",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]
@@ -227,7 +236,7 @@ const Metals = () => {
                 "name": "What is the current gold price in Nepal?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": `The current price of fine gold (24K) in Nepal is NPR ${data?.gold?.fineGold || "N/A"} per tola, while tejabi gold (22K) is NPR ${data?.gold?.tejabiGold || "N/A"} per tola. These rates are updated daily based on international market prices and local factors.`
+                  "text": `The current price of fine gold (24K) in Nepal is NPR ${goldPrices[0]?.price_per_tola || "N/A"} per tola, while tejabi gold (22K) is NPR ${goldPrices[0]?.price_per_tola || "N/A"} per tola. These rates are updated daily based on international market prices and local factors.`
                 }
               },
               {
@@ -271,7 +280,7 @@ const Metals = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Gold & Silver Prices for {pricesDate}
+                  Gold & Silver Prices for {kathmanduTime}
                 </motion.h2>
                 <motion.p 
                   className="text-md text-gray-600 max-w-2xl mx-auto"
@@ -280,10 +289,10 @@ const Metals = () => {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   नेपाल सुनचाँदी व्यवसायी महासंघ (FENEGOSIDA) द्वारा प्रकाशित नवीनतम दरहरू।
-                  {data?.source && (
-                    <span className={`block text-xs mt-1 ${data.source.includes('Fallback') || data.source.includes('Error') ? 'text-amber-600' : 'text-green-600'}`}>
-                      <span className="inline-block w-2 h-2 rounded-full mr-1 align-middle" style={{ backgroundColor: data.source.includes('Fallback') || data.source.includes('Error') ? '#f59e0b' : '#10b981' }}></span>
-                      Source: {data.source}
+                  {metalPrices?.[0]?.source && (
+                    <span className={`block text-xs mt-1 ${metalPrices[0].source.includes('Fallback') || metalPrices[0].source.includes('Error') ? 'text-amber-600' : 'text-green-600'}`}>
+                      <span className="inline-block w-2 h-2 rounded-full mr-1 align-middle" style={{ backgroundColor: metalPrices[0].source.includes('Fallback') || metalPrices[0].source.includes('Error') ? '#f59e0b' : '#10b981' }}></span>
+                      Source: {metalPrices[0].source}
                     </span>
                   )}
                 </motion.p>
@@ -301,39 +310,53 @@ const Metals = () => {
                   <FaInfoCircle className="text-3xl mx-auto mb-3" />
                   <p className="font-bold text-xl">मूल्यहरू लोड गर्न असमर्थ।</p>
                   <p>Could not load metal prices. Please try again later.</p>
-                  </div>
-              ) : data && hasRealData() ? (
+                  <p className="text-sm mt-2 text-red-600">{errorMessage}</p>
+                </div>
+              ) : metalPrices && hasRealData() ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto mb-12 md:mb-16">
-                  <MetalDisplayCard 
-                    metalName="सुन (Gold)"
-                    icon={<FaCoins />}
-                    prices= {[
-                      { label: 'फाइन गोल्ड (Fine Gold)', value: data.gold.fineGold || 'N/A', unit: 'per tola' },
-                      { label: 'तेजाबी गोल्ड (Tejabi Gold)', value: data.gold.tejabiGold || 'N/A', unit: 'per tola' },
-                    ]}
-                    bgColorClass="bg-gradient-to-br from-yellow-50 via-amber-100 to-yellow-100"
-                    borderColorClass="border-amber-400"
-                    textColorClass="text-amber-600"
-                    animationDelay={0.1}
-                  />
-                  <MetalDisplayCard 
-                    metalName="चाँदी (Silver)"
-                    icon={<FaCoins />}
-                    prices={[
-                      { label: 'स्ट्यान्डर्ड चाँदी (Standard Silver)', value: data.silver.standardSilver || 'N/A', unit: 'per tola' }
-                    ]}
-                    bgColorClass="bg-gradient-to-br from-gray-50 via-slate-100 to-gray-100"
-                    borderColorClass="border-slate-400"
-                    textColorClass="text-slate-600"
-                    animationDelay={0.25}
-                  />
+                  {/* Gold Prices */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {goldPrices.map((gold: MetalPrice, index: number) => (
+                      <MetalDisplayCard
+                        key={gold.metal_type}
+                        metalName={gold.hallmark || 'Gold'}
+                        icon={<FaCoins />}
+                        prices={[
+                          { label: 'Per Tola', value: gold.price_per_tola },
+                          { label: 'Per 10g', value: gold.price_per_10_grams }
+                        ]}
+                        bgColorClass={index === 0 ? 'bg-amber-50' : 'bg-amber-50/80'}
+                        borderColorClass="border-amber-200"
+                        textColorClass="text-amber-600"
+                        animationDelay={0.1 * (index + 1)}
+                      />
+                    ))}
+                  </div>
+                  {/* Silver Prices */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {silverPrices.map((silver: MetalPrice, index: number) => (
+                      <MetalDisplayCard
+                        key={silver.metal_type}
+                        metalName={silver.hallmark || 'Silver'}
+                        icon={<FaCoins />}
+                        prices={[
+                          { label: 'Per Tola', value: silver.price_per_tola },
+                          { label: 'Per 10g', value: silver.price_per_10_grams }
+                        ]}
+                        bgColorClass={index === 0 ? 'bg-gray-50' : 'bg-gray-50/80'}
+                        borderColorClass="border-slate-200"
+                        textColorClass="text-slate-600"
+                        animationDelay={0.1 * (index + 1)}
+                      />
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-6 rounded-lg shadow-md max-w-2xl mx-auto text-center">
                   <FaInfoCircle className="text-3xl mx-auto mb-3" />
                   <p className="font-bold text-xl">आजको लागि कुनै धातु मूल्य उपलब्ध छैन।</p>
                   <p>No metal prices available for today. Please check back later.</p>
-                  <p className="text-sm mt-2 text-blue-600">API response received, but no valid price data was found.</p>
+                  <p className="text-sm mt-2 text-blue-600">{errorMessage}</p>
                   <button 
                     className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
                     onClick={() => window.location.reload()}

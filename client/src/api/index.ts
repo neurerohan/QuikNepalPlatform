@@ -1,25 +1,30 @@
-// Direct API client for external API
-const API_BASE_URL = "https://api.kalimatirate.nyure.com.np/api/";
+// API endpoints with fallback support
+const PRIMARY_API = "https://api.quiknepal.com";
+const FALLBACK_API = "https://rohan-api.up.railway.app";
+
+async function fetchWithFallback(endpoint: string) {
+  try {
+    const response = await fetch(`${PRIMARY_API}${endpoint}`);
+    if (response.ok) return response;
+    
+    // Try fallback if primary fails
+    const fallbackResponse = await fetch(`${FALLBACK_API}${endpoint}`);
+    if (fallbackResponse.ok) return fallbackResponse;
+    
+    throw new Error(`Failed to fetch from both primary and fallback APIs`);
+  } catch (error) {
+    console.error('API fetch error:', error);
+    throw error;
+  }
+}
 
 export async function getTodayDate() {
   try {
-    // Hard-coded for now based on the data from getCurrentNepaliDate
-    const today = new Date();
-    return {
-      today: {
-        year: 2082,
-        month: 1, // Baishakh is month 1
-        day: 26,  // User mentioned it's 26th
-        month_name: 'Baishakh',
-        day_of_week: today.getDay(),
-        ad_date: today.toISOString().split('T')[0],
-        bs_date: "2082-01-26"
-      },
-      success: true
-    };
+    const response = await fetchWithFallback('/today');
+    return await response.json();
   } catch (error) {
     console.error("Error getting today's Nepali date:", error);
-    throw new Error("Failed to get today's Nepali date");
+    throw error;
   }
 }
 
@@ -36,10 +41,7 @@ export async function getCalendarEvents(params: {
     if (params.start_date_bs) queryParams.append("start_date_bs", params.start_date_bs);
     if (params.end_date_bs) queryParams.append("end_date_bs", params.end_date_bs);
     
-    const response = await fetch(`${API_BASE_URL}calendar/?${queryParams.toString()}`);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+    const response = await fetchWithFallback(`/calendar/events?${queryParams.toString()}`);
     return await response.json();
   } catch (error) {
     console.error("Error fetching calendar events:", error);
@@ -52,7 +54,7 @@ export async function convertDate(params: { from: string; date: string }) {
     const { from, date } = params;
     const queryParams = new URLSearchParams({ from, date });
     
-    const response = await fetch(`${API_BASE_URL}calendar/convert?${queryParams.toString()}`);
+    const response = await fetchWithFallback(`/calendar/convert?${queryParams.toString()}`);
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
@@ -65,19 +67,7 @@ export async function convertDate(params: { from: string; date: string }) {
 
 export async function getCalendar(year: string, month: string) {
   try {
-    // Convert month number to Nepali month name
-    const nepaliMonths = [
-      'Baishakh', 'Jestha', 'Ashadh', 'Shrawan', 
-      'Bhadra', 'Ashwin', 'Kartik', 'Mangsir', 
-      'Poush', 'Magh', 'Falgun', 'Chaitra'
-    ];
-    const monthName = nepaliMonths[parseInt(month) - 1] || 'Baishakh';
-    
-    const url = `${API_BASE_URL}detailed-calendar/?year=${year}&month_name=${monthName}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+    const response = await fetchWithFallback(`/calendar/${year}/${month}`);
     return await response.json();
   } catch (error) {
     console.error("Error fetching calendar:", error);
@@ -87,10 +77,7 @@ export async function getCalendar(year: string, month: string) {
 
 export async function getVegetables() {
   try {
-    const response = await fetch(`${API_BASE_URL}vegetables/`);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+    const response = await fetchWithFallback('/prices/vegetables');
     return await response.json();
   } catch (error) {
     console.error("Error fetching vegetables:", error);
@@ -100,10 +87,7 @@ export async function getVegetables() {
 
 export async function getMetals() {
   try {
-    const response = await fetch(`${API_BASE_URL}metals/`);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+    const response = await fetchWithFallback('/prices/metals');
     return await response.json();
   } catch (error) {
     console.error("Error fetching metals:", error);
@@ -111,15 +95,9 @@ export async function getMetals() {
   }
 }
 
-export async function getRashifal(date?: string) {
+export async function getRashifal(sign: string) {
   try {
-    const queryParams = new URLSearchParams();
-    if (date) queryParams.append("date", date);
-    
-    const response = await fetch(`${API_BASE_URL}rashifal/?${queryParams.toString()}`);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+    const response = await fetchWithFallback(`/rashifal/${sign}`);
     return await response.json();
   } catch (error) {
     console.error("Error fetching rashifal:", error);
@@ -127,26 +105,12 @@ export async function getRashifal(date?: string) {
   }
 }
 
-export async function getForex(params: {
-  from?: string;
-  to?: string;
-  page?: string;
-  per_page?: string;
-}) {
+export async function getForex() {
   try {
-    const queryParams = new URLSearchParams();
-    if (params.from) queryParams.append("from", params.from);
-    if (params.to) queryParams.append("to", params.to);
-    if (params.page) queryParams.append("page", params.page);
-    if (params.per_page) queryParams.append("per_page", params.per_page);
-    
-    const response = await fetch(`${API_BASE_URL}forex?${queryParams.toString()}`);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+    const response = await fetchWithFallback('/prices/forex');
     return await response.json();
   } catch (error) {
     console.error("Error fetching forex:", error);
     throw error;
   }
-} 
+}

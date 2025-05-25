@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getCalendar, getMonthName } from '@/lib/api';
-import { getCurrentNepaliDate, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
+import { getCalendar, getTodayDate } from '@/api';
+import { getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 import { Link, useLocation } from 'wouter';
 
 // Helper function to convert Tithi names to Devanagari
@@ -37,6 +37,16 @@ const convertTithiToNepali = (tithi: string): string => {
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const fullWeekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+const nepaliMonths = [
+  'Baishakh', 'Jestha', 'Ashadh', 'Shrawan',
+  'Bhadra', 'Ashwin', 'Kartik', 'Mangsir',
+  'Poush', 'Magh', 'Falgun', 'Chaitra'
+];
+
+const getMonthName = (month: number): string => {
+  return nepaliMonths[month - 1] || 'Unknown';
+};
+
 const CalendarWidget = () => {
   // For navigation
   const [, setLocation] = useLocation();
@@ -46,8 +56,8 @@ const CalendarWidget = () => {
   
   // Fetch today's Nepali date based on Kathmandu time
   const { data: nepaliToday, isLoading: loadingNepaliToday } = useQuery({
-    queryKey: ['/api/today-kathmandu-time'],
-    queryFn: getCurrentNepaliDate,
+    queryKey: ['/api/today'],
+    queryFn: getTodayDate,
     staleTime: 5 * 60 * 1000, // 5 minutes - shorter to keep time more accurate
   });
 
@@ -57,10 +67,10 @@ const CalendarWidget = () => {
   
   // Initialize with today's Nepali date once we have it
   useEffect(() => {
-    if (nepaliToday) {
-      console.log('Setting calendar to', nepaliToday.month_name, nepaliToday.year);
-      setCurrentYear(nepaliToday.year.toString());
-      setCurrentMonth(nepaliToday.month.toString());
+    if (nepaliToday?.today) {
+      console.log('Setting calendar to', nepaliToday.today.month_name, nepaliToday.today.year);
+      setCurrentYear(nepaliToday.today.year.toString());
+      setCurrentMonth(nepaliToday.today.month.toString());
     }
   }, [nepaliToday]);
 
@@ -112,15 +122,13 @@ const CalendarWidget = () => {
 
   // Check if a date is today
   const isToday = (bsDay: number, bsMonth: number, bsYear: number) => {
-    if (nepaliToday) {
-      // Log comparison for debugging
-      console.log('Comparing day:', bsDay, bsMonth, bsYear, 'with today:', nepaliToday);
-      
-      return nepaliToday.year === bsYear && 
-             nepaliToday.month === bsMonth && 
-             nepaliToday.day === bsDay;
-    }
-    return false;
+    if (!nepaliToday?.today) return false;
+    
+    return (
+      bsDay === nepaliToday.today.day &&
+      bsMonth === nepaliToday.today.month &&
+      bsYear === nepaliToday.today.year
+    );
   };
 
   // Navigate to calendar page
