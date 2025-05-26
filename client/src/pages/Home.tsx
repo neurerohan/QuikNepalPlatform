@@ -11,13 +11,23 @@ import {
   getVegetables, 
   getMetals, 
   getRashifal, 
-  getCalendarEvents 
-} from '@/lib/api';
+  getCalendarEvents,
+  getTodayDate
+} from '@/api';
 import { getCurrentNepaliDate, getKathmanduTime, getFormattedKathmanduTime } from '@/lib/nepaliDateConverter';
 
 const Home = () => {
-  // Get sample vegetable data for the preview
-  const vegetablesQuery = useQuery({
+  interface VegetablePrice {
+    commodity: string;
+    unit: string;
+    min_price: number;
+    max_price: number;
+    avg_price: number;
+    date: string;
+  }
+
+  // Get vegetable data for the preview
+  const { data: vegetablePrices, isLoading: loadingVegetables, error: vegetablesError } = useQuery<VegetablePrice[]>({
     queryKey: ['/api/vegetables'],
     queryFn: getVegetables,
     staleTime: 3600000 // 1 hour
@@ -30,12 +40,21 @@ const Home = () => {
     staleTime: 3600000 // 1 hour
   });
 
-  // Get sample rashifal data for the preview
-  const rashifalQuery = useQuery({
-    queryKey: ['/api/rashifal'],
-    queryFn: () => getRashifal(), // Wrap in anonymous function to match expected signature
-    staleTime: 3600000 // 1 hour
-  });
+  interface RashifalData {
+    prediction: string;
+    sign: string;
+    date: string;
+  }
+
+  // Get rashifal data for all signs
+  const zodiacSigns = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
+  const rashifalQueries = zodiacSigns.map(sign => (
+    useQuery<RashifalData>({
+      queryKey: ['/api/rashifal', sign],
+      queryFn: () => getRashifal(sign),
+      staleTime: 3600000 // 1 hour
+    })
+  ));
 
   // Get current date and time in Kathmandu time zone
   const kathmanduTime = getKathmanduTime();
@@ -51,10 +70,19 @@ const Home = () => {
   // For SEO metadata
   const modifiedDate = kathmanduTime.toISOString();
   
+  interface NepaliDate {
+    bs_date: string;
+    ad_date: string;
+    tithi: string;
+    day: string;
+    month_name: string;
+    year: string;
+  }
+
   // Get today's Nepali date based on Kathmandu time
-  const { data: nepaliToday, isLoading: loadingNepaliToday } = useQuery({
-    queryKey: ['/api/today-kathmandu-time'],
-    queryFn: getCurrentNepaliDate,
+  const { data: nepaliToday, isLoading: loadingNepaliToday } = useQuery<NepaliDate>({
+    queryKey: ['/api/today'],
+    queryFn: getTodayDate,
     staleTime: 5 * 60 * 1000, // 5 minutes - shorter to keep time more accurate
   });
   
@@ -66,12 +94,17 @@ const Home = () => {
   });
 
   const vegetableColumns = [
-    { header: 'Item', accessor: 'name' },
+    { header: 'Item', accessor: 'commodity' },
     { header: 'Unit', accessor: 'unit' },
-    { header: 'Min Price', accessor: 'minPrice', cell: (value: number) => `Rs. ${value}` },
-    { header: 'Max Price', accessor: 'maxPrice', cell: (value: number) => `Rs. ${value}` },
-    { header: 'Avg Price', accessor: 'avgPrice', cell: (value: number) => `Rs. ${value}` },
+    { header: 'Min Price', accessor: 'min_price', cell: (value: number) => `Rs. ${value}` },
+    { header: 'Max Price', accessor: 'max_price', cell: (value: number) => `Rs. ${value}` },
+    { header: 'Avg Price', accessor: 'avg_price', cell: (value: number) => `Rs. ${value}` },
   ];
+
+  // Get the top 5 vegetables by average price
+  const topVegetables = vegetablePrices
+    ?.sort((a, b) => b.avg_price - a.avg_price)
+    ?.slice(0, 5) || [];
 
   // SEO optimization
   
@@ -272,7 +305,7 @@ const Home = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                   <div className="bg-white rounded-lg p-2 shadow-sm flex-1">
                     <p className="text-xs text-gray-500">Gregorian (AD)</p>
-                    <p className="text-primary-dark font-medium">{formattedDate}</p>
+                    <p className="text-primary-dark font-medium">{nepaliToday?.ad_date || formattedDate}</p>
                     <p className="text-xs text-gray-500 mt-1">Kathmandu Time</p>
                     <p className="text-primary-dark font-medium">{formattedTime}</p>
                   </div>
@@ -392,7 +425,7 @@ const Home = () => {
                     <span className="text-xs text-gray-500">{`Last updated: ${formattedDate}`}</span>
                   </div>
                   
-                  {vegetablesQuery.isLoading ? (
+                  {loadingVegetables ? (
                     <div className="space-y-4 py-4">
                       {[1, 2, 3, 4, 5].map(i => (
                         <div key={i} className="flex gap-4 items-center animate-pulse">
@@ -406,39 +439,14 @@ const Home = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="divide-y">
-                      {(vegetablesQuery.data || []).slice(0, 5).map((item: any, index: number) => (
-                        <FadeIn key={index} delay={0.1 * index} className="py-3 first:pt-0 last:pb-0">
-                          <div className="flex items-center gap-4 group">
-                            <div className="h-10 w-10 bg-primary-light/10 flex items-center justify-center rounded-md text-primary">
-                              <i className="ri-leaf-line text-lg"></i>
-                            </div>
-                            
-                            <div className="flex-1">
-                              <div className="font-medium group-hover:text-primary transition-colors duration-300">
-                                {item.name_nepali ? `${item.name} (${item.name_nepali})` : item.name}
-                              </div>
-                              <div className="text-xs text-gray-500">Per {item.unit}</div>
-                            </div>
-                            
-                            <div className="text-right">
-                              <div className="font-semibold text-primary-dark">
-                                Rs. {parseFloat(item.avg_price).toFixed(2)}
-                              </div>
-                              <div className="text-xs flex items-center gap-1 justify-end">
-                                {parseFloat(item.min_price) < parseFloat(item.avg_price) * 0.9 ? (
-                                  <span className="text-green-500 flex items-center"><i className="ri-arrow-down-line"></i> Low: Rs.{parseFloat(item.min_price).toFixed(2)}</span>
-                                ) : parseFloat(item.max_price) > parseFloat(item.avg_price) * 1.1 ? (
-                                  <span className="text-red-500 flex items-center"><i className="ri-arrow-up-line"></i> High: Rs.{parseFloat(item.max_price).toFixed(2)}</span>
-                                ) : (
-                                  <span className="text-gray-500 flex items-center"><i className="ri-arrow-right-line"></i> Stable</span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </FadeIn>
-                      ))}
-                    </div>
+                    <DataTable 
+                      data={topVegetables}
+                      columns={vegetableColumns}
+                      isLoading={loadingVegetables}
+                      isError={!!vegetablesError}
+                      title="Top 5 Vegetables by Price"
+                      subtitle={`Last updated: ${nepaliToday?.ad_date || formattedDate}`}
+                    />
                   )}
                   
                   <div className="mt-5 text-center">
@@ -542,33 +550,26 @@ const Home = () => {
                   </div>
                   
                   <div className="grid grid-cols-2 gap-5">
-                    {rashifalQuery.data && rashifalQuery.data.predictions ? (
-                      rashifalQuery.data.predictions.slice(0, 4).map((sign: any, index: number) => (
-                        <FadeIn key={index} delay={0.1 * index}>
-                          <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 hover:shadow-inner group">
-                            <div className="flex items-center gap-2 mb-2">
-                              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 text-white">
-                                {sign.sign_english ? sign.sign_english.charAt(0) : '✨'}
-                              </div>
-                              <h4 className="font-medium text-white">{sign.sign_nepali}</h4>
+                    {rashifalQueries.slice(0, 4).map((query, index) => (
+                      <FadeIn key={index} delay={0.1 * index}>
+                        <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 group">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 text-white">
+                              {zodiacSigns[index].charAt(0).toUpperCase() + zodiacSigns[index].slice(1)}
                             </div>
-                            <p className="text-sm text-white/90 mt-2 line-clamp-3 group-hover:text-white transition-colors duration-300">{sign.prediction}</p>
+                            <h4 className="font-medium text-white">{zodiacSigns[index]}</h4>
                           </div>
-                        </FadeIn>
-                      ))
-                    ) : (
-                      <div className="col-span-2 p-6 text-center">
-                        <div className="animate-pulse bg-white/20 h-5 w-3/4 mx-auto rounded mb-3"></div>
-                        <div className="animate-pulse bg-white/20 h-4 w-2/3 mx-auto rounded"></div>
-                        <div className="animate-pulse bg-white/20 h-4 w-1/2 mx-auto rounded mt-3"></div>
-                      </div>
-                    )}
+                          <p className="text-sm text-white/90 mt-2 line-clamp-3 group-hover:text-white transition-colors duration-300">{query.data?.prediction || 'Loading...'}</p>
+                        </div>
+                      </FadeIn>
+                    ))}
                   </div>
                   
                   <div className="mt-6 text-center">
                     <p className="text-white/90 text-sm mb-3">Find guidance for your zodiac sign today</p>
                     <Link href="/nepali-rashifal" 
-                      className="inline-block bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2 rounded-lg font-medium border border-white/30 transition-all duration-300 hover:shadow-lg group">
+                      className="inline-block bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2 rounded-lg font-medium border border-white/30 transition-all duration-300 hover:shadow-lg group"
+                    >
                       <span className="inline-flex items-center">
                         <span>View All Signs</span>
                         <i className="ri-arrow-right-s-line ml-1 group-hover:translate-x-1 transition-transform duration-200"></i>

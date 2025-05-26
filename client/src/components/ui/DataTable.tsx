@@ -12,6 +12,7 @@ interface DataTableProps {
   columns: Column[];
   data: any[];
   isLoading?: boolean;
+  isError?: boolean;
   title?: string;
   subtitle?: string;
   sortBy?: string;
@@ -21,7 +22,8 @@ interface DataTableProps {
 const DataTable = ({ 
   columns, 
   data, 
-  isLoading = false, 
+  isLoading = false,
+  isError = false, 
   title, 
   subtitle,
   sortBy,
@@ -78,6 +80,12 @@ const DataTable = ({
                   ))}
                 </tr>
               ))
+            ) : isError ? (
+              <tr>
+                <td colSpan={columns.length} className="py-8 text-center text-red-500">
+                  Error loading data. Please try again.
+                </td>
+              </tr>
             ) : data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} className="py-8 text-center text-gray-500">
